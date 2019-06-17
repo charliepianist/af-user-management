@@ -3,12 +3,16 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'groovy'
 apply plugin: 'java'
+apply plugin: 'application'
 
 sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
 }
+
+mainClassName = 'com.mni.Application'
+
 
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.3.11'
