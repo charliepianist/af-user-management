@@ -1,0 +1,16 @@
+
+<table border="1">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>UserID</th>
+    </tr>
+    <tr *ngFor="let person of people.content">
+      <td>
+        <a [routerLink]="'/people/' + person.id">{{person.id}}</a> </td>
+      <td></td>
+      <td></td>
+    </tr>
+  </thead>
+</table>

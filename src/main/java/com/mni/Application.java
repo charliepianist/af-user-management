@@ -8,6 +8,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.io.File;
+
 /**
  * Created by will.schick on 6/17/19.
  */
@@ -24,8 +26,16 @@ public class Application {
     @Bean
     CommandLineRunner startup(){
         return strings -> {
-            personRepository.save(new Person("joe","bob"));
-            personRepository.save(new Person("billy","bob"));
+            personRepository.save(new Person());
+            personRepository.save(new Person());
+
+            new ProcessBuilder()
+                    .directory(new File("ui"))
+                    .command("ng","serve","--proxy-config","proxy.conf.json")
+                    .redirectOutput(ProcessBuilder.Redirect.INHERIT)
+                    .redirectError(ProcessBuilder.Redirect.INHERIT)
+                    .start();
+
         };
     }
 }
