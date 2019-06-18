@@ -1,30 +1,38 @@
-# java-starter
+# AF User Management
 
 
-### To build the app
-
-Type this command into the terminal
-
-    ./gradlew build
-    
-    
-### To run the app
-
-This command:
+## Guide to code
 
 
-     ./gradlew run
-
-## API
+### Server Side Code
 
 
-### To get a list of all people:
+#### Persistence Tier
+
+This is in the [model](src/main/java/com/mni/model) package. It contains JPA entities and 
+[Spring Data JPA repositories](https://www.baeldung.com/the-persistence-layer-with-spring-data-jpa).
+ 
+#### Service Tier
+
+This is in the [api](src/main/java/com/mni/api) package. It contains Spring @RestControllers and api DTOs.
+
+### Client Side Code
+
+The client side code is in the [ui](ui/src/app) directory.
+
+#### Client Side Model
+
+These are client side business objects. They are in the [model](ui/src/app/model) directory. 
+
+#### Client Side Services
+
+These service objects consume the rest api provided by the java code and translate it to client side model objects. 
+They are in [services](ui/src/app/services)
+
+#### Client side "routes"
+
+These are routers for [angular router](https://angular.io/guide/router). They correspond to different "pages" in the app. 
+They are in [routes](ui/src/app/routes).
 
 
-Go to: [http://localhost:8080/](http://localhost:8080/)
 
-
-### To get a person by ID:
-
-
-Go to: [http://localhost:8080/{id}](http://localhost:8080/1)
