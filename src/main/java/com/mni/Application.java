@@ -29,6 +29,15 @@ public class Application {
             personRepository.save(new Person());
             personRepository.save(new Person());
 
+
+            new ProcessBuilder()
+                    .directory(new File("ui"))
+                    .command("npm","install")
+                    .redirectOutput(ProcessBuilder.Redirect.INHERIT)
+                    .redirectError(ProcessBuilder.Redirect.INHERIT)
+                    .start()
+                    .waitFor();
+
             new ProcessBuilder()
                     .directory(new File("ui"))
                     .command("ng","serve","--proxy-config","proxy.conf.json")
