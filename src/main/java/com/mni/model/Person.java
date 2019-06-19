@@ -22,6 +22,13 @@ public class Person {
 
     public Person(){}
 
+    public Person(Long id, String name, String userId, String password) {
+        this.id = id;
+        this.name = name;
+        this.userId = userId;
+        this.password = password;
+    }
+
     public Long getId() {
         return id;
     }
