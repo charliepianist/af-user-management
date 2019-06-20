@@ -4,6 +4,8 @@ import com.mni.model.Person
 import com.mni.model.PersonRepository
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 import spock.lang.Specification
 
 /**
@@ -38,33 +40,33 @@ class PersonResourceSpec extends Specification {
         result.getPassword() == "a3lK9n12!_"
     }
 
-    void "getPerson() should return null when called with an invalid ID" () {
+    void "getPerson() should return NOT_FOUND when called with an invalid ID" () {
         when:
         "getPerson() is called with an invalid ID"
-        def result = personResource.getPerson(-1);
+        def result = personResource.getPerson(-1)
 
         then:
         "personRepository should call findById(-1), which will return an empty Optional object"
-        1 * personResource.personRepository.findById(-1) >> Optional.empty();
+        1 * personResource.personRepository.findById(-1) >> Optional.empty()
 
         and:
         "The result from getPerson() should be null"
-        result == null
+        thrown(ResponseStatusException)
     }
 
     void "savePerson() with a new userID should return a new persisted person" () {
         when:
         "savePerson() is called with a valid new ID"
-        def result = personResource.savePerson(new PersonDto(null, "Bank", "bankUserID", "b9(de!2kfne"))
+        def result = personResource.savePerson(new PersonDto(null, "Bank", "bankUserID", "abcdefghijklmno"))
 
         then:
         "personRepository should call save, returning the saved Person object"
         1 * personResource.personRepository.save({Person person ->
                                                                     person.getName() == "Bank" &&
                                                                     person.getUserId() == "bankUserID" &&
-                                                                    person.getPassword() == "b9(de!2kfne"
+                                                                    person.getPassword() == "abcdefghijklmno"
                                                         }) >>
-                new Person(120, "Bank", "bankUserID", "b9(de!2kfne")
+                new Person(120, "Bank", "bankUserID", "abcdefghijklmno")
 
         and:
         "Returned person should be the persisted PersonDto object"
@@ -72,7 +74,7 @@ class PersonResourceSpec extends Specification {
         result.getId() == 120L
         result.getName() == "Bank"
         result.getUserId() == "bankUserID"
-        result.getPassword() == "b9(de!2kfne"
+        result.getPassword() == "abcdefghijklmno"
     }
 
     void "listPeople() should return the current people" () {
@@ -114,5 +116,31 @@ class PersonResourceSpec extends Specification {
         then:
         "deleteById(1) should be called"
         1 * personResource.personRepository.deleteById(1)
+    }
+
+    void "updatePerson() should call save() to save person and return new person" () {
+        given:
+        PersonDto pdto = new PersonDto(1, "New Name", "New UserID", "abcdefghijklmno")
+
+        when:
+        "updatePerson() is called"
+        def result = personResource.updatePerson(1, pdto)
+
+        then:
+        "save() should be called"
+        1 * personResource.personRepository.save({Person person ->
+                                                                    person.getId() == 1L &&
+                                                                    person.getName() == "New Name" &&
+                                                                    person.getUserId() == "New UserID" &&
+                                                                    person.getPassword() == "abcdefghijklmno"
+        }) >> new Person(1L, "New Name", "New UserID", "abcdefghijklmno")
+
+        and:
+        "Correct result should be returned"
+        result instanceof PersonDto
+        result.getId() == pdto.getId()
+        result.getPassword() == pdto.getPassword()
+        result.getName() == pdto.getName()
+        result.getUserId() == pdto.getUserId()
     }
 }

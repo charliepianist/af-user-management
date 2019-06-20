@@ -1,6 +1,7 @@
 package com.mni.api;
 
-import com.mni.model.Person;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Null;
 
 /**
  * Created by will.schick on 6/17/19.
@@ -8,8 +9,14 @@ import com.mni.model.Person;
 public class PersonDto {
 
     private Long id;
+
+    @NotBlank
     private String name;
+
+    @NotBlank
     private String userId;
+
+    @NotBlank
     private String password;
 
     public PersonDto(Long id, String name, String userId, String password) {
