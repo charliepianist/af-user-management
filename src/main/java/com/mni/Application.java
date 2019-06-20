@@ -26,9 +26,10 @@ public class Application {
     @Bean
     CommandLineRunner startup(){
         return strings -> {
-            personRepository.save(new Person());
-            personRepository.save(new Person());
-
+            personRepository.save(new Person(null, "ACME", "a_user", "a%Fe23_fERF9dzV"));
+            personRepository.save(new Person(null, "Bank of America", "bofa", "b%23fi_3Fcfv)[e"));
+            personRepository.save(new Person(null, "Comcast", "com_user", "c54ENj!ogE4Me4!"));
+            personRepository.save(new Person(null, "Dell", "dell_userID", "d9@dl)p2kNM5J!d"));
 
             new ProcessBuilder()
                     .directory(new File("ui"))
