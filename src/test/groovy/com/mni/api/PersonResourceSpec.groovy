@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.server.ResponseStatusException
 import spock.lang.Specification
 
+import javax.xml.ws.Response
+
 /**
  * Created by will.schick on 6/17/19.
  */
@@ -142,5 +144,119 @@ class PersonResourceSpec extends Specification {
         result.getPassword() == pdto.getPassword()
         result.getName() == pdto.getName()
         result.getUserId() == pdto.getUserId()
+    }
+
+    void "savePerson() should throw ResponseStatusExceptions when invalid data entered" () {
+        given:
+        "Various invalid inputs"
+        PersonDto longName = new PersonDto(null, "NameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLong",
+                                            "validUserID", "validPassword11");
+        PersonDto longUserId = new PersonDto(null, "Name is fine", "UserIDIsTooLongUserIDIsTooLongUserIDIsTooLongUserIDIsTooLongUserIDIsTooLongUserIDIsTooLongUserIDIsTooLongUserIDIsTooLong",
+                                                "validPassword22");
+        PersonDto shortPassword = new PersonDto(null, "Name is fine", "validUserID", "shortpass");
+        PersonDto longPassword = new PersonDto(null, "Name is fine", "validUserID", "ReallyLongPasswordReallyLongPasswordReallyLongPasswordReallyLongPasswordReallyLongPasswordReallyLongPasswordReallyLongPasswordReallyLongPasswordReallyLongPasswordReallyLongPasswordReallyLongPasswordReallyLongPasswordReallyLongPassword");
+
+        PersonDto noName = new PersonDto(null, null,
+                "validUserID", "validPassword11");
+        PersonDto noUserId = new PersonDto(null, "Valid Name",
+                null, "validPassword11");
+        PersonDto noPassword = new PersonDto(null, "Valid Name",
+                "validUserID", null);
+
+        PersonDto emptyName = new PersonDto(null, "",
+                "validUserID", "validPassword11");
+        PersonDto emptyUserId = new PersonDto(null, "Valid Name",
+                "", "validPassword11");
+        PersonDto emptyPassword = new PersonDto(null, "Valid Name",
+                "validUserID", "");
+
+        when:
+        "Attempt to save long name"
+        personResource.savePerson(longName)
+
+        then:
+        "savePerson() should throw a ResponseStatusException"
+        thrown(ResponseStatusException)
+
+
+        when:
+        "Attempt to save long userID"
+        personResource.savePerson(longUserId)
+
+        then:
+        "savePerson() should throw a ResponseStatusException"
+        thrown(ResponseStatusException)
+
+
+        when:
+        "Attempt to save long password"
+        personResource.savePerson(longPassword)
+
+        then:
+        "savePerson() should throw a ResponseStatusException"
+        thrown(ResponseStatusException)
+
+
+        when:
+        "Attempt to save short password"
+        personResource.savePerson(shortPassword)
+
+        then:
+        "savePerson() should throw a ResponseStatusException"
+        thrown(ResponseStatusException)
+
+
+        when:
+        "Attempt to save no name"
+        personResource.savePerson(noName)
+
+        then:
+        "savePerson() should throw a ResponseStatusException"
+        thrown(ResponseStatusException)
+
+
+        when:
+        "Attempt to save no userID"
+        personResource.savePerson(noUserId)
+
+        then:
+        "savePerson() should throw a ResponseStatusException"
+        thrown(ResponseStatusException)
+
+
+        when:
+        "Attempt to save no password"
+        personResource.savePerson(noPassword)
+
+        then:
+        "savePerson() should throw a ResponseStatusException"
+        thrown(ResponseStatusException)
+
+
+        when:
+        "Attempt to save no name"
+        personResource.savePerson(emptyName)
+
+        then:
+        "savePerson() should throw a ResponseStatusException"
+        thrown(ResponseStatusException)
+
+
+        when:
+        "Attempt to save no userID"
+        personResource.savePerson(emptyUserId)
+
+        then:
+        "savePerson() should throw a ResponseStatusException"
+        thrown(ResponseStatusException)
+
+
+        when:
+        "Attempt to save no password"
+        personResource.savePerson(emptyPassword)
+
+        then:
+        "savePerson() should throw a ResponseStatusException"
+        thrown(ResponseStatusException)
     }
 }

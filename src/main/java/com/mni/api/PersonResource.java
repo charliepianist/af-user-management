@@ -55,6 +55,26 @@ public class PersonResource {
 
     // Checks Name, UserID, and Password lengths
     private void validatePerson(Person person) {
+        if(person.getName() == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Name cannot be null");
+        if(person.getUserId() == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "UserID cannot be null");
+        if(person.getPassword() == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Password cannot be null");
+        if(person.getName().length() == 0)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Name cannot be empty");
+        if(person.getUserId().length() == 0)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "UserID cannot be empty");
+        if(person.getPassword().length() == 0)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Password cannot be empty");
+
+        // validate correct lengths
         if(person.getName().length() > Person.MAX_NAME_LENGTH)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Name cannot have over " + Person.MAX_NAME_LENGTH + " characters");
