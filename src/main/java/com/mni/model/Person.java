@@ -24,7 +24,7 @@ public class Person {
     private String name;
     @Column(unique=true, length=20)
     private String userId;
-    @Column(unique=true, length=100)
+    @Column(length=100)
     private String password;
 
     public Person(){}
