@@ -31,12 +31,17 @@
       <div class="form-group">
         <label for="password">Password (15 to 100 characters, must contain lowercase letter, uppercase letter, number, and special character)</label>
         <input type="text" [(ngModel)]="password" name="password" 
-                #passwordInput="ngModel" class="form-control"
+                #passwordInput="ngModel" class="form-control" id="password"
                 (ngModelChange)="submissionErrorMsg=null" required>
         <div [hidden]="!validatePassword() || passwordInput.pristine" 
               class="alert alert-danger">
           {{validatePassword()}}
         </div>
+        <button (click)="generatePassword()" style="margin-top: 0.2em;">
+          Generate Password
+        </button>
+         of length <input [(ngModel)]="passLength" name="passLength"
+                        type="number" style="width:3.5em;">
       </div>
  
       <button (click)="submitButton()" class="btn btn-success">Submit</button>

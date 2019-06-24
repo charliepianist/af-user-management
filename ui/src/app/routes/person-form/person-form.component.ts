@@ -20,6 +20,7 @@ export class PersonFormComponent implements OnInit {
   name: string = null;
   userId: string = null;
   password: string = null;
+  passLength: number = 15;
   invalidSubmit: boolean = false; // when submit clicked with invalid input
   submissionErrorMsg: string = null;
 
@@ -94,5 +95,25 @@ export class PersonFormComponent implements OnInit {
           errorFunc);
       }
     }
+  }
+
+  generatePassword() {
+    this.passLength = Math.max(Math.min(Math.floor(this.passLength), 100), 15);
+    let categories = ['ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                      'abcdefghijklmnopqrstuvwxyz',
+                      '0123456789',
+                      '[!@#$%^&*()_+-=[]{};\':"\\|,.<>/?]'];
+    let chars = categories[0] + categories[1] + categories[2] + categories[3];
+
+    let result = '';
+    for(let i = 0; i < this.passLength - categories.length; i++) {
+      result += chars.charAt(Math.floor(Math.random() * (chars.length)));
+    }
+    for(let i = 0; i < categories.length; i++) {
+      let pos = Math.floor(Math.random() * (result.length + 1));
+      let char = categories[i].charAt(Math.floor(Math.random() * categories[i].length));
+      result = result.substring(0, pos) + char + result.substring(pos);
+    }
+    this.password = result;
   }
 }
