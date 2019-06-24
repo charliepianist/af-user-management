@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { PersonService } from './person.service';
+import { Page } from '../model/page';
 
 describe('PersonService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));

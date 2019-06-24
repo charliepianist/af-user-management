@@ -1,0 +1,32 @@
+td, th {
+    text-align: center;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+tr {
+    height: 2em;
+    font-size: 1.2em;
+}
+
+.link {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.person-entry {
+    cursor:pointer;
+}
+.person-entry:hover {
+    background-color: lightskyblue;
+}
+.person-option {
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+}
+.person-options {
+    cursor:default;
+}
+.full-width-centered {
+    width: 100%;
+    text-align: center;
+}

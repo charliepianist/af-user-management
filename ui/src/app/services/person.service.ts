@@ -1,21 +1,48 @@
 import { Injectable } from '@angular/core';
 import {Page} from "../model/page";
 import {Person} from "../model/person";
-import {Observable} from "rxjs/index";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
 export class PersonService {
 
-
+  static readonly BASE_URL = "/api/people/"
 
   constructor(private httpClient:HttpClient) { }
 
 
-  listPeople():Observable<Page<Person>>{
-    return this.httpClient.get<Page<Person>>("/api/people");
+  listPeople(successFunc: (p: Page<Person>) => any, 
+              errorFunc: (e: HttpErrorResponse) => any) {
+    this.httpClient.get<Page<Person>>(PersonService.BASE_URL).subscribe(
+      successFunc, errorFunc);
+  }
+
+  getPerson(id: string, successFunc: (p: Person) => any,
+            errorFunc: (e: HttpErrorResponse) => any) {
+    this.httpClient.get<Person>(PersonService.BASE_URL + id).subscribe(
+      successFunc, errorFunc);
+  }
+
+  deletePerson(id: number, successFunc: () => any, 
+                errorFunc: (e: HttpErrorResponse) => any = e => { // onError
+                  console.log(e);
+                  alert('Delete failed, see console for error.')
+                }) {
+    this.httpClient.delete(PersonService.BASE_URL + id).subscribe(
+      successFunc, errorFunc);
+  }
+
+  createPerson(person: Person, successFunc: (...args: any[]) => any,
+                errorFunc: (e: HttpErrorResponse) => any) {
+    this.httpClient.post(PersonService.BASE_URL, person).subscribe(
+      successFunc, errorFunc);
+  }
+  updatePerson(person: Person, successFunc: (...args: any[]) => any,
+      errorFunc: (e: HttpErrorResponse) => any) {
+    this.httpClient.put(PersonService.BASE_URL + '/' + person.getId(), person).subscribe(
+    successFunc, errorFunc);
   }
 
 }
