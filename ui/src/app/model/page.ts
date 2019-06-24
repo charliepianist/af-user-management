@@ -1,3 +1,4 @@
+import { Pageable } from "./pageable";
 
 
 export class Page<T> {
@@ -11,4 +12,5 @@ export class Page<T> {
   size: number;
   totalElements: number;
   totalPages: number;
+  pageable: Pageable;
 }

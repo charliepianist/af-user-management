@@ -1,0 +1,55 @@
+<div class="container">
+    <button style="font-size: 18px;" [routerLink]="['/people']">&lt; Back</button>
+    <h4 *ngIf="errorMsg">
+      An Error Occurred: {{errorMsg}}<br>
+      See Console for Details.
+    </h4>
+    <h1>{{origName ? 'Update ' + origName : 'Create New Person'}}</h1>
+    <form autocomplete="off">
+      <div class="form-group">
+        <label for="name">Name (up to 100 characters)</label>
+        <input type="text" [(ngModel)]="name" name="name" 
+                #nameInput="ngModel" class="form-control" 
+                (ngModelChange)="submissionErrorMsg=null" required>
+        <div [hidden]="!validateName() || nameInput.pristine" 
+              class="alert alert-danger">
+          {{validateName()}}
+        </div>
+      </div>
+ 
+      <div class="form-group">
+        <label for="userId">User ID (up to 20 characters)</label>
+        <input type="text" [(ngModel)]="userId" name="userId" 
+                #userIdInput="ngModel" class="form-control" 
+                (ngModelChange)="submissionErrorMsg=null" required>
+        <div [hidden]="!validateUserId() || userIdInput.pristine" 
+              class="alert alert-danger">
+          {{validateUserId()}}
+        </div>
+      </div>
+ 
+      <div class="form-group">
+        <label for="password">Password (15 to 100 characters, must contain lowercase letter, uppercase letter, number, and special character)</label>
+        <input type="text" [(ngModel)]="password" name="password" 
+                #passwordInput="ngModel" class="form-control"
+                (ngModelChange)="submissionErrorMsg=null" required>
+        <div [hidden]="!validatePassword() || passwordInput.pristine" 
+              class="alert alert-danger">
+          {{validatePassword()}}
+        </div>
+      </div>
+ 
+      <button (click)="submitButton()" class="btn btn-success">Submit</button>
+      <br><br>
+      <div [hidden]="!submissionErrorMsg" class="text-danger">
+        {{submissionErrorMsg}}<br>
+        See console for details.<br><br>
+      </div>
+      <div [hidden]="!invalidSubmit" class="text-danger">
+        <span *ngIf="validateName()">Please enter a valid name.<br></span>
+        <span *ngIf="validateUserId()">Please enter a valid user ID.<br></span>
+        <span *ngIf="validatePassword()">Please enter a valid password.<br></span>
+      </div>
+ 
+    </form>
+</div>

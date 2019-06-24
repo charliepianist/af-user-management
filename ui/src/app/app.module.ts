@@ -3,18 +3,21 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { PersonListComponent } from './routes/person-list/person-list.component';
-import {FormsModule} from "@angular/forms";
-import {RouterModule, Routes} from "@angular/router";
+import { FormsModule } from "@angular/forms";
+import { RouterModule, Routes } from "@angular/router";
 import { PersonDetailsComponent } from './routes/person-details/person-details.component';
-import {HttpClientModule} from "@angular/common/http";
+import { HttpClientModule } from "@angular/common/http";
+import { PersonFormComponent } from './routes/person-form/person-form.component';
 
 
 const appRoutes: Routes = [
   { path: 'people', component: PersonListComponent },
+  { path: 'people/new', component: PersonFormComponent },
   { path: 'people/:id',      component: PersonDetailsComponent },
+  { path: 'people/:id/update',      component: PersonFormComponent },
 
   //the default page
-  { path: '**', component: PersonListComponent }
+  { path: '**', redirectTo: 'people' }
 ];
 
 
@@ -25,6 +28,7 @@ const appRoutes: Routes = [
     AppComponent,
     PersonListComponent,
     PersonDetailsComponent,
+    PersonFormComponent,
   ],
   imports: [
     BrowserModule,

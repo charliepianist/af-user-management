@@ -1,16 +1,67 @@
+  <table border="1" class="full-width-centered">
+    <thead>
+      <tr>
+        <th style="width:7%">ID</th>
+        <th style="width:28%">Name</th>
+        <th style="width:15%">User ID</th>
+        <th style="width:25%">Password</th>
+        <th style="width:25%">Actions</th>
+      </tr>
+    </thead>
+    <ng-container *ngIf="peoplePage; else loading">
+      <ng-container *ngIf="people.length > 0; else noPeople">
+        <tr *ngFor="let person of people" [routerLink]="[person.getId()]" class="person-entry">
+          <td>
+            {{person.getId()}}
+          </td>
+          <td>
+            {{person.getName()}}
+          </td>
+          <td>
+            {{person.getUserId()}}
+          </td>
+          <td>
+            {{person.getPassword()}}
+          </td>
+          <!-- Details, Update, Delete-->
+          <td (click)="$event.stopPropagation()" class="person-options"> 
+            <span [routerLink]="[person.getId()]" class="link person-option">Details</span>
+            <span [routerLink]="[person.getId(), 'update']" class="link person-option">Update</span>
+            <ng-template #deleteLink>
+              <span (click)="toDelete[person.getId()] = true" class="link person-option">Delete</span>
+            </ng-template>
+            <span *ngIf="toDelete[person.getId()]; else deleteLink" class="person-option" style="font-size:90%;">
+              Are you sure?
+              <span (click)="deletePerson(person.getId())" class="link person-option">Yes</span>
+              <span (click)="toDelete[person.getId()]=false" class="link person-option">No</span>
+            </span>
+          </td>
+        </tr>
+      </ng-container>
+    </ng-container>
+    <ng-template #noPeople>
+      <tr class="full-width-centered">
+        <td colspan=100><b>There are currently no people.</b></td>
+      </tr>
+    </ng-template>
+    <ng-template #loading>
+      <tr class="full-width-centered">
+        <td colspan=100>
+          <span *ngIf="error; else loading">
+            An error occured, see console for details:<br>
+            {{error.message}}
+          </span>
+          <ng-template #loading><b>Loading...</b></ng-template>
+        </td>
+      </tr>
+    </ng-template>
+  </table>
+  <br>
+  <div class="full-width-centered">
+    <button [routerLink]="['new']" style="font-size: 115%">Add New Person</button>
+    <br><br>
+    &lt;&lt;&nbsp;&nbsp; 
+    Page {{pageNumber}} of {{totalPages}} (Entries {{startElement}} through {{endElement}} of {{totalElements}}) 
+    &nbsp;&nbsp;&gt;&gt;
+  </div>
 
-<table border="1">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Name</th>
-      <th>UserID</th>
-    </tr>
-    <tr *ngFor="let person of people.content">
-      <td>
-        <a [routerLink]="'/people/' + person.id">{{person.id}}</a> </td>
-      <td></td>
-      <td></td>
-    </tr>
-  </thead>
-</table>
