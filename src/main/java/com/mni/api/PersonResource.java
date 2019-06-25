@@ -126,7 +126,9 @@ public class PersonResource {
         if(!isPersonField(sortBy)) sortBy = "id";
 
         Sort.Direction direction = desc ? Sort.Direction.DESC : Sort.Direction.ASC;
-        Sort sort = Sort.by(new Sort.Order(direction, sortBy).ignoreCase());
+        Sort.Order order = new Sort.Order(direction, sortBy);
+        if(!order.equals("password")) order = order.ignoreCase();
+        Sort sort = Sort.by(order);
         Pageable pageRequest = PageRequest.of(page, size, sort);
         return personRepository
                 .findAll(pageRequest)

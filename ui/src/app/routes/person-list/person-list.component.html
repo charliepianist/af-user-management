@@ -1,11 +1,35 @@
   <table border="1" class="full-width-centered">
     <thead>
       <tr>
-        <th style="width:7%">ID</th>
-        <th style="width:28%">Name</th>
-        <th style="width:15%">User ID</th>
-        <th style="width:25%">Password</th>
-        <th style="width:25%">Actions</th>
+        <th style="width:7%" (click)="sort('id')">
+          ID
+          <span style="transform: rotate(270deg); display: inline-block"
+          *ngIf="isSortAsc('id')">&#10148;</span>
+          <span style="transform: rotate(90deg); display: inline-block"
+          *ngIf="isSortDesc('id')">&#10148;</span>
+        </th>
+        <th style="width:28%" (click)="sort('name')">
+          Name
+          <span style="transform: rotate(270deg); display: inline-block"
+          *ngIf="isSortAsc('name')">&#10148;</span>
+          <span style="transform: rotate(90deg); display: inline-block"
+          *ngIf="isSortDesc('name')">&#10148;</span>
+        </th>
+        <th style="width:15%" (click)="sort('userId')">
+          User ID
+          <span style="transform: rotate(270deg); display: inline-block"
+          *ngIf="isSortAsc('userId')">&#10148;</span>
+          <span style="transform: rotate(90deg); display: inline-block"
+          *ngIf="isSortDesc('userId')">&#10148;</span>
+        </th>
+        <th style="width:25%" (click)="sort('password')">
+          Password
+          <span style="transform: rotate(270deg); display: inline-block"
+          *ngIf="isSortAsc('password')">&#10148;</span>
+          <span style="transform: rotate(90deg); display: inline-block"
+          *ngIf="isSortDesc('password')">&#10148;</span>
+        </th>
+        <th style="width:25%; cursor:default;">Actions</th>
       </tr>
     </thead>
     <ng-container *ngIf="peoplePage; else loading">
@@ -41,7 +65,15 @@
     </ng-container>
     <ng-template #noPeople>
       <tr class="full-width-centered">
-        <td colspan=100><b>There are currently no people.</b></td>
+        <td colspan=100>
+          <b *ngIf="totalElements == 0; else wrongPage">
+            There are currently no people.
+          </b>
+          <ng-template #wrongPage><b>
+            This page is empty. 
+            <span (click)="toFirstPage()" class="link">Go to first page</span>
+          </b></ng-template>
+        </td>
       </tr>
     </ng-template>
     <ng-template #loading>
@@ -60,8 +92,27 @@
   <div class="full-width-centered">
     <button [routerLink]="['new']" style="font-size: 115%">Add New Customer</button>
     <br><br>
-    &lt;&lt;&nbsp;&nbsp; 
-    Page {{pageNumber}} of {{totalPages}} (Entries {{startElement}} through {{endElement}} of {{totalElements}}) 
-    &nbsp;&nbsp;&gt;&gt;
+    <span *ngIf="peoplePage && people.length > 0" style="font-size: 1.1em;">
+        
+        <div style="display:inline-block">
+          Page {{pageNumber}} of {{totalPages}} (Entries {{startElement}} 
+          through {{endElement}} of {{totalElements}})
+          <br>
+          <button *ngIf="!first" (click)="previousPage()"
+            style="float:left; margin-left:1.25em;">
+            Previous Page
+          </button>
+          <button *ngIf="!last" (click)="nextPage()"
+            style="float:right; margin-right:1.25em;">
+            Next Page
+          </button>
+          <br><br>
+          <span *ngIf="!(first && last)">
+              Go to page <input [(ngModel)]="pageToGoTo" 
+              type="number" style="width:3em;">
+              &nbsp;<button (click)="goToPage()">Go</button>
+          </span>
+        </div>
+    </span>
   </div>
 

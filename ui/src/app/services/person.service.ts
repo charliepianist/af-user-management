@@ -14,8 +14,11 @@ export class PersonService {
 
 
   listPeople(successFunc: (p: Page<Person>) => any, 
-              errorFunc: (e: HttpErrorResponse) => any) {
-    this.httpClient.get<Page<Person>>(PersonService.BASE_URL).subscribe(
+              errorFunc: (e: HttpErrorResponse) => any,
+              queryParams?: any) {
+    this.httpClient.get<Page<Person>>(PersonService.BASE_URL, {
+      params: queryParams
+    }).subscribe(
       successFunc, errorFunc);
   }
 
