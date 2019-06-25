@@ -71,7 +71,7 @@ export class PersonFormComponent implements OnInit {
   }
   
   submitButton() {
-    if(this.validateName() || this.validatePassword() || this.validateUserId()) {
+    if(this.validateName() || this.validateUserId() || this.validatePassword()) {
       this.invalidSubmit = true;
     }else {
       let newPerson = new Person(this.idNum, this.name, this.userId, this.password);

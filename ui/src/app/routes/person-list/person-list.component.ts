@@ -3,7 +3,6 @@ import {PersonService} from "../../services/person.service";
 import {Page} from "../../model/page";
 import {Person} from "../../model/person";
 import { Router, ActivatedRoute } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-person-list',
@@ -16,7 +15,7 @@ export class PersonListComponent implements OnInit {
 
   peoplePage:Page<Person>
   people:Person[]
-  error: HttpErrorResponse;
+  errorMsg: string;
   pageNumber: number;
   totalPages: number;
   startElement: number;
@@ -40,7 +39,7 @@ export class PersonListComponent implements OnInit {
           person => Object.assign(new Person(), person));
       },
       //onError
-      e => {console.log(e); this.error = e;}
+      e => {console.log(e); this.errorMsg = e.message;}
       );
   }
 

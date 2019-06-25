@@ -8,7 +8,7 @@ import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 })
 export class PersonService {
 
-  static readonly BASE_URL = "/api/people/"
+  static readonly BASE_URL = "/api/people"
 
   constructor(private httpClient:HttpClient) { }
 
@@ -21,7 +21,7 @@ export class PersonService {
 
   getPerson(id: string, successFunc: (p: Person) => any,
             errorFunc: (e: HttpErrorResponse) => any) {
-    this.httpClient.get<Person>(PersonService.BASE_URL + id).subscribe(
+    this.httpClient.get<Person>(PersonService.BASE_URL + '/' + id).subscribe(
       successFunc, errorFunc);
   }
 
@@ -30,7 +30,7 @@ export class PersonService {
                   console.log(e);
                   alert('Delete failed, see console for error.')
                 }) {
-    this.httpClient.delete(PersonService.BASE_URL + id).subscribe(
+    this.httpClient.delete(PersonService.BASE_URL + '/' + id).subscribe(
       successFunc, errorFunc);
   }
 
