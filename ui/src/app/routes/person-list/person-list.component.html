@@ -49,7 +49,7 @@
         <td colspan=100>
           <span *ngIf="error; else loading">
             An error occured, see console for details:<br>
-            {{error.message}}
+            {{errorMsg}}
           </span>
           <ng-template #loading><b>Loading...</b></ng-template>
         </td>
