@@ -101,8 +101,7 @@ describe('Updating Person', () => {
     TestBed.configureTestingModule({
       declarations: [ PersonFormComponent ],
       imports: [
-        TestingModule,
-        FormsModule
+        TestingModule
       ],
       providers: [{
         provide: ActivatedRoute,

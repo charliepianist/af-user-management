@@ -7,8 +7,12 @@ import { PersonService } from 'src/app/services/person.service';
 import { Page } from 'src/app/model/page';
 import { Person } from 'src/app/model/person';
 import { Pageable } from 'src/app/model/pageable';
+import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+import { HttpRequest } from '@angular/common/http';
 
-describe('PersonListComponent', () => {
+describe('PersonListComponent without Query parameters', () => {
   let component: PersonListComponent;
   let fixture: ComponentFixture<PersonListComponent>;
   let injector: TestBed;
@@ -43,7 +47,9 @@ describe('PersonListComponent', () => {
     peoplePage.content = [];
     peoplePage.pageable = new Pageable();
 
-    const req = httpMock.expectOne(`${PersonService.BASE_URL}`);
+    const req = httpMock.expectOne((request: HttpRequest<any>): boolean => {
+      return request.url === `${PersonService.BASE_URL}`;
+    });
     expect(req.request.method).toBe("GET");
     req.flush(peoplePage);
     
@@ -63,7 +69,9 @@ describe('PersonListComponent', () => {
     peoplePage.number = 1; // Spring page index starts at 0
     peoplePage.totalPages = 3;
 
-    const req = httpMock.expectOne(`${PersonService.BASE_URL}`);
+    const req = httpMock.expectOne((request: HttpRequest<any>): boolean => {
+      return request.url === `${PersonService.BASE_URL}`;
+    });
     expect(req.request.method).toBe("GET");
     req.flush(peoplePage);
     
@@ -82,7 +90,9 @@ describe('PersonListComponent', () => {
     peoplePage.content = [];
     peoplePage.pageable = new Pageable();
 
-    const req = httpMock.expectOne(`${PersonService.BASE_URL}`);
+    const req = httpMock.expectOne((request: HttpRequest<any>): boolean => {
+      return request.url === `${PersonService.BASE_URL}`;
+    });
     expect(req.request.method).toBe("GET");
     req.error(new ErrorEvent('network error'));
 
@@ -97,7 +107,127 @@ describe('PersonListComponent', () => {
     expect(service.deletePerson).toHaveBeenCalled();
   });
 
-  it('TODO: Test Sorting? (Making correct calls given URL Params)', () => {
-    expect(0).toBe(1);
+  it('should go to default query values', () => {
+    // current defaults:
+    // page: 0 (should not change)
+    // size: 20
+    // sortBy: 'id'
+    // desc: false
+    expect(component.queryParams.page).toBe(0);
+    expect(component.queryParams.size).toBeGreaterThan(0);
+    expect(component.queryParams.sortBy).toBeTruthy(); 
+    expect(component.queryParams.desc).toBe(false);
   })
+});
+
+describe('PersonListComponent with invalid query parameters', () => {
+  let component: PersonListComponent;
+  let fixture: ComponentFixture<PersonListComponent>;
+  let injector: TestBed;
+  let service: PersonService;
+  let httpMock: HttpTestingController;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ PersonListComponent ],
+      imports: [
+        TestingModule,
+      ],
+      providers: [{
+        provide: ActivatedRoute,
+        useValue: {
+          queryParamMap: new Observable(subscriber => {
+            subscriber.next({
+              get: (field: string) => {
+                switch(field) {
+                  case 'page': return '-5';
+                  case 'size': return '-2';
+                  case 'sortBy': return 'invalidsort';
+                  case 'desc': return 'true';
+                }
+              }
+            })
+          })
+        }
+      }]
+    })
+    .compileComponents();
+    
+  }));
+
+  beforeEach(() => {
+    injector = getTestBed();
+    service = injector.get(PersonService);
+    httpMock = injector.get(HttpTestingController);
+
+    fixture = TestBed.createComponent(PersonListComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should validate queryParams', () => {
+    expect(component.queryParams.page).toBe(0);
+    expect(component.queryParams.size).toBeGreaterThan(0);
+    expect(component.queryParams.sortBy).toBeTruthy(); 
+    expect(component.queryParams.desc).toBe(true);
+  });
+});
+
+
+describe('PersonListComponent with valid query parameters', () => {
+  let component: PersonListComponent;
+  let fixture: ComponentFixture<PersonListComponent>;
+  let injector: TestBed;
+  let service: PersonService;
+  let httpMock: HttpTestingController;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ PersonListComponent ],
+      imports: [
+        TestingModule,
+      ],
+      providers: [{
+        provide: ActivatedRoute,
+        useValue: {
+          queryParamMap: new Observable(subscriber => {
+            subscriber.next({
+              get: (field: string) => {
+                switch(field) {
+                  case 'page': return '1';
+                  case 'size': return '15';
+                  case 'sortBy': return 'name';
+                  case 'desc': return 'true';
+                }
+              }
+            })
+          })
+        }
+      }]
+    })
+    .compileComponents();
+    
+  }));
+
+  beforeEach(() => {
+    injector = getTestBed();
+    service = injector.get(PersonService);
+    httpMock = injector.get(HttpTestingController);
+
+    fixture = TestBed.createComponent(PersonListComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should have correct queryParams and call listPeople', () => {
+    expect(component.queryParams.page).toBe(1);
+    expect(component.queryParams.size).toBeGreaterThan(0);
+    expect(component.queryParams.sortBy).toBeTruthy(); 
+    expect(component.queryParams.desc).toBe(true);
+    
+    spyOn(service, 'listPeople');
+    component.ngOnInit();
+    expect(service.listPeople).toHaveBeenCalledWith(jasmine.any(Function), 
+      jasmine.any(Function), component.queryParams)
+  });
 });
