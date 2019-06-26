@@ -93,26 +93,15 @@
     <button [routerLink]="['new']" style="font-size: 115%">Add New Customer</button>
     <br><br>
     <span *ngIf="peoplePage && people.length > 0" style="font-size: 1.1em;">
-        
-        <div style="display:inline-block">
-          Page {{pageNumber}} of {{totalPages}} (Entries {{startElement}} 
-          through {{endElement}} of {{totalElements}})
-          <br>
-          <button *ngIf="!first" (click)="previousPage()"
-            style="float:left; margin-left:1.25em;">
-            Previous Page
-          </button>
-          <button *ngIf="!last" (click)="nextPage()"
-            style="float:right; margin-right:1.25em;">
-            Next Page
-          </button>
-          <br><br>
-          <span *ngIf="!(first && last)">
-              Go to page <input [(ngModel)]="pageToGoTo" 
-              type="number" style="width:3em;">
-              &nbsp;<button (click)="goToPage()">Go</button>
-          </span>
-        </div>
+      <app-paginator #paginator
+        [pageNumber]="pageNumber"
+        [totalPages]="totalPages"
+        [startElement]="startElement"
+        [endElement]="endElement"
+        [totalElements]="totalElements"
+        [first]="first"
+        [last]="last"
+        (pageChange)="goToPage($event)">
+      </app-paginator>
     </span>
   </div>
-

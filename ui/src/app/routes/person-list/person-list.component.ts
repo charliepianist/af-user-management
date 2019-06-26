@@ -1,9 +1,10 @@
-import { Component, OnInit, enableProdMode } from '@angular/core';
+import { Component, OnInit, enableProdMode, ViewChild } from '@angular/core';
 import {PersonService} from "../../services/person.service";
 import {Page} from "../../model/page";
 import {Person} from "../../model/person";
 import { Router, ActivatedRoute } from '@angular/router';
 import { isNumber } from 'util';
+import { PaginatorComponent } from 'src/app/paginator/paginator.component';
 
 @Component({
   selector: 'app-person-list',
@@ -14,10 +15,11 @@ export class PersonListComponent implements OnInit {
 
   constructor(private personService:PersonService, private router: Router, private route: ActivatedRoute) { }
 
-  peoplePage:Page<Person>
-  people:Person[]
+  @ViewChild('paginator') paginator: PaginatorComponent;
+  peoplePage:Page<Person>;
+  people:Person[];
   errorMsg: string;
-  pageNumber: number;
+  pageNumber: number; // indexed at 1 (spring indexes at 0)
   totalPages: number;
   startElement: number;
   endElement: number;
@@ -91,25 +93,14 @@ export class PersonListComponent implements OnInit {
     this.ngOnInit();
   }
 
-  nextPage() {
-    this.queryParams.page++;
-    this.refresh();
-  }
-
-  previousPage() {
-    this.queryParams.page--;
-    this.refresh();
-  }
-
   toFirstPage() {
     this.router.navigate(['/people']).then(() => {
       this.reinitialize();
     });
   }
 
-  goToPage() {
-    this.pageToGoTo = Math.min(this.pageToGoTo, this.totalPages);
-    this.queryParams.page = this.pageToGoTo - 1;
+  goToPage(num: number) {
+    this.queryParams.page = num;
     this.refresh();
   }
 
