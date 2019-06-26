@@ -8,6 +8,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { PersonDetailsComponent } from './routes/person-details/person-details.component';
 import { HttpClientModule } from "@angular/common/http";
 import { PersonFormComponent } from './routes/person-form/person-form.component';
+import { PaginatorComponent } from './paginator/paginator.component';
 
 
 const appRoutes: Routes = [
@@ -29,6 +30,7 @@ const appRoutes: Routes = [
     PersonListComponent,
     PersonDetailsComponent,
     PersonFormComponent,
+    PaginatorComponent,
   ],
   imports: [
     BrowserModule,

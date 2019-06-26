@@ -9,8 +9,8 @@ import { Person } from 'src/app/model/person';
 import { Pageable } from 'src/app/model/pageable';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { FormsModule } from '@angular/forms';
 import { HttpRequest } from '@angular/common/http';
+import { PaginatorComponent } from 'src/app/paginator/paginator.component';
 
 describe('PersonListComponent without Query parameters', () => {
   let component: PersonListComponent;
@@ -21,7 +21,7 @@ describe('PersonListComponent without Query parameters', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PersonListComponent ],
+      declarations: [ PersonListComponent, PaginatorComponent ],
       imports: [
         TestingModule,
       ],
@@ -129,7 +129,7 @@ describe('PersonListComponent with invalid query parameters', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PersonListComponent ],
+      declarations: [ PersonListComponent, PaginatorComponent ],
       imports: [
         TestingModule,
       ],
@@ -183,7 +183,7 @@ describe('PersonListComponent with valid query parameters', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PersonListComponent ],
+      declarations: [ PersonListComponent, PaginatorComponent ],
       imports: [
         TestingModule,
       ],
