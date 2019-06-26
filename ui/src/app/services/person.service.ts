@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import {Page} from "../model/page";
-import {Person} from "../model/person";
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
+import { Person } from '../model/person';
+import { Page } from '../model/page';
 
 @Injectable({
   providedIn: 'root'
