@@ -10,3 +10,50 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 input[type="number"] {
     -moz-appearance: textfield;
 }
+
+tr {
+    height: 2em;
+    font-size: 1.2em;
+}
+
+.list-component td, .list-component th {
+    text-align: center;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+.details-component td, .details-component th {
+    text-align: center;
+    padding: 0.25em;
+    font-size: 20px;
+}
+
+.details-component button {
+    font-size: 20px;
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+}
+
+button.new-entry {
+    font-size: 115%;
+}
+
+.link {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.row-entry:hover, th:hover {
+    background-color: lightskyblue;
+    cursor:pointer;
+}
+.row-option {
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+}
+.row-options {
+    cursor:default;
+}
+.full-width-centered {
+    width: 100%;
+    text-align: center;
+}

@@ -1,10 +1,9 @@
 import { Component, OnInit, enableProdMode, ViewChild } from '@angular/core';
-import {PersonService} from "../../services/person.service";
-import {Page} from "../../model/page";
-import {Person} from "../../model/person";
 import { Router, ActivatedRoute } from '@angular/router';
-import { isNumber } from 'util';
 import { PaginatorComponent } from 'src/app/paginator/paginator.component';
+import { Page } from 'src/app/model/page';
+import { Person } from 'src/app/model/person';
+import { PersonService } from 'src/app/services/person.service';
 
 @Component({
   selector: 'app-person-list',

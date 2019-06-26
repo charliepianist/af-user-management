@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PersonService } from 'src/app/services/person.service';
 import { Person } from 'src/app/model/person';
 import { HttpErrorResponse } from '@angular/common/http';
-import { NonNullAssert } from '@angular/compiler';
 
 @Component({
   selector: 'app-person-form',
