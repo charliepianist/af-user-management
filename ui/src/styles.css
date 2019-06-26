@@ -10,3 +10,45 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 input[type="number"] {
     -moz-appearance: textfield;
 }
+
+.list td, .list th {
+    text-align: center;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+.details td, .details th {
+    text-align: center;
+    padding: 0.25em;
+    font-size: 20px;
+}
+
+tr {
+    height: 2em;
+    font-size: 1.2em;
+}
+
+.details button {
+    font-size: 20px;
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+}
+.link {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.row-entry:hover, th:hover {
+    background-color: lightskyblue;
+    cursor:pointer;
+}
+.row-option {
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+}
+.row-options {
+    cursor:default;
+}
+.full-width-centered {
+    width: 100%;
+    text-align: center;
+}

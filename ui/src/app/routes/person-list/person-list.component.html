@@ -1,3 +1,4 @@
+<div class="list">
   <table border="1" class="full-width-centered">
     <thead>
       <tr>
@@ -34,7 +35,7 @@
     </thead>
     <ng-container *ngIf="peoplePage; else loading">
       <ng-container *ngIf="people.length > 0; else noPeople">
-        <tr *ngFor="let person of people" [routerLink]="[person.getId()]" class="person-entry">
+        <tr *ngFor="let person of people" [routerLink]="[person.getId()]" class="row-entry">
           <td>
             {{person.getId()}}
           </td>
@@ -48,16 +49,16 @@
             {{person.getPassword()}}
           </td>
           <!-- Details, Update, Delete-->
-          <td (click)="$event.stopPropagation()" class="person-options"> 
-            <span [routerLink]="[person.getId()]" class="link person-option">Details</span>
-            <span [routerLink]="[person.getId(), 'update']" class="link person-option">Update</span>
+          <td (click)="$event.stopPropagation()" class="row-options"> 
+            <span [routerLink]="[person.getId()]" class="link row-option">Details</span>
+            <span [routerLink]="[person.getId(), 'update']" class="link row-option">Update</span>
             <ng-template #deleteLink>
-              <span (click)="toDelete[person.getId()] = true" class="link person-option">Delete</span>
+              <span (click)="toDelete[person.getId()] = true" class="link row-option">Delete</span>
             </ng-template>
-            <span *ngIf="toDelete[person.getId()]; else deleteLink" class="person-option" style="font-size:90%;">
+            <span *ngIf="toDelete[person.getId()]; else deleteLink" class="row-option" style="font-size:90%;">
               Are you sure?
-              <span (click)="deletePerson(person.getId())" class="link person-option">Yes</span>
-              <span (click)="toDelete[person.getId()]=false" class="link person-option">No</span>
+              <span (click)="deletePerson(person.getId())" class="link row-option">Yes</span>
+              <span (click)="toDelete[person.getId()]=false" class="link row-option">No</span>
             </span>
           </td>
         </tr>
@@ -105,3 +106,4 @@
       </app-paginator>
     </span>
   </div>
+</div>
