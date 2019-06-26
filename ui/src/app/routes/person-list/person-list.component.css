@@ -13,11 +13,9 @@ tr {
     text-decoration: underline;
     cursor: pointer;
 }
-.person-entry {
-    cursor:pointer;
-}
-.person-entry:hover {
+.person-entry:hover, th:hover {
     background-color: lightskyblue;
+    cursor:pointer;
 }
 .person-option {
     margin-left: 0.25em;

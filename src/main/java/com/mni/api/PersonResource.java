@@ -10,6 +10,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +52,12 @@ public class PersonResource {
         person.setUserId(personDto.getUserId());
         person.setPassword(personDto.getPassword());
         return person;
+    }
+
+    // Returns whether a String is a field of Person
+    private boolean isPersonField(String field) {
+        return field.equals("id") || field.equals("name") || field.equals("userId") ||
+                field.equals("password");
     }
 
     // Checks Name, UserID, and Password lengths
@@ -108,9 +115,21 @@ public class PersonResource {
     }
 
     @GetMapping
-    public Page<PersonDto> listPeople(
-            @PageableDefault Pageable pageRequest
+    public Page<PersonDto> listPeople(@RequestParam(value="page", defaultValue="0") int page,
+                                      @RequestParam(value="size", defaultValue="20") int size,
+                                      @RequestParam(value="sortBy", defaultValue="id") String sortBy,
+                                      @RequestParam(value="desc", defaultValue="false") boolean desc
     ){
+        if(page < 0) page = 0;
+        if(size < 1) size = 1;
+        if(size > 100) size = 100;
+        if(!isPersonField(sortBy)) sortBy = "id";
+
+        Sort.Direction direction = desc ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort.Order order = new Sort.Order(direction, sortBy);
+        if(!order.equals("password")) order = order.ignoreCase();
+        Sort sort = Sort.by(order);
+        Pageable pageRequest = PageRequest.of(page, size, sort);
         return personRepository
                 .findAll(pageRequest)
                 .map(this::translatePersonToPersonDto);
