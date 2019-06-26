@@ -2,12 +2,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { PersonListComponent } from './routes/person-list/person-list.component';
+import { PersonListComponent } from './routes/people/person-list/person-list.component';
 import { FormsModule } from "@angular/forms";
 import { RouterModule, Routes } from "@angular/router";
-import { PersonDetailsComponent } from './routes/person-details/person-details.component';
+import { PersonDetailsComponent } from './routes/people/person-details/person-details.component';
 import { HttpClientModule } from "@angular/common/http";
-import { PersonFormComponent } from './routes/person-form/person-form.component';
+import { PersonFormComponent } from './routes/people/person-form/person-form.component';
 import { PaginatorComponent } from './paginator/paginator.component';
 
 
