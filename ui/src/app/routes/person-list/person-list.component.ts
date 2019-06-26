@@ -53,6 +53,8 @@ export class PersonListComponent implements OnInit {
 
       if(!this.isPersonField(this.queryParams.sortBy)) 
         this.queryParams.sortBy = 'id';
+      
+      this.pageToGoTo = this.queryParams.page + 1;
     });
 
     this.personService.listPeople(
@@ -106,6 +108,7 @@ export class PersonListComponent implements OnInit {
   }
 
   goToPage() {
+    this.pageToGoTo = Math.min(this.pageToGoTo, this.totalPages);
     this.queryParams.page = this.pageToGoTo - 1;
     this.refresh();
   }
