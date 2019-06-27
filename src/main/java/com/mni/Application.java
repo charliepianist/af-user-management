@@ -1,7 +1,7 @@
 package com.mni;
 
-import com.mni.model.Person;
-import com.mni.model.PersonRepository;
+import com.mni.model.Customer;
+import com.mni.model.CustomerRepository;
 import com.mni.model.Product;
 import com.mni.model.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import java.io.File;
 public class Application {
 
     @Autowired
-    PersonRepository personRepository;
+    CustomerRepository customerRepository;
     @Autowired
     ProductRepository productRepository;
 
@@ -30,10 +30,10 @@ public class Application {
     @Bean
     CommandLineRunner startup(){
         return strings -> {
-            personRepository.save(new Person(null, "ACME", "a_user", "a%Fe23_fERF9dzV"));
-            personRepository.save(new Person(null, "Bank of America", "bofa", "b%23fi_3Fcfv)[e"));
-            personRepository.save(new Person(null, "Comcast", "com_user", "c54ENj!ogE4Me4!"));
-            personRepository.save(new Person(null, "Dell", "dell_userID", "d9@dl)p2kNM5J!d"));
+            customerRepository.save(new Customer(null, "ACME", "a_user", "a%Fe23_fERF9dzV"));
+            customerRepository.save(new Customer(null, "Bank of America", "bofa", "b%23fi_3Fcfv)[e"));
+            customerRepository.save(new Customer(null, "Comcast", "com_user", "c54ENj!ogE4Me4!"));
+            customerRepository.save(new Customer(null, "Dell", "dell_userID", "d9@dl)p2kNM5J!d"));
             productRepository.save(new Product(null, "Department of Energy Data"));
             productRepository.save(new Product(null, "US Data"));
             productRepository.save(new Product(null, "EU Data"));
