@@ -1,50 +1,50 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import { Person } from '../model/person';
+import { Customer } from '../model/customer';
 import { Page } from '../model/page';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PersonService {
+export class CustomerService {
 
-  static readonly BASE_URL = "/api/people"
+  static readonly BASE_URL = "/api/customers"
 
   constructor(private httpClient:HttpClient) { }
 
 
-  listPeople(successFunc: (p: Page<Person>) => any, 
+  listCustomers(successFunc: (p: Page<Customer>) => any, 
               errorFunc: (e: HttpErrorResponse) => any,
               queryParams?: any) {
-    this.httpClient.get<Page<Person>>(PersonService.BASE_URL, {
+    this.httpClient.get<Page<Customer>>(CustomerService.BASE_URL, {
       params: queryParams
     }).subscribe(
       successFunc, errorFunc);
   }
 
-  getPerson(id: string, successFunc: (p: Person) => any,
+  getCustomer(id: string, successFunc: (p: Customer) => any,
             errorFunc: (e: HttpErrorResponse) => any) {
-    this.httpClient.get<Person>(PersonService.BASE_URL + '/' + id).subscribe(
+    this.httpClient.get<Customer>(CustomerService.BASE_URL + '/' + id).subscribe(
       successFunc, errorFunc);
   }
 
-  deletePerson(id: number, successFunc: () => any, 
+  deleteCustomer(id: number, successFunc: () => any, 
                 errorFunc: (e: HttpErrorResponse) => any = e => { // onError
                   console.log(e);
                   alert('Delete failed, see console for error.')
                 }) {
-    this.httpClient.delete(PersonService.BASE_URL + '/' + id).subscribe(
+    this.httpClient.delete(CustomerService.BASE_URL + '/' + id).subscribe(
       successFunc, errorFunc);
   }
 
-  createPerson(person: Person, successFunc: (...args: any[]) => any,
+  createCustomer(customer: Customer, successFunc: (...args: any[]) => any,
                 errorFunc: (e: HttpErrorResponse) => any) {
-    this.httpClient.post(PersonService.BASE_URL, person).subscribe(
+    this.httpClient.post(CustomerService.BASE_URL, customer).subscribe(
       successFunc, errorFunc);
   }
-  updatePerson(person: Person, successFunc: (...args: any[]) => any,
+  updateCustomer(customer: Customer, successFunc: (...args: any[]) => any,
       errorFunc: (e: HttpErrorResponse) => any) {
-    this.httpClient.put(PersonService.BASE_URL + '/' + person.getId(), person).subscribe(
+    this.httpClient.put(CustomerService.BASE_URL + '/' + customer.getId(), customer).subscribe(
     successFunc, errorFunc);
   }
 

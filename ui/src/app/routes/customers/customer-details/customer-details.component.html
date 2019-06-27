@@ -1,53 +1,53 @@
 <div class="details-component">
     <div align="center">
         <br>
-        <button class="details-button" [routerLink]="['/people']">
+        <button class="details-button" [routerLink]="['/customers']">
             &lt; Back
         </button>
     </div><br>
     <h3 *ngIf="error" align="center">
-        Could not get person, see console for details:<br>
+        Could not get customer, see console for details:<br>
         {{error.message}}
     </h3>
 
-    <table class="container" border="1" *ngIf="person">
+    <table class="container" border="1" *ngIf="customer">
         <thead>
             <tr>
-                <td colspan="100"><b>{{person.getName()}} Details</b></td>
+                <td colspan="100"><b>{{customer.getName()}} Details</b></td>
             </tr>
             <tr>
                 <th style="width:35%">Field</th>
                 <th style="width:65%">Value</th>
             </tr>
         </thead>
-        <ng-container *ngIf="person">
+        <ng-container *ngIf="customer">
             <tr>
                 <td>ID</td>
-                <td>{{person.getId()}}</td>
+                <td>{{customer.getId()}}</td>
             </tr>
             <tr>
                 <td>Name</td>
-                <td>{{person.getName()}}</td>
+                <td>{{customer.getName()}}</td>
             </tr>
             <tr>
                 <td>User ID</td>
-                <td>{{person.getUserId()}}</td>
+                <td>{{customer.getUserId()}}</td>
             </tr>
             <tr>
                 <td>Password</td>
-                <td>{{person.getPassword()}}</td>
+                <td>{{customer.getPassword()}}</td>
             </tr>
         </ng-container>
     </table>
     <br>
-    <div *ngIf="person" align="center">
+    <div *ngIf="customer" align="center">
         <button [routerLink]="['update']">Update</button>
         <ng-template #deleteButton>
             <button (click)="toDelete = true">Delete</button>
         </ng-template>
         <span *ngIf="toDelete; else deleteButton">
             Are you sure?
-            <button (click)="deletePerson()">Yes</button>
+            <button (click)="deleteCustomer()">Yes</button>
             <button (click)="toDelete=false">No</button>
         </span>
     </div>

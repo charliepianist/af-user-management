@@ -9,7 +9,7 @@ import javax.persistence.Id;
  * Created by will.schick on 6/17/19.
  */
 @Entity
-public class Person {
+public class Customer {
 
     public static final int MAX_NAME_LENGTH = 100;
     public static final int MAX_USERID_LENGTH = 20;
@@ -26,9 +26,9 @@ public class Person {
     @Column(length=MAX_PASSWORD_LENGTH)
     private String password;
 
-    public Person(){}
+    public Customer(){}
 
-    public Person(Long id, String name, String userId, String password) {
+    public Customer(Long id, String name, String userId, String password) {
         this.id = id;
         this.name = name;
         this.userId = userId;

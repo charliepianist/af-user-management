@@ -2,21 +2,21 @@ import { Component, OnInit, enableProdMode, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PaginatorComponent } from 'src/app/paginator/paginator.component';
 import { Page } from 'src/app/model/page';
-import { Person } from 'src/app/model/person';
-import { PersonService } from 'src/app/services/person.service';
+import { Customer } from 'src/app/model/customer';
+import { CustomerService } from 'src/app/services/customer.service';
 
 @Component({
-  selector: 'app-person-list',
-  templateUrl: './person-list.component.html',
-  styleUrls: ['./person-list.component.css']
+  selector: 'app-customer-list',
+  templateUrl: './customer-list.component.html',
+  styleUrls: ['./customer-list.component.css']
 })
-export class PersonListComponent implements OnInit {
+export class CustomerListComponent implements OnInit {
 
-  constructor(private personService:PersonService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private customerService:CustomerService, private router: Router, private route: ActivatedRoute) { }
 
   @ViewChild('paginator') paginator: PaginatorComponent;
-  peoplePage:Page<Person>;
-  people:Person[];
+  customerPage:Page<Customer>;
+  customers:Customer[];
   errorMsg: string;
   toDelete: number[];
   queryParams: {
@@ -44,16 +44,16 @@ export class PersonListComponent implements OnInit {
         this.queryParams.size = 20;
       if(this.queryParams.size > 100) this.queryParams.size = 100;
 
-      if(!this.isPersonField(this.queryParams.sortBy)) 
+      if(!this.isCustomerField(this.queryParams.sortBy)) 
         this.queryParams.sortBy = 'id';
     });
 
-    this.personService.listPeople(
+    this.customerService.listCustomers(
       p => { 
-        // success, returned Page<Person> object
-        this.peoplePage = p;
-        this.people = p.content.map(
-          person => Object.assign(new Person(), person));
+        // success, returned Page<Customer> object
+        this.customerPage = p;
+        this.customers = p.content.map(
+          customer => Object.assign(new Customer(), customer));
       },
       //onError
       e => {console.log(e); this.errorMsg = e.message;},
@@ -62,7 +62,7 @@ export class PersonListComponent implements OnInit {
 
   // Reinitalize component AND parameters
   refresh() {
-    this.router.navigate(['/people'], {
+    this.router.navigate(['/customers'], {
       queryParams: this.queryParams
     }).then(() => {
       this.reinitialize();
@@ -75,12 +75,12 @@ export class PersonListComponent implements OnInit {
   }
 
   toFirstPage() {
-    this.router.navigate(['/people']).then(() => {
+    this.router.navigate(['/customers']).then(() => {
       this.reinitialize();
     });
   }
 
-  goToPage(num: number) {
+  goToPage(num: number) { // input number indexed at 0 (same as Spring)
     this.queryParams.page = num;
     this.refresh();
   }
@@ -106,12 +106,12 @@ export class PersonListComponent implements OnInit {
     this.refresh();
   }
 
-  deletePerson(id: number) {
-    this.personService.deletePerson(id,
+  deleteCustomer(id: number) {
+    this.customerService.deleteCustomer(id,
       () => { this.ngOnInit() }); //reload component on success 
   }
 
-  isPersonField(str: string): boolean {
+  isCustomerField(str: string): boolean {
     if(str === 'id') return true;
     if(str === 'name') return true;
     if(str === 'userId') return true;

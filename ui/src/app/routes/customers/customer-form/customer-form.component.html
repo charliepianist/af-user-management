@@ -1,10 +1,10 @@
 <div class="container">
-    <button style="font-size: 18px;" [routerLink]="['/people']">&lt; Back</button>
+    <button style="font-size: 18px;" [routerLink]="['/customers']">&lt; Back</button>
     <h4 *ngIf="errorMsg">
       An Error Occurred: {{errorMsg}}<br>
       See Console for Details.
     </h4>
-    <h1>{{origName ? 'Update ' + origName : 'Create New Person'}}</h1>
+    <h1>{{origName ? 'Update ' + origName : 'Create New Customer'}}</h1>
     <form autocomplete="off">
       <div class="form-group">
         <label for="name">Name (up to 100 characters)</label>

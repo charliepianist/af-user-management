@@ -1,20 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PersonService } from 'src/app/services/person.service';
-import { Person } from 'src/app/model/person';
+import { CustomerService } from 'src/app/services/customer.service';
+import { Customer } from 'src/app/model/customer';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-person-form',
-  templateUrl: './person-form.component.html',
-  styleUrls: ['./person-form.component.css']
+  selector: 'app-customer-form',
+  templateUrl: './customer-form.component.html',
+  styleUrls: ['./customer-form.component.css']
 })
-export class PersonFormComponent implements OnInit {
+export class CustomerFormComponent implements OnInit {
 
   id: string; // null if invalid ID or no ID passed in
   idNum: number = null; 
   errorMsg: string = null;
-  person: Person = new Person();
+  customer: Customer = new Customer();
   origName: string = null;
   name: string = null;
   userId: string = null;
@@ -23,7 +23,7 @@ export class PersonFormComponent implements OnInit {
   invalidSubmit: boolean = false; // when submit clicked with invalid input
   submissionErrorMsg: string = null;
 
-  constructor(private router: Router, private route: ActivatedRoute, private personService: PersonService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private customerService: CustomerService) {}
 
   ngOnInit() {
     let errorFunc = (e: HttpErrorResponse) => {
@@ -34,14 +34,14 @@ export class PersonFormComponent implements OnInit {
     this.route.paramMap.subscribe(
       params => {
         this.id = params.get('id');
-        if(this.id) this.personService.getPerson(this.id, 
+        if(this.id) this.customerService.getCustomer(this.id, 
           p => {
-            this.person = Object.assign(new Person(), p);
-            this.origName = this.person.getName();
-            this.idNum = this.person.getId();
+            this.customer = Object.assign(new Customer(), p);
+            this.origName = this.customer.getName();
+            this.idNum = this.customer.getId();
             this.name = this.origName;
-            this.userId = this.person.getUserId();
-            this.password = this.person.getPassword();
+            this.userId = this.customer.getUserId();
+            this.password = this.customer.getPassword();
           },
           e => { this.id = null; errorFunc(e);});
       },
@@ -73,10 +73,10 @@ export class PersonFormComponent implements OnInit {
     if(this.validateName() || this.validateUserId() || this.validatePassword()) {
       this.invalidSubmit = true;
     }else {
-      let newPerson = new Person(this.idNum, this.name, this.userId, this.password);
-      let successFunc = (p: Person) => {
-        this.router.navigate(['/people', 
-                              Object.assign(new Person(), p).getId()]);
+      let newCustomer = new Customer(this.idNum, this.name, this.userId, this.password);
+      let successFunc = (p: Customer) => {
+        this.router.navigate(['/customers', 
+                              Object.assign(new Customer(), p).getId()]);
       };
       let errorFunc = (e: HttpErrorResponse) => {
         this.submissionErrorMsg = e.error.status + ' ' + 
@@ -86,11 +86,11 @@ export class PersonFormComponent implements OnInit {
       }
       if(this.id) {
         // Updating an already existing user
-        this.personService.updatePerson(newPerson, successFunc, 
+        this.customerService.updateCustomer(newCustomer, successFunc, 
           errorFunc);
       }else {
         // Creating a new user
-        this.personService.createPerson(newPerson, successFunc,
+        this.customerService.createCustomer(newCustomer, successFunc,
           errorFunc);
       }
     }

@@ -8,7 +8,7 @@ import { Page } from '../model/page';
 })
 export class PaginatorComponent implements OnInit, OnChanges {
   @Input() page: Page<any>;
-  pageNumber: number; // indexed at 1; spring indexes at 0
+  pageNumber: number; // indexed at 1; Spring indexes at 0
   totalPages: number;
   startElement: number;
   endElement: number;

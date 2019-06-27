@@ -1,24 +1,24 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PersonFormComponent } from './person-form.component';
+import { CustomerFormComponent } from './customer-form.component';
 import { TestingModule } from 'src/app/test/TestingModule';
 import { FormsModule } from '@angular/forms';
 import { HttpTestingController } from '@angular/common/http/testing';
-import { PersonService } from 'src/app/services/person.service';
+import { CustomerService } from 'src/app/services/customer.service';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 
 
 
-describe('Creating new Person', () => {
-  let component: PersonFormComponent;
-  let fixture: ComponentFixture<PersonFormComponent>;
-  let service: PersonService;
+describe('Creating new Customer', () => {
+  let component: CustomerFormComponent;
+  let fixture: ComponentFixture<CustomerFormComponent>;
+  let service: CustomerService;
   let httpMock: HttpTestingController;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PersonFormComponent ],
+      declarations: [ CustomerFormComponent ],
       imports: [
         TestingModule,
         FormsModule
@@ -28,10 +28,10 @@ describe('Creating new Person', () => {
   }));
 
   beforeEach(() => {
-    service = TestBed.get(PersonService);
+    service = TestBed.get(CustomerService);
     httpMock = TestBed.get(HttpTestingController);
 
-    fixture = TestBed.createComponent(PersonFormComponent);
+    fixture = TestBed.createComponent(CustomerFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -52,7 +52,7 @@ describe('Creating new Person', () => {
     
     expect(component.validateName).toHaveBeenCalled();
     expect(component.invalidSubmit).toBeTruthy();
-    httpMock.expectNone(`${PersonService.BASE_URL}`);
+    httpMock.expectNone(`${CustomerService.BASE_URL}`);
   })
 
   it('should validate userId, no creation if invalid', () => {
@@ -63,7 +63,7 @@ describe('Creating new Person', () => {
     
     expect(component.validateUserId).toHaveBeenCalled();
     expect(component.invalidSubmit).toBeTruthy();
-    httpMock.expectNone(`${PersonService.BASE_URL}`);
+    httpMock.expectNone(`${CustomerService.BASE_URL}`);
   })
 
   it('should validate password, no creation if invalid', () => {
@@ -74,32 +74,32 @@ describe('Creating new Person', () => {
     
     expect(component.validatePassword).toHaveBeenCalled();
     expect(component.invalidSubmit).toBeTruthy();
-    httpMock.expectNone(`${PersonService.BASE_URL}`);
+    httpMock.expectNone(`${CustomerService.BASE_URL}`);
   })
 
-  it('should call personService.createPerson() for valid inputs', () => {
+  it('should call customerService.createCustomer() for valid inputs', () => {
     spyOn(component, 'validateName').and.returnValue(null);
     spyOn(component, 'validateUserId').and.returnValue(null);
     spyOn(component, 'validatePassword').and.returnValue(null);
-    spyOn(service, 'createPerson');
+    spyOn(service, 'createCustomer');
     component.submitButton();
 
     expect(component.validateName).toHaveBeenCalled();
     expect(component.validateUserId).toHaveBeenCalled();
     expect(component.validatePassword).toHaveBeenCalled();
-    expect(service.createPerson).toHaveBeenCalled();
+    expect(service.createCustomer).toHaveBeenCalled();
   })
 });
 
-describe('Updating Person', () => {
-  let component: PersonFormComponent;
-  let fixture: ComponentFixture<PersonFormComponent>;
-  let service: PersonService;
+describe('Updating Customer', () => {
+  let component: CustomerFormComponent;
+  let fixture: ComponentFixture<CustomerFormComponent>;
+  let service: CustomerService;
   let httpMock: HttpTestingController;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PersonFormComponent ],
+      declarations: [ CustomerFormComponent ],
       imports: [
         TestingModule
       ],
@@ -120,10 +120,10 @@ describe('Updating Person', () => {
   }));
 
   beforeEach(() => {
-    service = TestBed.get(PersonService);
+    service = TestBed.get(CustomerService);
     httpMock = TestBed.get(HttpTestingController);
 
-    fixture = TestBed.createComponent(PersonFormComponent);
+    fixture = TestBed.createComponent(CustomerFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -144,7 +144,7 @@ describe('Updating Person', () => {
     
     expect(component.validateName).toHaveBeenCalled();
     expect(component.invalidSubmit).toBeTruthy();
-    httpMock.expectNone(`${PersonService.BASE_URL}`);
+    httpMock.expectNone(`${CustomerService.BASE_URL}`);
   })
 
   it('should validate userId, no creation if invalid', () => {
@@ -155,7 +155,7 @@ describe('Updating Person', () => {
     
     expect(component.validateUserId).toHaveBeenCalled();
     expect(component.invalidSubmit).toBeTruthy();
-    httpMock.expectNone(`${PersonService.BASE_URL}`);
+    httpMock.expectNone(`${CustomerService.BASE_URL}`);
   })
 
   it('should validate password, no creation if invalid', () => {
@@ -166,19 +166,19 @@ describe('Updating Person', () => {
     
     expect(component.validatePassword).toHaveBeenCalled();
     expect(component.invalidSubmit).toBeTruthy();
-    httpMock.expectNone(`${PersonService.BASE_URL}`);
+    httpMock.expectNone(`${CustomerService.BASE_URL}`);
   })
 
-  it('should call personService.updatePerson() for valid inputs', () => {
+  it('should call customerService.updateCustomer() for valid inputs', () => {
     spyOn(component, 'validateName').and.returnValue(null);
     spyOn(component, 'validateUserId').and.returnValue(null);
     spyOn(component, 'validatePassword').and.returnValue(null);
-    spyOn(service, 'updatePerson');
+    spyOn(service, 'updateCustomer');
     component.submitButton();
 
     expect(component.validateName).toHaveBeenCalled();
     expect(component.validateUserId).toHaveBeenCalled();
     expect(component.validatePassword).toHaveBeenCalled();
-    expect(service.updatePerson).toHaveBeenCalled();
+    expect(service.updateCustomer).toHaveBeenCalled();
   })
 });

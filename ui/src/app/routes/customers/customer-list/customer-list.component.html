@@ -1,5 +1,5 @@
 <div class="list-component">
-  <table border="1" class="full-width-centered">
+  <table border="1" class="container">
     <thead>
       <tr>
         <th style="width:7%" (click)="sort('id')">
@@ -33,42 +33,42 @@
         <th style="width:25%; cursor:default;">Actions</th>
       </tr>
     </thead>
-    <ng-container *ngIf="peoplePage; else loading">
-      <ng-container *ngIf="people.length > 0; else noPeople">
-        <tr *ngFor="let person of people" [routerLink]="[person.getId()]" class="row-entry">
+    <ng-container *ngIf="customerPage; else loading">
+      <ng-container *ngIf="customers.length > 0; else noCustomers">
+        <tr *ngFor="let customer of customers" [routerLink]="[customer.getId()]" class="row-entry">
           <td>
-            {{person.getId()}}
+            {{customer.getId()}}
           </td>
           <td>
-            {{person.getName()}}
+            {{customer.getName()}}
           </td>
           <td>
-            {{person.getUserId()}}
+            {{customer.getUserId()}}
           </td>
           <td>
-            {{person.getPassword()}}
+            {{customer.getPassword()}}
           </td>
           <!-- Details, Update, Delete-->
           <td (click)="$event.stopPropagation()" class="row-options"> 
-            <span [routerLink]="[person.getId()]" class="link row-option">Details</span>
-            <span [routerLink]="[person.getId(), 'update']" class="link row-option">Update</span>
+            <span [routerLink]="[customer.getId()]" class="link row-option">Details</span>
+            <span [routerLink]="[customer.getId(), 'update']" class="link row-option">Update</span>
             <ng-template #deleteLink>
-              <span (click)="toDelete[person.getId()] = true" class="link row-option">Delete</span>
+              <span (click)="toDelete[customer.getId()] = true" class="link row-option">Delete</span>
             </ng-template>
-            <span *ngIf="toDelete[person.getId()]; else deleteLink" class="row-option" style="font-size:90%;">
+            <span *ngIf="toDelete[customer.getId()]; else deleteLink" class="row-option" style="font-size:90%;">
               Are you sure?
-              <span (click)="deletePerson(person.getId())" class="link row-option">Yes</span>
-              <span (click)="toDelete[person.getId()]=false" class="link row-option">No</span>
+              <span (click)="deleteCustomer(customer.getId())" class="link row-option">Yes</span>
+              <span (click)="toDelete[customer.getId()]=false" class="link row-option">No</span>
             </span>
           </td>
         </tr>
       </ng-container>
     </ng-container>
-    <ng-template #noPeople>
+    <ng-template #noCustomers>
       <tr class="full-width-centered">
         <td colspan=100>
           <b *ngIf="totalElements == 0; else wrongPage">
-            There are currently no people.
+            There are currently no customers.
           </b>
           <ng-template #wrongPage><b>
             This page is empty. 
@@ -80,7 +80,7 @@
     <ng-template #loading>
       <tr class="full-width-centered">
         <td colspan=100>
-          <span *ngIf="error; else loading">
+          <span *ngIf="errorMsg; else loading">
             An error occured, see console for details:<br>
             {{errorMsg}}
           </span>
@@ -93,9 +93,9 @@
   <div class="full-width-centered">
     <button [routerLink]="['new']" class="new-entry">Add New Customer</button>
     <br><br>
-    <span *ngIf="peoplePage && people.length > 0" style="font-size: 1.1em;">
+    <span *ngIf="customerPage && customers.length > 0" style="font-size: 1.1em;">
       <app-paginator #paginator
-        [page]="peoplePage"
+        [page]="customerPage"
         (pageChange)="goToPage($event)">
       </app-paginator>
     </span>
