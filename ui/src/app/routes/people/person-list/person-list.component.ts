@@ -18,11 +18,6 @@ export class PersonListComponent implements OnInit {
   peoplePage:Page<Person>;
   people:Person[];
   errorMsg: string;
-  pageNumber: number; // indexed at 1 (spring indexes at 0)
-  totalPages: number;
-  startElement: number;
-  endElement: number;
-  totalElements: number;
   toDelete: number[];
   queryParams: {
     page: number,
@@ -30,9 +25,6 @@ export class PersonListComponent implements OnInit {
     sortBy: string,
     desc: boolean,
   }
-  first: boolean;
-  last: boolean;
-  pageToGoTo: number;
 
   ngOnInit() {
     this.toDelete = new Array();
@@ -54,22 +46,12 @@ export class PersonListComponent implements OnInit {
 
       if(!this.isPersonField(this.queryParams.sortBy)) 
         this.queryParams.sortBy = 'id';
-      
-      this.pageToGoTo = this.queryParams.page + 1;
     });
 
     this.personService.listPeople(
       p => { 
         // success, returned Page<Person> object
         this.peoplePage = p;
-        this.pageNumber = p.number + 1;
-        this.totalPages = p.totalPages;
-        this.startElement = p.pageable.offset + 1;
-        this.endElement = p.pageable.offset + p.numberOfElements;
-        this.totalElements = p.totalElements;
-        this.first = p.first;
-        this.last = p.last;
-
         this.people = p.content.map(
           person => Object.assign(new Person(), person));
       },

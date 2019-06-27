@@ -1,5 +1,5 @@
-<div class="list-component">
-  <table border="1" class="full-width-centered">
+<div class="list">
+  <table border="1" class="container">
     <thead>
       <tr>
         <th style="width:7%" (click)="sort('id')">
@@ -91,11 +91,11 @@
   </table>
   <br>
   <div class="full-width-centered">
-    <button [routerLink]="['new']" class="new-entry">Add New Customer</button>
+    <button [routerLink]="['new']" style="font-size: 115%">Add New Customer</button>
     <br><br>
     <span *ngIf="peoplePage && people.length > 0" style="font-size: 1.1em;">
       <app-paginator #paginator
-        [page]="peoplePage"
+        [page]="null"
         (pageChange)="goToPage($event)">
       </app-paginator>
     </span>

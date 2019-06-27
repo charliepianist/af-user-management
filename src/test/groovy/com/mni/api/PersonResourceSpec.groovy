@@ -3,13 +3,11 @@ package com.mni.api
 import com.mni.model.Person
 import com.mni.model.PersonRepository
 import org.springframework.data.domain.PageImpl
-import org.springframework.data.domain.PageRequest
-import org.springframework.http.HttpStatus
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.web.server.ResponseStatusException
 import spock.lang.Shared
 import spock.lang.Specification
-
-import javax.xml.ws.Response
 
 /**
  * Created by will.schick on 6/17/19.
@@ -49,7 +47,7 @@ class PersonResourceSpec extends Specification {
         result.getPassword() == "a3lK9n12!_"
     }
 
-    void "getPerson() should return NOT_FOUND when called with an invalid ID" () {
+    void "getPerson() should return null and throw an exception when called with an invalid ID" () {
         when:
         "getPerson() is called with an invalid ID"
         def result = personResource.getPerson(-1)
@@ -61,6 +59,7 @@ class PersonResourceSpec extends Specification {
         and:
         "The result from getPerson() should be null"
         thrown(ResponseStatusException)
+        result == null
     }
 
     void "savePerson() with a new userID should return a new persisted person" () {
@@ -92,29 +91,50 @@ class PersonResourceSpec extends Specification {
                 new Person(1, "Person 1", "person1", "password1"),
                 new Person(2, "Person 2", "person2", "password2")
         ])
-        def pageRequest = PageRequest.of(0, 2)
 
         when:
         "listPeople() is called"
-        def result = personResource.listPeople(pageRequest).getContent()
+        def result = personResource.listPeople(0, 20, "id", true).getContent()
 
         then:
         "Call findAll(), returning list of people"
-        1 * personResource.personRepository.findAll(pageRequest) >> people
+        1 * personResource.personRepository.findAll(_) >> people
 
         and:
         "Correct people are returned"
         result.size() == 2
 
-        result[0].id == 1L
-        result[0].name == "Person 1"
-        result[0].userId == "person1"
-        result[0].password == "password1"
+        result[0].getId() == 1L
+        result[0].getName() == "Person 1"
+        result[0].getUserId() == "person1"
+        result[0].getPassword() == "password1"
 
-        result[1].id == 2L
-        result[1].name == "Person 2"
-        result[1].userId == "person2"
-        result[1].password == "password2"
+        result[1].getId() == 2L
+        result[1].getName() == "Person 2"
+        result[1].getUserId() == "person2"
+        result[1].getPassword() == "password2"
+    }
+
+    void "listPeople() should use default parameters given invalid parameters" () {
+        given:
+        def people = new PageImpl([
+                new Person(1, "Person 1", "person1", "password1"),
+                new Person(2, "Person 2", "person2", "password2")
+        ])
+
+        when:
+        "listPeople() is given invalid parameters"
+        personResource.listPeople(-1, -1, "NOT A SORT FIELD", false)
+
+        then:
+        "findAll should be called with default page, size, and sortBy parameters, and false desc"
+        1 * personResource.personRepository.findAll({ Pageable pageRequest ->
+                    pageRequest.getPageNumber() == 0 &&
+                    pageRequest.getPageSize() == PersonResource.MIN_PAGE_SIZE &&
+                    pageRequest.getSort().first().getProperty() == PersonResource.DEFAULT_SORT_FIELD &&
+                    pageRequest.getSort().getOrderFor(
+                            PersonResource.DEFAULT_SORT_FIELD).getDirection() == Sort.Direction.ASC
+        }) >> people
     }
 
     void "deletePerson(id) should call deleteById() to delete the person" () {
@@ -151,21 +171,5 @@ class PersonResourceSpec extends Specification {
         result.getPassword() == pdto.getPassword()
         result.getName() == pdto.getName()
         result.getUserId() == pdto.getUserId()
-    }
-
-    void "savePerson() should throw ResponseStatusExceptions when invalid data entered" () {
-        when:
-        "Attempt to save name"
-        personResource.savePerson(new PersonDto(null, name, userId, password))
-
-        then:
-        "savePerson() should throw a ResponseStatusException"
-        thrown(ResponseStatusException)
-
-        where:
-        "Various invalid inputs"
-        name <<     [longName,  validName,  validName, validName, null,       validName, validName, "",        validName, validName]
-        userId <<   [validUser, longUserId, validUser, validUser, validUser,  null,      validUser, validUser, "",        validUser]
-        password << [validPass, validPass,  shortPass, longPass,  validPass,  validPass, null,      validPass, validPass, ""       ]
     }
 }

@@ -2,8 +2,6 @@ package com.mni.api;
 
 import com.mni.model.Person;
 import com.mni.model.PersonRepository;
-import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
-import org.omg.CORBA.DynAnyPackage.Invalid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -11,17 +9,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.util.Collection;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * Created by will.schick on 6/17/19.
@@ -30,9 +23,13 @@ import java.util.stream.StreamSupport;
 @RequestMapping("/api/people")
 public class PersonResource {
 
-
     @Autowired
     PersonRepository personRepository;
+
+    public static final int MAX_PAGE_SIZE = 100;
+    public static final int DEFAULT_PAGE_SIZE = 20;
+    public static final int MIN_PAGE_SIZE = 1;
+    public static final String DEFAULT_SORT_FIELD = "id";
 
     // Translates Person object to PersonDto object
     private PersonDto translatePersonToPersonDto(Person person){
@@ -60,42 +57,6 @@ public class PersonResource {
                 field.equals("password");
     }
 
-    // Checks Name, UserID, and Password lengths
-    private void validatePerson(Person person) {
-        if(person.getName() == null)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Name cannot be null");
-        if(person.getUserId() == null)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "UserID cannot be null");
-        if(person.getPassword() == null)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Password cannot be null");
-        if(person.getName().length() == 0)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Name cannot be empty");
-        if(person.getUserId().length() == 0)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "UserID cannot be empty");
-        if(person.getPassword().length() == 0)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Password cannot be empty");
-
-        // validate correct lengths
-        if(person.getName().length() > Person.MAX_NAME_LENGTH)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Name cannot have over " + Person.MAX_NAME_LENGTH + " characters");
-        if(person.getUserId().length() > Person.MAX_USERID_LENGTH)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "UserID cannot have over " + Person.MAX_USERID_LENGTH + " characters");
-        if(person.getPassword().length() < Person.MIN_PASSWORD_LENGTH)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Password must have at least " + Person.MIN_PASSWORD_LENGTH + " characters");
-        if(person.getPassword().length() > Person.MAX_PASSWORD_LENGTH)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Password must have at most " + Person.MAX_PASSWORD_LENGTH + " characters");
-    }
-
     //Attempt to save a person, returns HTTP 400 Bad Request if something goes wrong
     private Person trySavePerson(Person person) {
         try{
@@ -103,8 +64,7 @@ public class PersonResource {
         }catch(Exception e) {
             if(e instanceof DataIntegrityViolationException)
                 // This happens when unique index or primary key violation occurs
-                // or invalid data (such as too long of a name, userID, but that should be
-                // caught through validatePerson)
+                // or invalid data
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                         "Name or UserID already taken");
 
@@ -116,20 +76,23 @@ public class PersonResource {
 
     @GetMapping
     public Page<PersonDto> listPeople(@RequestParam(value="page", defaultValue="0") int page,
-                                      @RequestParam(value="size", defaultValue="20") int size,
-                                      @RequestParam(value="sortBy", defaultValue="id") String sortBy,
+                                      @RequestParam(value="size", defaultValue=DEFAULT_PAGE_SIZE + "")
+                                              int size,
+                                      @RequestParam(value="sortBy", defaultValue=DEFAULT_SORT_FIELD)
+                                                  String sortBy,
                                       @RequestParam(value="desc", defaultValue="false") boolean desc
     ){
         if(page < 0) page = 0;
-        if(size < 1) size = 1;
-        if(size > 100) size = 100;
-        if(!isPersonField(sortBy)) sortBy = "id";
+        if(size < MIN_PAGE_SIZE) size = MIN_PAGE_SIZE;
+        if(size > MAX_PAGE_SIZE) size = MAX_PAGE_SIZE;
+        if(!isPersonField(sortBy)) sortBy = DEFAULT_SORT_FIELD;
 
         Sort.Direction direction = desc ? Sort.Direction.DESC : Sort.Direction.ASC;
         Sort.Order order = new Sort.Order(direction, sortBy);
         if(!order.equals("password")) order = order.ignoreCase();
         Sort sort = Sort.by(order);
         Pageable pageRequest = PageRequest.of(page, size, sort);
+
         return personRepository
                 .findAll(pageRequest)
                 .map(this::translatePersonToPersonDto);
@@ -148,8 +111,6 @@ public class PersonResource {
     @PostMapping
     PersonDto savePerson(@Valid @RequestBody PersonDto personDto) {
         Person inputPerson = translatePersonDtoToPerson(personDto);
-        // Validating Name, UserID, and Password lengths
-        validatePerson(inputPerson);
         inputPerson.setId(null); // ID should be autogenerated
 
         return translatePersonToPersonDto(trySavePerson(inputPerson));
@@ -158,7 +119,6 @@ public class PersonResource {
     @PutMapping("{id}")
     PersonDto updatePerson(@PathVariable Long id, @Valid @RequestBody PersonDto personDto) {
         Person inputPerson = translatePersonDtoToPerson(personDto);
-        validatePerson(inputPerson);
 
         inputPerson.setId(id);
         return translatePersonToPersonDto(trySavePerson(inputPerson));
@@ -173,9 +133,4 @@ public class PersonResource {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
     }
-
-
-
-
-
 }
