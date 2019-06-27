@@ -9,6 +9,7 @@ import { PersonDetailsComponent } from './routes/people/person-details/person-de
 import { HttpClientModule } from "@angular/common/http";
 import { PersonFormComponent } from './routes/people/person-form/person-form.component';
 import { PaginatorComponent } from './paginator/paginator.component';
+import { ProductListComponent } from './routes/products/product-list/product-list.component';
 
 
 const appRoutes: Routes = [
@@ -16,6 +17,7 @@ const appRoutes: Routes = [
   { path: 'people/new', component: PersonFormComponent },
   { path: 'people/:id',      component: PersonDetailsComponent },
   { path: 'people/:id/update',      component: PersonFormComponent },
+  { path: 'products', component: ProductListComponent },
 
   //the default page
   { path: '**', redirectTo: 'people' }
@@ -31,6 +33,7 @@ const appRoutes: Routes = [
     PersonDetailsComponent,
     PersonFormComponent,
     PaginatorComponent,
+    ProductListComponent,
   ],
   imports: [
     BrowserModule,

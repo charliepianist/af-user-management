@@ -1,6 +1,5 @@
 package com.mni.model;
 
-import javax.annotation.Generated;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,11 +19,11 @@ public class Person {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(unique=true, length=100)
+    @Column(unique=true, length=MAX_NAME_LENGTH)
     private String name;
-    @Column(unique=true, length=20)
+    @Column(unique=true, length=MAX_USERID_LENGTH)
     private String userId;
-    @Column(length=100)
+    @Column(length=MAX_PASSWORD_LENGTH)
     private String password;
 
     public Person(){}

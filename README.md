@@ -1,5 +1,15 @@
 # AF User Management
 
+## Postman Links
+
+#### People REST API Tests
+
+https://www.getpostman.com/collections/88805f116b753327ebbf
+
+#### Products REST API Tests
+
+https://www.getpostman.com/collections/fb3ff7855b4025e54de4
+
 
 ## Guide to code
 
