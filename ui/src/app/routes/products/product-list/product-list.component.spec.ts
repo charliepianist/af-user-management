@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProductListComponent } from './product-list.component';
 import { TestingModule } from 'src/app/test/TestingModule';
-import { PaginatorComponent } from 'src/app/paginator/paginator.component';
+import { PaginatorComponent } from 'src/app/components/paginator/paginator.component';
 
 describe('ProductListComponent', () => {
   let component: ProductListComponent;

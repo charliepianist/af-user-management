@@ -10,6 +10,9 @@ https://www.getpostman.com/collections/88805f116b753327ebbf
 
 https://www.getpostman.com/collections/fb3ff7855b4025e54de4
 
+#### Locations REST API Tests
+
+https://www.getpostman.com/collections/393c1de80460dbf74fed
 
 ## Guide to code
 

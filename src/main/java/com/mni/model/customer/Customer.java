@@ -1,9 +1,10 @@
-package com.mni.model;
+package com.mni.model.customer;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.mni.model.entitlement.Entitlement;
+
+import javax.persistence.*;
+import java.util.Collection;
 
 /**
  * Created by will.schick on 6/17/19.
@@ -19,20 +20,29 @@ public class Customer {
     @Id
     @GeneratedValue
     private Long id;
+
     @Column(unique=true, length=MAX_NAME_LENGTH)
     private String name;
+
     @Column(unique=true, length=MAX_USERID_LENGTH)
     private String userId;
+
     @Column(length=MAX_PASSWORD_LENGTH)
     private String password;
 
+    @JsonManagedReference
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    Collection<Entitlement> entitlements;
+
     public Customer(){}
 
-    public Customer(Long id, String name, String userId, String password) {
+    public Customer(Long id, String name, String userId, String password,
+                    Collection<Entitlement> entitlements) {
         this.id = id;
         this.name = name;
         this.userId = userId;
         this.password = password;
+        this.entitlements = entitlements;
     }
 
     public Long getId() {
@@ -65,5 +75,13 @@ public class Customer {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Collection<Entitlement> getEntitlements() {
+        return entitlements;
+    }
+
+    public void setEntitlements(Collection<Entitlement> entitlements) {
+        this.entitlements = entitlements;
     }
 }

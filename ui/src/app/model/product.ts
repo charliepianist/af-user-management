@@ -3,8 +3,9 @@
 
 export class Product{
 
-    id:number;
-    name:string;
+    id: number;
+    name: string;
+    multicastGroups: any[];
   
     constructor(id: number = null, name: string = null) {
       this.id = id;
@@ -16,6 +17,10 @@ export class Product{
     }
     getName(): string {
       return this.name;
+    }
+
+    equals(other: Product): boolean {
+      return this.getName() === other.getName();
     }
   }
   

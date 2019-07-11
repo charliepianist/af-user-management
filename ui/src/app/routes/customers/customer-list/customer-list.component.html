@@ -1,5 +1,5 @@
 <div class="list-component">
-  <table border="1" class="container">
+  <table class="container">
     <thead>
       <tr>
         <th style="width:7%" (click)="sort('id')">
@@ -37,29 +37,25 @@
       <ng-container *ngIf="customers.length > 0; else noCustomers">
         <tr *ngFor="let customer of customers" [routerLink]="[customer.getId()]" class="row-entry">
           <td>
-            {{customer.getId()}}
+            {{ customer.getId() }}
           </td>
           <td>
-            {{customer.getName()}}
+            {{ customer.getName() }}
           </td>
           <td>
-            {{customer.getUserId()}}
+            {{ customer.getUserId() }}
           </td>
           <td>
-            {{customer.getPassword()}}
+            {{ customer.getPassword() }}
           </td>
           <!-- Details, Update, Delete-->
           <td (click)="$event.stopPropagation()" class="row-options"> 
             <span [routerLink]="[customer.getId()]" class="link row-option">Details</span>
             <span [routerLink]="[customer.getId(), 'update']" class="link row-option">Update</span>
-            <ng-template #deleteLink>
-              <span (click)="toDelete[customer.getId()] = true" class="link row-option">Delete</span>
-            </ng-template>
-            <span *ngIf="toDelete[customer.getId()]; else deleteLink" class="row-option" style="font-size:90%;">
-              Are you sure?
-              <span (click)="deleteCustomer(customer.getId())" class="link row-option">Yes</span>
-              <span (click)="toDelete[customer.getId()]=false" class="link row-option">No</span>
-            </span>
+            <app-delete-confirmation
+              [button]="false"
+              (onDelete)="deleteCustomer(customer.getId())">
+            </app-delete-confirmation>
           </td>
         </tr>
       </ng-container>
@@ -67,7 +63,7 @@
     <ng-template #noCustomers>
       <tr class="full-width-centered">
         <td colspan=100>
-          <b *ngIf="totalElements == 0; else wrongPage">
+          <b *ngIf="customerPage.totalElements === 0; else wrongPage">
             There are currently no customers.
           </b>
           <ng-template #wrongPage><b>
@@ -82,7 +78,7 @@
         <td colspan=100>
           <span *ngIf="errorMsg; else loading">
             An error occured, see console for details:<br>
-            {{errorMsg}}
+            {{ errorMsg }}
           </span>
           <ng-template #loading><b>Loading...</b></ng-template>
         </td>

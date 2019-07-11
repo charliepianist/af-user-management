@@ -1,6 +1,5 @@
 import { Component, OnInit, enableProdMode, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { PaginatorComponent } from 'src/app/paginator/paginator.component';
 import { Page } from 'src/app/model/page';
 import { Customer } from 'src/app/model/customer';
 import { CustomerService } from 'src/app/services/customer.service';
@@ -14,11 +13,11 @@ export class CustomerListComponent implements OnInit {
 
   constructor(private customerService:CustomerService, private router: Router, private route: ActivatedRoute) { }
 
-  @ViewChild('paginator') paginator: PaginatorComponent;
+  static readonly DEFAULT_SORT_FIELD = 'name';
+
   customerPage:Page<Customer>;
   customers:Customer[];
   errorMsg: string;
-  toDelete: number[];
   queryParams: {
     page: number,
     size: number,
@@ -27,8 +26,6 @@ export class CustomerListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.toDelete = new Array();
-
     // Get query params/set to defaults if necessary
     this.route.queryParamMap.subscribe(queryParams => {
       this.queryParams = {
@@ -45,15 +42,14 @@ export class CustomerListComponent implements OnInit {
       if(this.queryParams.size > 100) this.queryParams.size = 100;
 
       if(!this.isCustomerField(this.queryParams.sortBy)) 
-        this.queryParams.sortBy = 'id';
+        this.queryParams.sortBy = CustomerListComponent.DEFAULT_SORT_FIELD;
     });
 
     this.customerService.listCustomers(
       p => { 
         // success, returned Page<Customer> object
         this.customerPage = p;
-        this.customers = p.content.map(
-          customer => Object.assign(new Customer(), customer));
+        this.customers = p.content;
       },
       //onError
       e => {console.log(e); this.errorMsg = e.message;},

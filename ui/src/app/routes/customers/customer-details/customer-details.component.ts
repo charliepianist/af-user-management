@@ -21,7 +21,7 @@ export class CustomerDetailsComponent implements OnInit {
     this.route.paramMap.subscribe(
       params => {
         this.customerService.getCustomer(params.get('id'),
-          p => this.customer = Object.assign(new Customer(), p),
+          p => this.customer = p,
           e => { // onError
             console.log(e);
             this.error = e;

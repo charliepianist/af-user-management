@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { Page } from '../model/page';
+import { Page } from '../../model/page';
 
 @Component({
   selector: 'app-paginator',

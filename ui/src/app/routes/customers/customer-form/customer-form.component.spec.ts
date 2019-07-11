@@ -7,6 +7,7 @@ import { HttpTestingController } from '@angular/common/http/testing';
 import { CustomerService } from 'src/app/services/customer.service';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { CustomerEntitlementsComponent } from '../customer-entitlements/customer-entitlements.component';
 
 
 
@@ -18,7 +19,7 @@ describe('Creating new Customer', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CustomerFormComponent ],
+      declarations: [ CustomerFormComponent, CustomerEntitlementsComponent ],
       imports: [
         TestingModule,
         FormsModule
@@ -81,12 +82,14 @@ describe('Creating new Customer', () => {
     spyOn(component, 'validateName').and.returnValue(null);
     spyOn(component, 'validateUserId').and.returnValue(null);
     spyOn(component, 'validatePassword').and.returnValue(null);
+    spyOn(component.customerEntitlementsComponent, 'getEntitlements').and.returnValue([]);
     spyOn(service, 'createCustomer');
     component.submitButton();
 
     expect(component.validateName).toHaveBeenCalled();
     expect(component.validateUserId).toHaveBeenCalled();
     expect(component.validatePassword).toHaveBeenCalled();
+    expect(component.customerEntitlementsComponent.getEntitlements).toHaveBeenCalled();
     expect(service.createCustomer).toHaveBeenCalled();
   })
 });
@@ -99,7 +102,7 @@ describe('Updating Customer', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CustomerFormComponent ],
+      declarations: [ CustomerFormComponent, CustomerEntitlementsComponent ],
       imports: [
         TestingModule
       ],
@@ -173,12 +176,14 @@ describe('Updating Customer', () => {
     spyOn(component, 'validateName').and.returnValue(null);
     spyOn(component, 'validateUserId').and.returnValue(null);
     spyOn(component, 'validatePassword').and.returnValue(null);
+    spyOn(component.customerEntitlementsComponent, 'getEntitlements').and.returnValue([]);
     spyOn(service, 'updateCustomer');
     component.submitButton();
 
     expect(component.validateName).toHaveBeenCalled();
     expect(component.validateUserId).toHaveBeenCalled();
     expect(component.validatePassword).toHaveBeenCalled();
+    expect(component.customerEntitlementsComponent.getEntitlements).toHaveBeenCalled();
     expect(service.updateCustomer).toHaveBeenCalled();
   })
 });

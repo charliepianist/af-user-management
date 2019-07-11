@@ -1,18 +1,23 @@
+import { Entitlement } from "./entitlement";
 
 
 
 export class Customer {
 
-  id:number;
-  name:string;
-  userId:string;
-  password:string;
+  id: number;
+  name: string;
+  userId: string;
+  password: string;
+  entitlements: Entitlement[];
 
-  constructor(id: number = null, name: string = null, userId: string = null, password: string = null) {
+  constructor(id: number = null, name: string = null, 
+    userId: string = null, password: string = null,
+    entitlements: Entitlement[] = null) {
     this.id = id;
     this.name = name;
     this.userId = userId;
     this.password = password;
+    this.entitlements = entitlements;
   }
   
   getId(): number {
@@ -26,5 +31,15 @@ export class Customer {
   }
   getPassword(): string {
     return this.password;
+  }
+  getEntitlements(): Entitlement[] {
+    return this.entitlements;
+  }
+
+  equals(other: Customer): boolean {
+    return this.getId() === other.getId() &&
+    this.getName() === other.getName() &&
+    this.getUserId() === other.getUserId() &&
+    this.getPassword() === other.getPassword();
   }
 }

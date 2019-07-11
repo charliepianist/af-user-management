@@ -8,8 +8,10 @@ import { RouterModule, Routes } from "@angular/router";
 import { CustomerDetailsComponent } from './routes/customers/customer-details/customer-details.component';
 import { HttpClientModule } from "@angular/common/http";
 import { CustomerFormComponent } from './routes/customers/customer-form/customer-form.component';
-import { PaginatorComponent } from './paginator/paginator.component';
+import { PaginatorComponent } from './components/paginator/paginator.component';
 import { ProductListComponent } from './routes/products/product-list/product-list.component';
+import { CustomerEntitlementsComponent } from './routes/customers/customer-entitlements/customer-entitlements.component';
+import { DeleteConfirmationComponent } from './components/delete-confirmation/delete-confirmation.component';
 
 
 const appRoutes: Routes = [
@@ -34,6 +36,8 @@ const appRoutes: Routes = [
     CustomerFormComponent,
     PaginatorComponent,
     ProductListComponent,
+    CustomerEntitlementsComponent,
+    DeleteConfirmationComponent,
   ],
   imports: [
     BrowserModule,

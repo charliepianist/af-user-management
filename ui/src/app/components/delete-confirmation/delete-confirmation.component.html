@@ -1,0 +1,16 @@
+<span *ngIf="toDelete; else deleteButton" style="font-size:80%; white-space: nowrap;">
+  Are you sure?<ng-container *ngIf="button; else links">
+    <button (click)="throwDeleteEvent()">Yes</button>
+    <button (click)="toDelete = false">No</button>
+  </ng-container>
+  <ng-template #links>
+    <span (click)="throwDeleteEvent()" class="link">Yes</span>
+    <span (click)="toDelete = false" class="link">No</span>
+  </ng-template>  
+</span>
+<ng-template #deleteButton>
+  <button *ngIf="button; else link" (click)="toDelete = true">Delete</button>
+  <ng-template #link>
+    <span class="link row-option" (click)="toDelete = true">Delete</span>
+  </ng-template>
+</ng-template>
