@@ -5,50 +5,48 @@
             &lt; Back
         </button>
     </div><br>
-    <h3 *ngIf="error" align="center">
+    <h3 *ngIf="error" align="center details-table">
         Could not get customer, see console for details:<br>
-        {{error.message}}
+        {{ error.message }}
     </h3>
 
-    <table class="container" border="1" *ngIf="customer">
-        <thead>
-            <tr>
-                <td colspan="100"><b>{{customer.getName()}} Details</b></td>
-            </tr>
-            <tr>
-                <th style="width:35%">Field</th>
-                <th style="width:65%">Value</th>
-            </tr>
-        </thead>
-        <ng-container *ngIf="customer">
-            <tr>
-                <td>ID</td>
-                <td>{{customer.getId()}}</td>
-            </tr>
-            <tr>
-                <td>Name</td>
-                <td>{{customer.getName()}}</td>
-            </tr>
-            <tr>
-                <td>User ID</td>
-                <td>{{customer.getUserId()}}</td>
-            </tr>
-            <tr>
-                <td>Password</td>
-                <td>{{customer.getPassword()}}</td>
-            </tr>
-        </ng-container>
-    </table>
-    <br>
-    <div *ngIf="customer" align="center">
-        <button [routerLink]="['update']">Update</button>
-        <ng-template #deleteButton>
-            <button (click)="toDelete = true">Delete</button>
-        </ng-template>
-        <span *ngIf="toDelete; else deleteButton">
-            Are you sure?
-            <button (click)="deleteCustomer()">Yes</button>
-            <button (click)="toDelete=false">No</button>
-        </span>
+    <div *ngIf="customer">
+        <table class="container">
+            <thead>
+                <tr>
+                    <td colspan="100"><b>{{ customer.getName() }} Details</b></td>
+                </tr>
+                <tr>
+                    <th style="width:35%">Field</th>
+                    <th style="width:65%">Value</th>
+                </tr>
+            </thead>
+            <ng-container>
+                <tr>
+                    <td>Name</td>
+                    <td>{{ customer.getName() }}</td>
+                </tr>
+                <tr>
+                    <td>User ID</td>
+                    <td>{{ customer.getUserId() }}</td>
+                </tr>
+                <tr>
+                    <td>Password</td>
+                    <td>{{ customer.getPassword() }}</td>
+                </tr>
+            </ng-container>
+        </table>
+        <br>
+        <div align="center">
+            <button [routerLink]="['update']">Update</button>
+            <app-delete-confirmation
+                [button]="true"
+                (onDelete)="deleteCustomer()">
+            </app-delete-confirmation>
+        </div>
+        <br>
+        <app-customer-entitlements
+            [entitlements]="customer.getEntitlements()">
+        </app-customer-entitlements>
     </div>
 </div>

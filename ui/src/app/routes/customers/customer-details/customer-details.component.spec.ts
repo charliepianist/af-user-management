@@ -7,6 +7,8 @@ import { HttpTestingController } from '@angular/common/http/testing';
 import { Customer } from 'src/app/model/customer';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { Observable } from 'rxjs';
+import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
+import { CustomerEntitlementsComponent } from '../customer-entitlements/customer-entitlements.component';
 
 describe('CustomerDetailsComponent', () => {
   let component: CustomerDetailsComponent;
@@ -17,7 +19,9 @@ describe('CustomerDetailsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CustomerDetailsComponent ],
+      declarations: [ CustomerDetailsComponent, 
+        DeleteConfirmationComponent,
+        CustomerEntitlementsComponent],
       imports: [
         TestingModule
       ],

@@ -1,10 +1,10 @@
 <div class="container">
     <button style="font-size: 18px;" [routerLink]="['/customers']">&lt; Back</button>
     <h4 *ngIf="errorMsg">
-      An Error Occurred: {{errorMsg}}<br>
+      An Error Occurred: {{ errorMsg }}<br>
       See Console for Details.
     </h4>
-    <h1>{{origName ? 'Update ' + origName : 'Create New Customer'}}</h1>
+    <h1>{{ origName ? 'Update ' + origName : 'Create New Customer' }}</h1>
     <form autocomplete="off">
       <div class="form-group">
         <label for="name">Name (up to 100 characters)</label>
@@ -13,7 +13,7 @@
                 (ngModelChange)="submissionErrorMsg=null" required>
         <div [hidden]="!validateName() || nameInput.pristine" 
               class="alert alert-danger">
-          {{validateName()}}
+          {{ validateName() }}
         </div>
       </div>
  
@@ -24,7 +24,7 @@
                 (ngModelChange)="submissionErrorMsg=null" required>
         <div [hidden]="!validateUserId() || userIdInput.pristine" 
               class="alert alert-danger">
-          {{validateUserId()}}
+          {{ validateUserId() }}
         </div>
       </div>
  
@@ -35,7 +35,7 @@
                 (ngModelChange)="submissionErrorMsg=null" required>
         <div [hidden]="!validatePassword() || passwordInput.pristine" 
               class="alert alert-danger">
-          {{validatePassword()}}
+          {{ validatePassword() }}
         </div>
         <button (click)="generatePassword()" style="margin-top: 0.2em;">
           Generate Password
@@ -43,11 +43,20 @@
          of length <input [(ngModel)]="passLength" name="passLength"
                         type="number" style="width:2.25em;"> characters
       </div>
- 
-      <button (click)="submitButton()" class="btn btn-success">Submit</button>
+      
+      <br>
+      <button (click)="submitButton()" 
+      class="btn btn-success form-button">
+        Submit
+      </button>
+      <button (click)="cancelButton()" 
+      class="btn form-button">
+        Cancel
+      </button>
+      
       <br><br>
       <div [hidden]="!submissionErrorMsg" class="text-danger">
-        {{submissionErrorMsg}}<br>
+        {{ submissionErrorMsg }}<br>
         See console for details.<br><br>
       </div>
       <div [hidden]="!invalidSubmit" class="text-danger">
@@ -55,6 +64,11 @@
         <span *ngIf="validateUserId()">Please enter a valid user ID.<br></span>
         <span *ngIf="validatePassword()">Please enter a valid password.<br></span>
       </div>
- 
+      <br>
+
+      <app-customer-entitlements
+        [update]="true"
+        [entitlements]="entitlements">
+      </app-customer-entitlements>
     </form>
 </div>

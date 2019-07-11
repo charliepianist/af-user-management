@@ -1,29 +1,28 @@
-package com.mni.model;
-
+package com.mni.model.location;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-/**
- * Created by charles.liu on 6/26/19.
- */
 @Entity
-public class Product {
-
-    public static final int MAX_NAME_LENGTH = 100;
-
+public class Location {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(unique=true, length=MAX_NAME_LENGTH)
+
+    @Column(unique = true)
+    private String code;
+
+    @Column(unique = true)
     private String name;
 
-    public Product(){}
 
-    public Product(Long id, String name) {
+    public Location() {}
+
+    public Location(Long id, String code, String name) {
         this.id = id;
+        this.code = code;
         this.name = name;
     }
 
@@ -33,6 +32,14 @@ public class Product {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getName() {

@@ -10,7 +10,8 @@ import { Pageable } from 'src/app/model/pageable';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { HttpRequest } from '@angular/common/http';
-import { PaginatorComponent } from 'src/app/paginator/paginator.component';
+import { PaginatorComponent } from 'src/app/components/paginator/paginator.component';
+import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
 
 describe('CustomerListComponent without Query parameters', () => {
   let component: CustomerListComponent;
@@ -21,7 +22,11 @@ describe('CustomerListComponent without Query parameters', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CustomerListComponent, PaginatorComponent ],
+      declarations: [ 
+        CustomerListComponent, 
+        PaginatorComponent,
+        DeleteConfirmationComponent 
+      ],
       imports: [
         TestingModule,
       ],
@@ -119,7 +124,11 @@ describe('CustomerListComponent with invalid query parameters', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CustomerListComponent, PaginatorComponent ],
+      declarations: [ 
+        CustomerListComponent, 
+        PaginatorComponent,
+        DeleteConfirmationComponent
+      ],
       imports: [
         TestingModule,
       ],
@@ -173,7 +182,11 @@ describe('Customer ListComponent with valid query parameters', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CustomerListComponent, PaginatorComponent ],
+      declarations: [ 
+        CustomerListComponent, 
+        PaginatorComponent,
+        DeleteConfirmationComponent
+      ],
       imports: [
         TestingModule,
       ],

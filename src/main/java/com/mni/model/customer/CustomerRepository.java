@@ -1,5 +1,6 @@
-package com.mni.model;
+package com.mni.model.customer;
 
+import com.mni.model.customer.Customer;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**

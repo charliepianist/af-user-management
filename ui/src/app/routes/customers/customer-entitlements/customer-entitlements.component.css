@@ -1,0 +1,240 @@
+/* =============== General CSS =============== */
+table {
+    font-size: 0.75em;
+}
+td div { /*Two halves of bigger div*/
+    padding-top: 0.1em;
+    padding-bottom: 0.1em;
+}
+thead td {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+.row-options {
+    width: 11%
+}
+span {
+    cursor: default;
+}
+span.link {
+    cursor: pointer;
+}
+.product-name {
+    width: 10%;
+}
+.cell-text {
+    font-weight: bold;
+}
+
+/* ========== Subscribed Cells ========== */
+.subscribed {
+    background-color: forestgreen;
+}
+.subscribed.changed {
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(36, 196, 4, 0.89),
+        rgba(36, 196, 4, 0.89) 5px,
+        rgba(37, 168, 10, 0.89) 5px,
+        rgba(37, 168, 10, 0.89) 10px
+    );
+}
+.subscribed.changed:hover {
+    background: none;
+    background-color: rgba(255, 0, 0, 0.2);
+}
+.subscribed:hover {
+    /* unsub from sub */
+    background-color: rgba(255, 0, 0, 0.2);
+}
+.subscribed .upper-text {
+    visibility: hidden;
+}
+.subscribed .lower-text {
+    display: none;
+}
+.subscribed:hover .upper-text {
+    /* unsub */
+    display: block;
+}
+.subscribed:hover .lower-half {
+    display: none;
+}
+
+/* ============ Trial Cells ============ */
+.trial {
+    background-color: cornflowerblue;
+}
+.trial.changed {
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(0, 127, 177, 0.877),
+        rgba(0, 127, 177, 0.877) 5px,
+        rgba(2, 143, 224, 0.877) 5px,
+        rgba(2, 143, 224, 0.877) 10px
+    );
+}
+.trial.changed:hover {
+    background: none;
+}
+.trial .lower-half {
+    display: none;
+}
+.trial:hover {
+    background-color: inherit;
+}
+.trial:hover .upper-half {
+    /* Sub from trial */
+    background-color: forestgreen;
+}
+.trial:hover .lower-half {
+    /* Unsub from trial */
+    background-color: rgba(255, 0, 0, 0.2);
+    display: block;
+}
+.trial .upper-text {
+    display: none;
+}
+.trial:hover .upper-text {
+    display: block;
+}
+
+/* ========= Unsubscribed Cells ========= */
+.not-subscribed {
+    background-color: inherit;
+}
+.not-subscribed.changed {
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(255, 0, 0, 0.226),
+        rgba(255, 0, 0, 0.226) 5px,
+        rgba(194, 0, 0, 0.322) 5px,
+        rgba(194, 0, 0, 0.322)  10px
+    );
+}
+.not-subscribed:hover .upper-half {
+    background-color: forestgreen;
+}
+.not-subscribed:hover .lower-half {
+    background-color: cornflowerblue;
+}
+
+/* ========= Cell Text ========== */
+.upper-text {
+    visibility: hidden;
+}
+.lower-text {
+    visibility: hidden;
+}
+td:hover .upper-text {
+    visibility: inherit;
+}
+td:hover .lower-text {
+    visibility: inherit;
+}
+td .full-text {
+    display: block;
+}
+td:hover .full-text {
+    display: none;
+}
+
+/* ========= Trial Prompts ========= */
+.has-trial-prompt {
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(72, 198, 248, 0.74),
+        rgba(72, 198, 248, 0.74) 5px,
+        rgba(136, 205, 245, 0.877) 5px,
+        rgba(136, 205, 245, 0.877) 10px
+    );
+}
+.has-trial-prompt:hover {
+    /* Trial Prompt cell unsub */
+    background: none;
+    background-color: rgba(255, 0, 0, 0.2);
+}
+.trial-prompt:hover {
+    background-color: lightskyblue;
+    cursor: pointer;
+}
+.trial-prompt input:hover {
+    cursor: pointer;
+}
+#trial-prompts {
+    font-size: 0.95em;
+}
+#trial-prompts tr {
+    background-color: inherit;
+}
+#trial-prompts td {
+    text-align: left;
+    padding-left: 0.25em;
+    padding-right: 0.3em;
+}
+.selected-trial-prompt {
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(0, 127, 177, 0.877),
+        rgba(0, 127, 177, 0.877) 5px,
+        rgba(2, 143, 224, 0.877) 5px,
+        rgba(2, 143, 224, 0.877) 10px
+    );
+}
+.hover-highlight {
+    background: none;
+    background-color: rgba(255, 238, 0, 0.493);
+}
+.hover-highlight.changed {
+    background: none;
+    background-color: rgba(255, 238, 0, 0.493);
+}
+
+/* =========== Changes =========== */
+#changes {
+    font-size: 0.9em;
+    margin-right: 1em;
+    border-bottom: 3px solid black;
+}
+#changes td {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+#changes :not(thead) > tr {
+    border-left: 3px solid black;
+    border-right: 3px solid black;
+}
+#changes :not(thead) > tr:hover td:not([rowspan]) {
+    background-color: lightskyblue;
+    cursor: pointer;
+}
+#changes tr.first-change {
+    border-top: 3px solid black;
+}
+
+.trial-background {
+    background-color: lightblue;
+}
+.unsub-background {
+    background-color: rgba(255, 0, 0, 0.2);
+}
+.sub-background {
+    background-color: palegreen;
+}
+
+/* ==================================================== */
+/*                View State of Component               */
+/* ==================================================== */
+.view-subscribed, .view-trial, .view-not-subscribed {
+    padding-bottom: 0.2em;
+    padding-top: 0.2em;
+}
+.view-subscribed {
+    background-color: forestgreen;
+}
+.view-trial {
+    background-color: cornflowerblue;
+}
+.view-not-subscribed {
+    background-color: inherit;
+}

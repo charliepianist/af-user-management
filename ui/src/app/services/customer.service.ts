@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import { Customer } from '../model/customer';
 import { Page } from '../model/page';
+import { Product } from '../model/product';
+import { Location } from '../model/location';
+import { Entitlement } from '../model/entitlement';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +15,21 @@ export class CustomerService {
 
   constructor(private httpClient:HttpClient) { }
 
+  private objectToCustomer(cust: {name: string, userId: string, 
+    id: number, password: string, entitlements: Entitlement[]}): Customer {
+    if(cust.entitlements) {
+      cust.entitlements.forEach(e => {
+        e.product = Object.assign(new Product(), e.product);
+        e.location = Object.assign(new Location(), e.location);
+        if(e.expirationDate) 
+          e.expirationDate = new Date(e.expirationDate);
+      });
+      cust.entitlements = cust.entitlements.map(
+        e => Object.assign(new Entitlement(), e)
+      );
+    }else cust.entitlements = new Array();
+    return Object.assign(new Customer(), cust);
+  }
 
   listCustomers(successFunc: (p: Page<Customer>) => any, 
               errorFunc: (e: HttpErrorResponse) => any,
@@ -19,13 +37,20 @@ export class CustomerService {
     this.httpClient.get<Page<Customer>>(CustomerService.BASE_URL, {
       params: queryParams
     }).subscribe(
-      successFunc, errorFunc);
+      page => {
+        page.content = page.content.map(
+          cust => this.objectToCustomer(cust)
+        );
+        successFunc(page);
+      }, errorFunc);
   }
 
   getCustomer(id: string, successFunc: (p: Customer) => any,
             errorFunc: (e: HttpErrorResponse) => any) {
     this.httpClient.get<Customer>(CustomerService.BASE_URL + '/' + id).subscribe(
-      successFunc, errorFunc);
+      cust => {
+        successFunc(this.objectToCustomer(cust));
+      }, errorFunc);
   }
 
   deleteCustomer(id: number, successFunc: () => any, 

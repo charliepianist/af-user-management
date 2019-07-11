@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CustomerService } from 'src/app/services/customer.service';
 import { Customer } from 'src/app/model/customer';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Entitlement } from 'src/app/model/entitlement';
+import { CustomerEntitlementsComponent } from '../customer-entitlements/customer-entitlements.component';
 
 @Component({
   selector: 'app-customer-form',
@@ -11,6 +13,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class CustomerFormComponent implements OnInit {
 
+  @ViewChild(CustomerEntitlementsComponent) 
+  customerEntitlementsComponent: CustomerEntitlementsComponent;
   id: string; // null if invalid ID or no ID passed in
   idNum: number = null; 
   errorMsg: string = null;
@@ -22,6 +26,7 @@ export class CustomerFormComponent implements OnInit {
   passLength: number = 15;
   invalidSubmit: boolean = false; // when submit clicked with invalid input
   submissionErrorMsg: string = null;
+  entitlements: Entitlement[] = [];
 
   constructor(private router: Router, private route: ActivatedRoute, private customerService: CustomerService) {}
 
@@ -30,18 +35,18 @@ export class CustomerFormComponent implements OnInit {
       this.errorMsg = e.message; 
       console.log(e);
     };
-
     this.route.paramMap.subscribe(
       params => {
         this.id = params.get('id');
-        if(this.id) this.customerService.getCustomer(this.id, 
+        if(this.isUpdating()) this.customerService.getCustomer(this.id, 
           p => {
-            this.customer = Object.assign(new Customer(), p);
+            this.customer = p
             this.origName = this.customer.getName();
             this.idNum = this.customer.getId();
             this.name = this.origName;
             this.userId = this.customer.getUserId();
             this.password = this.customer.getPassword();
+            this.entitlements = this.customer.getEntitlements();
           },
           e => { this.id = null; errorFunc(e);});
       },
@@ -68,12 +73,18 @@ export class CustomerFormComponent implements OnInit {
     if(this.password.length > 100) return 'Password must have at most 100 characters.'
     return null;
   }
+
+  isUpdating(): boolean {
+    if(this.id) return true;
+    return false;
+  }
   
   submitButton() {
     if(this.validateName() || this.validateUserId() || this.validatePassword()) {
       this.invalidSubmit = true;
     }else {
-      let newCustomer = new Customer(this.idNum, this.name, this.userId, this.password);
+      let newCustomer = new Customer(this.idNum, this.name, this.userId, 
+        this.password, this.customerEntitlementsComponent.getEntitlements());
       let successFunc = (p: Customer) => {
         this.router.navigate(['/customers', 
                               Object.assign(new Customer(), p).getId()]);
@@ -84,7 +95,8 @@ export class CustomerFormComponent implements OnInit {
                                   e.error.message;
         console.log(e);
       }
-      if(this.id) {
+
+      if(this.isUpdating()) {
         // Updating an already existing user
         this.customerService.updateCustomer(newCustomer, successFunc, 
           errorFunc);
@@ -94,6 +106,12 @@ export class CustomerFormComponent implements OnInit {
           errorFunc);
       }
     }
+  }
+
+  cancelButton() {
+    if(this.isUpdating()) {
+      this.router.navigate(['/customers', this.customer.getId()]);
+    }else this.router.navigate(['/customers']);
   }
 
   generatePassword() {

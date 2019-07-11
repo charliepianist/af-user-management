@@ -1,11 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PaginatorComponent } from './paginator.component';
-import { TestingModule } from '../test/TestingModule';
-import { CustomerListComponent } from '../routes/customers/customer-list/customer-list.component';
-import { Page } from '../model/page';
-import { Customer } from '../model/customer';
-import { Pageable } from '../model/pageable';
+import { TestingModule } from '../../test/TestingModule';
+import { Page } from '../../model/page';
+import { Customer } from '../../model/customer';
+import { Pageable } from '../../model/pageable';
 
 describe('PaginatorComponent with customer page', () => {
   let component: PaginatorComponent;

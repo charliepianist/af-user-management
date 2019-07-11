@@ -1,7 +1,10 @@
 package com.mni.api
 
-import com.mni.model.Product
-import com.mni.model.ProductRepository
+import com.mni.api.product.ProductDto
+import com.mni.api.product.ProductResource
+import com.mni.model.multicastgroup.MulticastGroup
+import com.mni.model.product.Product
+import com.mni.model.product.ProductRepository
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
@@ -14,8 +17,13 @@ import spock.lang.Specification
  */
 class ProductResourceSpec extends Specification {
 
-    ProductResource productResource;
-    @Shared String longName = "NameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLongNameIsTooLong"
+    @Shared ArrayList<MulticastGroup> multicastGroups
+    @Shared ProductResource productResource
+
+    void setupSpec() {
+        multicastGroups = new ArrayList<>()
+        multicastGroups.add(new MulticastGroup(1, "Example Group", "192.168.1.1", 4000))
+    }
 
     void setup(){
         productResource = new ProductResource()
@@ -30,13 +38,14 @@ class ProductResourceSpec extends Specification {
         then:
         "productRepository should call findById(1), which will return a Product object"
         1 * productResource.productRepository.findById(1) >> Optional.of(
-                new Product(1, "US Data"))
+                new Product(1, "US Data", multicastGroups))
 
         and:
         "The product returned by getProduct() should be the same as the product given by the repository"
         result instanceof ProductDto
-        result.getId() == 1L;
+        result.getId() == 1L
         result.getName() == "US Data"
+        result.getMulticastGroups() == multicastGroups
     }
 
     void "getProduct() should return null and throw an exception when called with an invalid ID" () {
@@ -57,26 +66,27 @@ class ProductResourceSpec extends Specification {
     void "saveProduct() with a new name should return a new persisted product" () {
         when:
         "saveProduct() is called with a valid new name"
-        def result = productResource.saveProduct(new ProductDto(null, "US Data"))
+        def result = productResource.saveProduct(new ProductDto(null, "US Data", multicastGroups))
 
         then:
         "productRepository should call save, returning the saved Product object"
         1 * productResource.productRepository.save({ Product product ->
             product.getName() == "US Data"
-        }) >> new Product(120, "US Data")
+        }) >> new Product(120, "US Data", multicastGroups)
 
         and:
         "Returned product should be the persisted ProductDto object"
         result instanceof ProductDto
         result.getId() == 120L
         result.getName() == "US Data"
+        result.getMulticastGroups() == multicastGroups
     }
 
     void "listProducts() should return the current products" () {
         given:
         def products = new PageImpl([
-                new Product(1, "Product 1"),
-                new Product(2, "Product 2")
+                new Product(1, "Product 1", multicastGroups),
+                new Product(2, "Product 2", multicastGroups)
         ])
 
         when:
@@ -93,16 +103,18 @@ class ProductResourceSpec extends Specification {
 
         result[0].getId() == 1L
         result[0].getName() == "Product 1"
+        result[0].getMulticastGroups() == multicastGroups
 
         result[1].getId() == 2L
         result[1].getName() == "Product 2"
+        result[1].getMulticastGroups() == multicastGroups
     }
 
     void "listProducts() should use default parameters given invalid parameters" () {
         given:
         def products = new PageImpl([
-                new Product(1, "Product 1"),
-                new Product(2, "Product 2")
+                new Product(1, "Product 1", multicastGroups),
+                new Product(2, "Product 2", multicastGroups)
         ])
 
         when:
@@ -132,23 +144,24 @@ class ProductResourceSpec extends Specification {
 
     void "updateProduct() should call save() to save product and return new product" () {
         given:
-        ProductDto pdto = new ProductDto(1, "New Name")
+        ProductDto productDto = new ProductDto(1, "New Name", multicastGroups)
 
         when:
         "updateProduct() is called"
-        def result = productResource.updateProduct(1, pdto)
+        def result = productResource.updateProduct(1, productDto)
 
         then:
         "save() should be called"
         1 * productResource.productRepository.save({ Product product ->
             product.getId() == 1L &&
-                    product.getName() == "New Name"
-        }) >> new Product(1L, "New Name")
+                    product.getName() == "New Name" && product.getMulticastGroups() == multicastGroups
+        }) >> new Product(1L, "New Name", multicastGroups)
 
         and:
         "Correct result should be returned"
         result instanceof ProductDto
-        result.getId() == pdto.getId()
-        result.getName() == pdto.getName()
+        result.getId() == productDto.getId()
+        result.getName() == productDto.getName()
+        result.getMulticastGroups() == multicastGroups
     }
 }

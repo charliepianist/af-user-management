@@ -6,52 +6,65 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     -webkit-appearance: none;
     margin: 0;
 }
- 
 input[type="number"] {
     -moz-appearance: textfield;
 }
+/* Hide Arrows and X Button for Datetime Input */
+input[type=datetime-local]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    display: none;
+}
 
+/* ================= Table Styling ================= */
+table, th, td {
+    border: 1px solid black;
+    text-align: center;
+}
 tr {
     height: 2em;
     font-size: 1.2em;
 }
+thead tr { background-color: lightsteelblue;}
+thead th { background-color: lightsteelblue;}
+:not(thead) > tr:nth-child(odd) {background-color: #f2f2f2;}
 
-.list-component td, .list-component th {
-    text-align: center;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-}
-.details-component td, .details-component th {
-    text-align: center;
-    padding: 0.25em;
-    font-size: 20px;
-}
-
-.details-component button {
-    font-size: 20px;
-    margin-left: 0.25em;
-    margin-right: 0.25em;
-}
-
-button.new-entry {
-    font-size: 115%;
-}
-
-.link {
-    color: blue;
-    text-decoration: underline;
-    cursor: pointer;
-}
-.row-entry:hover, th:hover {
-    background-color: lightskyblue;
-    cursor:pointer;
-}
 .row-option {
     margin-left: 0.25em;
     margin-right: 0.25em;
 }
 .row-options {
     cursor:default;
+}
+
+/* ============= List Component Styling ============= */
+.list-component td, .list-component th {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+.list-component .row-entry:hover, .list-component th:hover {
+    background-color: lightskyblue;
+    cursor:pointer;
+}
+
+/* =========== Details Component Styling ============ */
+.details-component .details-table td, .details-component .details-table th {
+    padding: 0.25em;
+    font-size: 1.2em;
+}
+.details-component button {
+    font-size: 1.3em;
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+}
+
+/* ================ General Styling ================ */
+button.new-entry {
+    font-size: 115%;
+}
+.link {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
 }
 .full-width-centered {
     width: 100%;

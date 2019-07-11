@@ -1,0 +1,171 @@
+<ng-container *ngIf="update; else viewEntitlements">
+  <table class="container">
+    <thead>
+      <tr>
+        <td colspan="1000"><b>Entitlements</b></td>
+      </tr>
+      <tr>
+        <td><b>Product</b></td>
+        <td *ngFor="let location of locations" style="font-size:0.8em;">
+          <b>{{ location.getCode() }}</b>
+        </td>
+      </tr>
+    </thead>
+    <tr *ngFor="let product of products; let i = index">
+      <td class="product-name"><b>{{ product.getName() }}</b></td>
+      <td *ngFor="let location of locations; let j = index"
+        [ngClass]="cellClasses(i, j)"
+        (click)="cellClick(i, j)">
+  
+          <div class="upper-half">
+            <span *ngIf="expirationDate(i, j)" 
+              class="full-text cell-text">
+              Trial
+              <br>{{ expirationDate(i, j) }}
+            </span>
+            <span *ngIf="isSubscribed(i, j); else subscribeText" 
+              class="upper-text cell-text">
+              Unsub
+            </span>
+            <ng-template #subscribeText>
+              <span *ngIf="!hasTrialPrompt(i, j)" class="upper-text cell-text">
+                Sub
+              </span>
+            </ng-template>
+          </div>
+  
+          <div class="lower-half" 
+            (click)="$event.stopPropagation(); lowerHalfClick(i, j)">
+            <span *ngIf="!expirationDate(i, j) && !hasTrialPrompt(i, j); else unsub" 
+              class="lower-text cell-text">
+              Trial
+            </span>
+            <ng-template #unsub>
+              <span class="lower-text cell-text">Unsub</span>
+            </ng-template>
+          </div>
+      </td>
+    </tr>
+    <tr>
+        <td><b>Product</b></td>
+        <td *ngFor="let location of locations" style="font-size:0.8em;">
+          <b>{{ location.getCode() }}</b>
+        </td>
+      </tr>
+  </table>
+  <br>
+  
+  <div style="display:flex;">
+    <table *ngIf="changes.length > 0" id="changes">
+      <thead>
+        <tr>
+          <th colspan="1000">
+            Changes
+          </th>
+        </tr>
+        <tr>
+          <td>Undo</td>
+          <td>Product</td>
+          <td>Location</td>
+          <td>Old</td>
+          <td>New</td>
+        </tr>
+      </thead>
+      <tr *ngFor="let change of changes; let i = index" 
+          [class.first-change]="isFirstChange(i)"
+          (click)="undoChange(i)"
+          (mouseover)="changeMouseover(i)"
+          (mouseleave)="changeMouseleave(i)">
+        <td>
+          <button>Undo</button>
+        </td>
+        <td *ngIf="isFirstChange(i)" 
+            [attr.rowspan]="numChangesByProduct(i)"
+            (click)="$event.stopPropagation()" 
+            (mouseover)="$event.stopPropagation()"
+            (mouseleave)="$event.stopPropagation()">
+          {{ change.getProduct().getName() }}
+        </td>
+        <td>{{ change.getLocation().getCode() }}</td>
+        <td [ngClass]="change.oldClasses()">
+          {{ change.oldString() }}
+        </td>
+        <td [ngClass]="change.newClasses()">
+          {{ change.newString() }}
+        </td>
+      </tr>
+    </table>
+  
+    <table id="trial-prompts">
+      <thead *ngIf="trialPrompts.length > 0">
+        <tr>
+          <th colspan="1000">
+            Trial Lengths
+          </th>
+        </tr>
+      </thead>
+        <tr *ngIf="trialPrompts.length > 0">
+            <td (click)="toggleTrialPrompts()" class="trial-prompt">
+              <input type="checkbox" [(ngModel)]="allChecked">
+              <b> Check/Uncheck All</b>
+            </td>
+            <td rowspan="1000" style="text-align: center;">
+              ending
+              <input type="datetime-local" [(ngModel)]="endTime" required>
+              <br><button (click)="addTrials()">Add Trials</button>
+              <span *ngIf="invalidTrialTimeError" class="text-danger">
+                <br>{{ invalidTrialTimeError }}
+              </span>
+            </td>
+          </tr>
+          
+          <tr *ngFor="let i of orderedIndices; let j = index;">
+            <td (click)="toggleTrialPrompt(i)" class="trial-prompt"
+              (mouseover)="trialPromptMouseover(i)" (mouseleave)="trialPromptMouseleave(i)">
+              <input type="checkbox" [(ngModel)]="toSetTime[i]">
+              Add trial for <b>{{ trialPrompts[i].getProduct().getName() }}</b> at 
+              <b>{{ trialPrompts[i].getLocation().getCode() }}</b>
+            </td>
+          </tr>
+        </table>
+  </div>
+</ng-container>
+
+<ng-template #viewEntitlements>
+  <table class="container">
+    <thead>
+      <tr>
+        <td colspan="1000"><b>Entitlements</b></td>
+      </tr>
+      <tr>
+        <td><b>Product</b></td>
+        <td *ngFor="let location of locations" style="font-size:0.8em;">
+          <b>{{ location.getCode() }}</b>
+        </td>
+      </tr>
+    </thead>
+    <tr *ngFor="let product of products; let i = index">
+      <td class="product-name"><b>{{ product.getName() }}</b></td>
+      <td *ngFor="let location of locations; let j = index"
+        [ngClass]="cellClasses(i, j)">
+        <span *ngIf="expirationDate(i, j); else filler" 
+          class="cell-text">
+          Trial
+          <br>{{ expirationDate(i, j) }}
+        </span>
+        <ng-template #filler>
+          <span style="visibility: hidden;" class="cell-text">
+            Unsub<br>&nbsp;
+          </span>
+        </ng-template>
+      </td>
+    </tr>
+    <tr>
+        <td><b>Product</b></td>
+        <td *ngFor="let location of locations" style="font-size:0.8em;">
+          <b>{{ location.getCode() }}</b>
+        </td>
+      </tr>
+  </table>
+  <br>
+</ng-template>

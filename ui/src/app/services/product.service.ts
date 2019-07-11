@@ -19,13 +19,18 @@ export class ProductService {
     this.httpClient.get<Page<Product>>(ProductService.BASE_URL, {
       params: queryParams
     }).subscribe(
-      successFunc, errorFunc);
+      page => {
+        page.content = page.content.map(
+          p => Object.assign(new Product(), p));
+        successFunc(page);
+      }, errorFunc);
   }
 
   getProduct(id: string, successFunc: (p: Product) => any,
             errorFunc: (e: HttpErrorResponse) => any) {
     this.httpClient.get<Product>(ProductService.BASE_URL + '/' + id).subscribe(
-      successFunc, errorFunc);
+      p => successFunc(Object.assign(new Product(), p)),
+      errorFunc);
   }
 
   deleteProduct(id: number, successFunc: () => any, 

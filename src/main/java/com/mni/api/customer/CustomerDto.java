@@ -1,9 +1,13 @@
-package com.mni.api;
+package com.mni.api.customer;
 
-import com.mni.model.Customer;
+import com.mni.api.Password;
+import com.mni.model.customer.Customer;
+import com.mni.model.entitlement.Entitlement;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Collection;
 
 /**
  * Created by will.schick on 6/17/19.
@@ -29,14 +33,20 @@ public class CustomerDto {
     @Password
     private String password;
 
-    public CustomerDto(Long id, String name, String userId, String password) {
+    @NotNull
+    private Collection<Entitlement> entitlements;
+
+
+    public CustomerDto() {}
+
+    public CustomerDto(Long id, String name, String userId, String password,
+                       Collection<Entitlement> entitlements) {
         this.id = id;
         this.name = name;
         this.userId = userId;
         this.password = password;
+        this.entitlements = entitlements;
     }
-
-    public CustomerDto() {}
 
     public String getName() {
         return name;
@@ -68,5 +78,13 @@ public class CustomerDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Collection<Entitlement> getEntitlements() {
+        return entitlements;
+    }
+
+    public void setEntitlements(Collection<Entitlement> entitlements) {
+        this.entitlements = entitlements;
     }
 }
