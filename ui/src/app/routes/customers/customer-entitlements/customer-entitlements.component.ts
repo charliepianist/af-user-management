@@ -43,8 +43,6 @@ export class CustomerEntitlementsComponent implements OnInit {
     private locationService: LocationService) {}
 
   ngOnInit() {
-    if(!this.entitlements) this.entitlements = [];
-    
     let tom = new Date();
     tom.setHours(0, 0, 0, 0);
     tom.setDate(tom.getDate() + 1);
@@ -52,7 +50,10 @@ export class CustomerEntitlementsComponent implements OnInit {
     
     // Load products and locations
     this.productService.listProducts(
-      p => this.products = p.content,
+      p => {
+        this.products = p.content;
+        this.processEntitlements();
+      },
       e => {
         alert('Could not load products, see console for details.');
         console.log(e);
@@ -60,7 +61,10 @@ export class CustomerEntitlementsComponent implements OnInit {
       {sortBy: "name", size: 500}
     )
     this.locationService.listLocations(
-      p => this.locations = p.content,
+      p => {
+        this.locations = p.content;
+        this.processEntitlements();
+      },
       e => {
         alert('Could not load locations, see console for details.');
         console.log(e);
@@ -93,11 +97,7 @@ export class CustomerEntitlementsComponent implements OnInit {
             year: '2-digit'
           });
       else return null;
-    }else {
-      if(this.processEntitlements()) {
-        return this.expirationDate(pIndex, lIndex)
-      }else return null;
-    }
+    }else return null;
   }
 
   // Customer is currently subscribed and not on trial for prod/loc combo
@@ -107,18 +107,17 @@ export class CustomerEntitlementsComponent implements OnInit {
       if(entitlement)
         return entitlement.getExpirationDate() === null;
       else return false;
-    }else {
-      if(this.processEntitlements()) {
-        return this.isSubscribed(pIndex, lIndex);
-      }else return false;
-    }
+    }else return false;
   }
 
-  notSubscribed(pIndex: number, lIndex: number) {
+  // is not subscribed, according to entitlement grid, but can display differently
+  notSubscribed(pIndex: number, lIndex: number): boolean {
+    if(!this.processed) return true;
     return this.entitlementGrid[pIndex][lIndex] === null
   }
 
-  displayNotSubscribed(pIndex: number, lIndex: number) {
+  // should display as not subscribed
+  displayNotSubscribed(pIndex: number, lIndex: number): boolean {
     return !this.expirationDate(pIndex, lIndex) && 
           !this.isSubscribed(pIndex, lIndex) && 
           !this.hasTrialPrompt(pIndex, lIndex)
@@ -132,6 +131,11 @@ export class CustomerEntitlementsComponent implements OnInit {
       }
     }
     return newEntitlements;
+  }
+
+  useEntitlements(entitlements: Entitlement[]) {
+    this.entitlements = entitlements;
+    this.processEntitlements();
   }
 
   processEntitlements(): boolean {
@@ -168,20 +172,20 @@ export class CustomerEntitlementsComponent implements OnInit {
   }
 
   cellClasses(i: number, j: number) {
+    if(!this.processed) return {};
     if(this.update) {
       return {
         'subscribed': this.isSubscribed(i, j),
-        'trial': this.expirationDate(i, j),
+        'trial': this.expirationDate(i, j) ? true : false,
         'not-subscribed': this.displayNotSubscribed(i, j),
         'has-trial-prompt': this.hasTrialPrompt(i, j),
-        'selected-trial-prompt': this.selectedTrialPrompt[i][j],
+        'selected-trial-prompt': this.hasSelectedTrialPrompt(i, j),
         'hover-highlight': i === this.hoverP && j === this.hoverL,
-        'changed': !Entitlement.areEqual(this.origEntitlements[i][j],
-          this.entitlementGrid[i][j]),
+        'changed': this.hasChanged(i, j),
       };
     }else return {
       'view-subscribed': this.isSubscribed(i, j),
-      'view-trial': this.expirationDate(i, j),
+      'view-trial': this.expirationDate(i, j) ? true : false,
       'view-not-subscribed': this.displayNotSubscribed(i, j)
     }
   }
@@ -190,44 +194,50 @@ export class CustomerEntitlementsComponent implements OnInit {
     this.setEntitlement(pIndex, lIndex, null);
   }
   subscribe(pIndex: number, lIndex: number) {
-    let entitlement = new Entitlement(null, this.products[pIndex],
-      this.locations[lIndex]);
+    if(this.processed) {
+      let entitlement = new Entitlement(null, this.products[pIndex],
+        this.locations[lIndex]);
       this.setEntitlement(pIndex, lIndex, entitlement);
+    }
   }
   
 
   cellClick(pIndex: number, lIndex: number) {
-    if(!this.hasTrialPrompt(pIndex, lIndex)) {
-      if(this.isSubscribed(pIndex, lIndex)) {
-        // currently subscribed, want to unsubscribe
-        this.unsubscribe(pIndex, lIndex);
-  
-      }else if(this.expirationDate(pIndex, lIndex)) {
-        // on trial, want to subscribe
-        this.subscribe(pIndex, lIndex);
-      }else {
-        // not subscribed, want to subscribe
-        this.subscribe(pIndex, lIndex);
-      }
-    }else {
-      // has trial prompt, want to remove
-      let i = this.trialPromptIndex[pIndex][lIndex];
-      this.removeTrialPrompt(i);
-    }
-  }
-
-  lowerHalfClick(pIndex: number, lIndex: number) {
-    if(this.expirationDate(pIndex, lIndex)) {
-      // on trial, want to unsubscribe
-      this.unsubscribe(pIndex, lIndex)
-    }else {
-      // not subscribed, want to add trial
+    if(this.processed) {
       if(!this.hasTrialPrompt(pIndex, lIndex)) {
-        this.addTrialPrompt(pIndex, lIndex);
+        if(this.isSubscribed(pIndex, lIndex)) {
+          // currently subscribed, want to unsubscribe
+          this.unsubscribe(pIndex, lIndex);
+    
+        }else if(this.expirationDate(pIndex, lIndex)) {
+          // on trial, want to subscribe
+          this.subscribe(pIndex, lIndex);
+        }else {
+          // not subscribed, want to subscribe
+          this.subscribe(pIndex, lIndex);
+        }
       }else {
         // has trial prompt, want to remove
         let i = this.trialPromptIndex[pIndex][lIndex];
         this.removeTrialPrompt(i);
+      }
+    }
+  }
+
+  lowerHalfClick(pIndex: number, lIndex: number) {
+    if(this.processed) {
+      if(this.expirationDate(pIndex, lIndex)) {
+        // on trial, want to unsubscribe
+        this.unsubscribe(pIndex, lIndex)
+      }else {
+        // not subscribed, want to add trial
+        if(!this.hasTrialPrompt(pIndex, lIndex)) {
+          this.addTrialPrompt(pIndex, lIndex);
+        }else {
+          // has trial prompt, want to remove
+          let i = this.trialPromptIndex[pIndex][lIndex];
+          this.removeTrialPrompt(i);
+        }
       }
     }
   }
@@ -267,8 +277,20 @@ export class CustomerEntitlementsComponent implements OnInit {
     })
   }
 
-  hasTrialPrompt(pIndex: number, lIndex: number) {
+  hasTrialPrompt(pIndex: number, lIndex: number): boolean {
+    if(!this.processed) return false;
     return this.trialPromptIndex[pIndex][lIndex] != null;
+  }
+
+  hasSelectedTrialPrompt(pIndex: number, lIndex: number): boolean {
+    if(!this.processed) return false;
+    return this.selectedTrialPrompt[pIndex][lIndex];
+  }
+
+  hasChanged(pIndex: number, lIndex: number): boolean {
+    if(!this.processed) return false;
+    return !Entitlement.areEqual(this.origEntitlements[pIndex][lIndex],
+      this.entitlementGrid[pIndex][lIndex])
   }
 
   sortOrderedIndices() {

@@ -1,10 +1,8 @@
 package com.mni.api.product;
 
-import com.mni.model.multicastgroup.MulticastGroup;
+import com.mni.api.multicastgroup.MulticastGroupDto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.util.Collection;
 
 public class ProductDto {
 
@@ -13,16 +11,11 @@ public class ProductDto {
     @NotBlank
     private String name;
 
-    @NotNull
-    private Collection<MulticastGroup> multicastGroups;
-
-
     public ProductDto() {}
 
-    public ProductDto(Long id, String name, Collection<MulticastGroup> multicastGroups) {
+    public ProductDto(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.multicastGroups = multicastGroups;
     }
 
     public Long getId() { return id; }
@@ -35,11 +28,5 @@ public class ProductDto {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Collection<MulticastGroup> getMulticastGroups() { return multicastGroups; }
-
-    public void setMulticastGroups(Collection<MulticastGroup> multicastGroups) {
-        this.multicastGroups = multicastGroups;
     }
 }

@@ -27,6 +27,9 @@ tr {
 thead tr { background-color: lightsteelblue;}
 thead th { background-color: lightsteelblue;}
 :not(thead) > tr:nth-child(odd) {background-color: #f2f2f2;}
+:not(thead) > tr.title-row {
+    background-color: lightsteelblue;   
+}
 
 .row-option {
     margin-left: 0.25em;

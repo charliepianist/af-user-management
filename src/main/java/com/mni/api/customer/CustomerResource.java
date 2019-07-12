@@ -1,6 +1,6 @@
 package com.mni.api.customer;
 
-import com.mni.api.customer.CustomerDto;
+import com.mni.api.entitlement.EntitlementDto;
 import com.mni.model.customer.Customer;
 import com.mni.model.customer.CustomerRepository;
 import com.mni.model.entitlement.Entitlement;
@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.util.Optional;
+import javax.validation.constraints.NotNull;
+import java.util.*;
 
 /**
  * Created by will.schick on 6/17/19.
@@ -40,7 +41,6 @@ public class CustomerResource {
         customerDto.setName(customer.getName());
         customerDto.setUserId(customer.getUserId());
         customerDto.setPassword(customer.getPassword());
-        customerDto.setEntitlements(customer.getEntitlements());
         return customerDto;
     }
 
@@ -51,7 +51,6 @@ public class CustomerResource {
         customer.setName(customerDto.getName());
         customer.setUserId(customerDto.getUserId());
         customer.setPassword(customerDto.getPassword());
-        customer.setEntitlements(customerDto.getEntitlements());
         return customer;
     }
 
@@ -64,9 +63,7 @@ public class CustomerResource {
     //Attempt to save a customer, returns HTTP 400 Bad Request if something goes wrong
     private Customer trySaveCustomer(Customer customer) {
         try{
-            customer.getEntitlements().forEach((Entitlement e) -> {
-                e.setClient(customer);
-            });
+            if(customer.getEntitlements() == null) customer.setEntitlements(new ArrayList());
             return customerRepository.save(customer);
         }catch(Exception e) {
             if(e instanceof DataIntegrityViolationException)
@@ -105,7 +102,6 @@ public class CustomerResource {
                 .map(this::translateCustomerToCustomerDto);
     }
 
-
     @GetMapping("{id}")
     public CustomerDto getCustomer(@PathVariable("id") Long id){
         Optional<Customer> customer = customerRepository.findById(id);
@@ -113,6 +109,16 @@ public class CustomerResource {
         if(!customer.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND); // Invalid ID
         return translateCustomerToCustomerDto(customer.get()); //Valid ID
+    }
+
+    @GetMapping("{id}/entitlements")
+    public Collection<EntitlementDto> getCustomerEntitlements(@PathVariable("id") Long id){
+        Optional<Customer> customer = customerRepository.findById(id);
+        if(!customer.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND); // Invalid ID
+
+        Collection<Entitlement> entitlements = customer.get().getEntitlements();
+        return EntitlementDto.entitlementsToEntitlementDtos(entitlements); //Valid ID
     }
 
     @PostMapping
@@ -129,6 +135,24 @@ public class CustomerResource {
         inputCustomer.setId(id);
 
         return translateCustomerToCustomerDto(trySaveCustomer(inputCustomer));
+    }
+
+    @PutMapping("{id}/entitlements")
+    public Collection<EntitlementDto> updateCustomerEntitlements(@PathVariable Long id,
+                                                                 @NotNull @RequestBody Collection<EntitlementDto> entitlementDtos) {
+        Optional<Customer> customerOptional = customerRepository.findById(id);
+        if(!customerOptional.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND); // Invalid ID
+        Customer customer = customerOptional.get();
+
+        Collection<Entitlement> entitlements = EntitlementDto.entitlementDtosToEntitlements(entitlementDtos);
+        entitlements.forEach(e -> {
+            e.setClient(customer);
+        });
+        customer.setEntitlements(entitlements);
+
+        Customer persistedCustomer = trySaveCustomer(customer);
+        return EntitlementDto.entitlementsToEntitlementDtos(persistedCustomer.getEntitlements());
     }
 
     @DeleteMapping("{id}")

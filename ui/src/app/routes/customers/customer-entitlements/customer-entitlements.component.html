@@ -6,7 +6,7 @@
       </tr>
       <tr>
         <td><b>Product</b></td>
-        <td *ngFor="let location of locations" style="font-size:0.8em;">
+        <td *ngFor="let location of locations" style="font-size:0.95em;">
           <b>{{ location.getCode() }}</b>
         </td>
       </tr>
@@ -46,9 +46,9 @@
           </div>
       </td>
     </tr>
-    <tr>
-        <td><b>Product</b></td>
-        <td *ngFor="let location of locations" style="font-size:0.8em;">
+    <tr class="title-row">
+        <td><b>Locations</b></td>
+        <td *ngFor="let location of locations" style="font-size: 0.95em;">
           <b>{{ location.getCode() }}</b>
         </td>
       </tr>
@@ -139,7 +139,7 @@
       </tr>
       <tr>
         <td><b>Product</b></td>
-        <td *ngFor="let location of locations" style="font-size:0.8em;">
+        <td *ngFor="let location of locations" style="font-size:0.95em;">
           <b>{{ location.getCode() }}</b>
         </td>
       </tr>
@@ -155,14 +155,14 @@
         </span>
         <ng-template #filler>
           <span style="visibility: hidden;" class="cell-text">
-            Unsub<br>&nbsp;
+            Unsub<br>&nbsp; <!-- For spacing -->
           </span>
         </ng-template>
       </td>
     </tr>
-    <tr>
-        <td><b>Product</b></td>
-        <td *ngFor="let location of locations" style="font-size:0.8em;">
+    <tr class="title-row">
+        <td><b>Locations</b></td>
+        <td *ngFor="let location of locations" style="font-size:0.95em;">
           <b>{{ location.getCode() }}</b>
         </td>
       </tr>

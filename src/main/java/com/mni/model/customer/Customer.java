@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mni.model.entitlement.Entitlement;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -30,8 +32,8 @@ public class Customer {
     @Column(length=MAX_PASSWORD_LENGTH)
     private String password;
 
-    @JsonManagedReference
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @NotNull
     Collection<Entitlement> entitlements;
 
     public Customer(){}
@@ -82,6 +84,8 @@ public class Customer {
     }
 
     public void setEntitlements(Collection<Entitlement> entitlements) {
-        this.entitlements = entitlements;
+        if(this.entitlements == null) this.entitlements = new ArrayList();
+        this.entitlements.clear();
+        this.entitlements.addAll(entitlements);
     }
 }
