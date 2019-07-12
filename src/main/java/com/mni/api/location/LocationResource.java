@@ -30,7 +30,7 @@ public class LocationResource {
     public static final int MAX_PAGE_SIZE = 100;
     public static final int DEFAULT_PAGE_SIZE = 20;
     public static final int MIN_PAGE_SIZE = 1;
-    public static final String DEFAULT_SORT_FIELD = "id";
+    public static final String DEFAULT_SORT_FIELD = "code";
 
     private LocationDto translateLocationToLocationDto(Location location) {
         LocationDto locationDto = new LocationDto();

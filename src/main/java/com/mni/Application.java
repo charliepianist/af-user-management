@@ -115,16 +115,16 @@ public class Application {
         // ================= Customer & Entitlement Setup =====================
         Customer acme = customerRepository.save(
                 new Customer(10001L, "ACME", "acme",
-                "a@e!E2r39#rErB$", null));
+                "a@e!E2r39#rErB$", new ArrayList()));
         Customer bofa = customerRepository.save(
                 new Customer(10002L, "Bank of America", "bofa",
-                "b@e!E2r39#rErB$", null));
+                "b@e!E2r39#rErB$", new ArrayList()));
         Customer comcast = customerRepository.save(
                 new Customer(10003L, "Comcast", "comcast",
-                "c@e!E2r39#rErB$", null));
+                "c@e!E2r39#rErB$", new ArrayList()));
         Customer dell = customerRepository.save(
                 new Customer(10004L, "Dell", "dell",
-                "d@e!E2r39#rErB$", null));
+                "d@e!E2r39#rErB$", new ArrayList()));
         
         // ====================== Entitlement Setup =========================
         Date now = new Date();

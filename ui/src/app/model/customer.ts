@@ -20,6 +20,22 @@ export class Customer {
     this.entitlements = entitlements;
   }
   
+  static copy(customer: Customer, {
+      id = customer.getId(),
+      name = customer.getName(),
+      userId = customer.getUserId(),
+      password = customer.getPassword(),
+      entitlements = customer.getEntitlements()
+    }: {
+      id?: number,
+      name?: string,
+      userId?: string,
+      password?: string,
+      entitlements?: Entitlement[]
+    } = {}): Customer {
+      return new Customer(id, name, userId, password, entitlements);
+  }
+
   getId(): number {
     return this.id;
   }
@@ -34,6 +50,9 @@ export class Customer {
   }
   getEntitlements(): Entitlement[] {
     return this.entitlements;
+  }
+  setEntitlements(entitlements: Entitlement[]) {
+    this.entitlements = entitlements;
   }
 
   equals(other: Customer): boolean {

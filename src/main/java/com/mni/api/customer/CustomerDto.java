@@ -33,19 +33,13 @@ public class CustomerDto {
     @Password
     private String password;
 
-    @NotNull
-    private Collection<Entitlement> entitlements;
-
-
     public CustomerDto() {}
 
-    public CustomerDto(Long id, String name, String userId, String password,
-                       Collection<Entitlement> entitlements) {
+    public CustomerDto(Long id, String name, String userId, String password) {
         this.id = id;
         this.name = name;
         this.userId = userId;
         this.password = password;
-        this.entitlements = entitlements;
     }
 
     public String getName() {
@@ -78,13 +72,5 @@ public class CustomerDto {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Collection<Entitlement> getEntitlements() {
-        return entitlements;
-    }
-
-    public void setEntitlements(Collection<Entitlement> entitlements) {
-        this.entitlements = entitlements;
     }
 }

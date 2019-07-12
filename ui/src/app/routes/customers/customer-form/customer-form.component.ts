@@ -26,7 +26,6 @@ export class CustomerFormComponent implements OnInit {
   passLength: number = 15;
   invalidSubmit: boolean = false; // when submit clicked with invalid input
   submissionErrorMsg: string = null;
-  entitlements: Entitlement[] = [];
 
   constructor(private router: Router, private route: ActivatedRoute, private customerService: CustomerService) {}
 
@@ -38,7 +37,7 @@ export class CustomerFormComponent implements OnInit {
     this.route.paramMap.subscribe(
       params => {
         this.id = params.get('id');
-        if(this.isUpdating()) this.customerService.getCustomer(this.id, 
+        if(this.isUpdating()) this.customerService.getCustomerWithEntitlements(this.id, 
           p => {
             this.customer = p
             this.origName = this.customer.getName();
@@ -46,7 +45,8 @@ export class CustomerFormComponent implements OnInit {
             this.name = this.origName;
             this.userId = this.customer.getUserId();
             this.password = this.customer.getPassword();
-            this.entitlements = this.customer.getEntitlements();
+            this.customerEntitlementsComponent.useEntitlements(
+              this.customer.getEntitlements());
           },
           e => { this.id = null; errorFunc(e);});
       },
@@ -86,8 +86,7 @@ export class CustomerFormComponent implements OnInit {
       let newCustomer = new Customer(this.idNum, this.name, this.userId, 
         this.password, this.customerEntitlementsComponent.getEntitlements());
       let successFunc = (p: Customer) => {
-        this.router.navigate(['/customers', 
-                              Object.assign(new Customer(), p).getId()]);
+        this.router.navigate(['/customers', p.getId()]);
       };
       let errorFunc = (e: HttpErrorResponse) => {
         this.submissionErrorMsg = e.error.status + ' ' + 
@@ -98,11 +97,11 @@ export class CustomerFormComponent implements OnInit {
 
       if(this.isUpdating()) {
         // Updating an already existing user
-        this.customerService.updateCustomer(newCustomer, successFunc, 
+        this.customerService.updateCustomerWithEntitlements(newCustomer, successFunc, 
           errorFunc);
       }else {
         // Creating a new user
-        this.customerService.createCustomer(newCustomer, successFunc,
+        this.customerService.createCustomerWithEntitlements(newCustomer, successFunc,
           errorFunc);
       }
     }

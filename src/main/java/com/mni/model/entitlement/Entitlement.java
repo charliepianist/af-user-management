@@ -19,7 +19,6 @@ public class Entitlement {
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @NotNull
     private Product product;
 
     @ManyToOne
@@ -27,7 +26,6 @@ public class Entitlement {
     @NotNull
     private Location location;
 
-    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Customer client;

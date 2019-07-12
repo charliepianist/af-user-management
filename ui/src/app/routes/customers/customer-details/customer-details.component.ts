@@ -12,7 +12,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class CustomerDetailsComponent implements OnInit {
 
   customer: Customer;
-  error: HttpErrorResponse;
   toDelete: boolean = false;
 
   constructor(private customerService: CustomerService, private route: ActivatedRoute, private router: Router) { }
@@ -20,12 +19,8 @@ export class CustomerDetailsComponent implements OnInit {
   ngOnInit() {
     this.route.paramMap.subscribe(
       params => {
-        this.customerService.getCustomer(params.get('id'),
-          p => this.customer = p,
-          e => { // onError
-            console.log(e);
-            this.error = e;
-          }
+        this.customerService.getCustomerWithEntitlements(params.get('id'),
+          p => this.customer = p
         );
       }
     );

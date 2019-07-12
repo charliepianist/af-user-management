@@ -2,6 +2,7 @@ package com.mni.api
 
 import com.mni.api.customer.CustomerDto
 import com.mni.api.customer.CustomerResource
+import com.mni.api.entitlement.EntitlementDto
 import com.mni.model.customer.Customer
 import com.mni.model.customer.CustomerRepository
 import com.mni.model.entitlement.Entitlement
@@ -19,10 +20,12 @@ class CustomerResourceSpec extends Specification {
 
     CustomerResource customerResource
     @Shared ArrayList<Entitlement> entitlements
+    @Shared ArrayList<EntitlementDto> entitlementDtos
 
     void setupSpec() {
-        entitlements = new ArrayList<>();
+        entitlements = new ArrayList<>()
         entitlements.add(new Entitlement(1, null, null, null))
+        entitlementDtos = EntitlementDto.entitlementsToEntitlementDtos(entitlements)
     }
 
     void setup(){
@@ -38,7 +41,9 @@ class CustomerResourceSpec extends Specification {
         then:
         "customerRepository should call findById(1), which will return a Customer object"
         1 * customerResource.customerRepository.findById(1) >> Optional.of(
-                new Customer(1, "ACME", "acme", "a3lK9n12!_", entitlements))
+                new Customer(1, "ACME", "acme", "a3lK9n12!_", entitlements)
+        )
+
         and:
         "The customer returned by getCustomer() should be the same as the customer given by the repository"
         result instanceof CustomerDto
@@ -46,7 +51,6 @@ class CustomerResourceSpec extends Specification {
         result.getName() == "ACME"
         result.getUserId() == "acme"
         result.getPassword() == "a3lK9n12!_"
-        result.getEntitlements() == entitlements
     }
 
     void "getCustomer() should return null and throw an exception when called with an invalid ID" () {
@@ -59,16 +63,50 @@ class CustomerResourceSpec extends Specification {
         1 * customerResource.customerRepository.findById(-1) >> Optional.empty()
 
         and:
-        "The result from getCustomer() should be null"
+        "Exception should be thrown"
         thrown(ResponseStatusException)
-        result == null
+    }
+
+    void "getCustomerEntitlements() should return correct entitlements when called with valid ID" () {
+        when:
+        "getCustomerEntitlements() is called"
+        def result = customerResource.getCustomerEntitlements(1)
+
+        then:
+        "customerRepository should call findById(1), which will return a Customer object"
+        1 * customerResource.customerRepository.findById(1) >> Optional.of(
+                new Customer(1, "ACME", "acme", "a3lK9n12!_", entitlements)
+        )
+
+        and:
+        "result should be the correct set of entitlements"
+        result instanceof Collection<EntitlementDto>
+        result[0].getId() == entitlementDtos.get(0).getId()
+        result[0].getProduct() == entitlementDtos.get(0).getProduct()
+        result[0].getLocation() == entitlementDtos.get(0).getLocation()
+        result[0].getClient() == entitlementDtos.get(0).getClient()
+        result[0].getExpirationDate() == entitlementDtos.get(0).getExpirationDate()
+    }
+
+    void "getCustomerEntitlements() should throw exception given invalid ID" () {
+        when:
+        "getCustomerEntitlements() is called"
+        def result = customerResource.getCustomerEntitlements(1)
+
+        then:
+        "customerRepository should call findById(1), which will return a Customer object"
+        1 * customerResource.customerRepository.findById(1) >> Optional.empty()
+
+        and:
+        "Exception should be thrown"
+        thrown(ResponseStatusException)
     }
 
     void "saveCustomer() with a new userID should return a new persisted customer" () {
         when:
         "saveCustomer() is called with a valid new ID"
         def result = customerResource.saveCustomer(new CustomerDto(null, "Bank",
-                "bankUserID", "abcdefghijklmno", entitlements))
+                "bankUserID", "abcdefghijklmno"))
 
         then:
         "customerRepository should call save, returning the saved Customer object"
@@ -86,7 +124,6 @@ class CustomerResourceSpec extends Specification {
         result.getName() == "Bank"
         result.getUserId() == "bankUserID"
         result.getPassword() == "abcdefghijklmno"
-        result.getEntitlements() == entitlements
     }
 
     void "listCustomers() should return the current customers" () {
@@ -112,13 +149,11 @@ class CustomerResourceSpec extends Specification {
         result[0].getName() == "Customer 1"
         result[0].getUserId() == "customer1"
         result[0].getPassword() == "password1"
-        result[0].getEntitlements() == entitlements
 
         result[1].getId() == 2L
         result[1].getName() == "Customer 2"
         result[1].getUserId() == "customer2"
         result[1].getPassword() == "password2"
-        result[1].getEntitlements() == entitlements
     }
 
     void "listCustomers() should use default parameters given invalid parameters" () {
@@ -155,7 +190,7 @@ class CustomerResourceSpec extends Specification {
 
     void "updateCustomer() should call save() to save customer and return new customer" () {
         given:
-        CustomerDto customerDto = new CustomerDto(1, "New Name", "New UserID", "abcdefghijklmno", entitlements)
+        CustomerDto customerDto = new CustomerDto(1, "New Name", "New UserID", "abcdefghijklmno")
 
         when:
         "updateCustomer() is called"
@@ -167,8 +202,7 @@ class CustomerResourceSpec extends Specification {
                                                                     customer.getId() == 1L &&
                                                                     customer.getName() == "New Name" &&
                                                                     customer.getUserId() == "New UserID" &&
-                                                                    customer.getPassword() == "abcdefghijklmno" &&
-                                                                    customer.getEntitlements() == entitlements
+                                                                    customer.getPassword() == "abcdefghijklmno"
         }) >> new Customer(1L, "New Name", "New UserID", "abcdefghijklmno", entitlements)
 
         and:
@@ -178,6 +212,47 @@ class CustomerResourceSpec extends Specification {
         result.getPassword() == customerDto.getPassword()
         result.getName() == customerDto.getName()
         result.getUserId() == customerDto.getUserId()
-        result.getEntitlements() == entitlements
+    }
+
+    void "updateCustomerEntitlements() should call save() and return updated customer" () {
+        given:
+        Customer c = new Customer(1, "New Name", "New UserID", "abcdefghijklmno", new ArrayList())
+
+        when:
+        "updateCustomerEntitlements() is called"
+        def result = customerResource.updateCustomerEntitlements(1, entitlementDtos)
+
+        then:
+        "save() should be called"
+        1 * customerResource.customerRepository.findById(1) >> Optional.of(c)
+        1 * customerResource.customerRepository.save({ Customer customer ->
+            customer.getId() == 1L &&
+                    customer.getName() == "New Name" &&
+                    customer.getUserId() == "New UserID" &&
+                    customer.getPassword() == "abcdefghijklmno"
+        }) >> new Customer(1L, "New Name", "New UserID", "abcdefghijklmno", entitlements)
+
+        and:
+        "Correct result should be returned"
+        result instanceof Collection<EntitlementDto>
+        result[0].getId() == entitlementDtos.get(0).getId()
+        result[0].getProduct() == entitlementDtos.get(0).getProduct()
+        result[0].getLocation() == entitlementDtos.get(0).getLocation()
+        result[0].getClient() == entitlementDtos.get(0).getClient()
+        result[0].getExpirationDate() == entitlementDtos.get(0).getExpirationDate()
+    }
+
+    void "updateCustomerEntitlements() should throw an exception when invalid ID" () {
+        when:
+        "updateCustomerEntitlements() with invalid ID is called"
+        def result = customerResource.updateCustomerEntitlements(1, entitlementDtos)
+
+        then:
+        "findById() should be called"
+        1 * customerResource.customerRepository.findById(1) >> Optional.empty()
+
+        and:
+        "Exception is thrown"
+        thrown(ResponseStatusException)
     }
 }

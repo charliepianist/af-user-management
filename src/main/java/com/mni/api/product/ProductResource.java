@@ -30,20 +30,18 @@ public class ProductResource {
     public static final int MAX_PAGE_SIZE = 100;
     public static final int DEFAULT_PAGE_SIZE = 20;
     public static final int MIN_PAGE_SIZE = 1;
-    public static final String DEFAULT_SORT_FIELD = "id";
+    public static final String DEFAULT_SORT_FIELD = "name";
 
     private ProductDto translateProductToProductDto(Product product) {
         ProductDto productDto = new ProductDto();
         productDto.setId(product.getId());
         productDto.setName(product.getName());
-        productDto.setMulticastGroups(product.getMulticastGroups());
         return productDto;
     }
     private Product translateProductDtoToProduct(ProductDto productDto) {
         Product product = new Product();
         product.setId(productDto.getId());
         product.setName(productDto.getName());
-        product.setMulticastGroups(productDto.getMulticastGroups());
         return product;
     }
 

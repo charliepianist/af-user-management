@@ -45,7 +45,6 @@ class ProductResourceSpec extends Specification {
         result instanceof ProductDto
         result.getId() == 1L
         result.getName() == "US Data"
-        result.getMulticastGroups() == multicastGroups
     }
 
     void "getProduct() should return null and throw an exception when called with an invalid ID" () {
@@ -66,7 +65,7 @@ class ProductResourceSpec extends Specification {
     void "saveProduct() with a new name should return a new persisted product" () {
         when:
         "saveProduct() is called with a valid new name"
-        def result = productResource.saveProduct(new ProductDto(null, "US Data", multicastGroups))
+        def result = productResource.saveProduct(new ProductDto(null, "US Data"))
 
         then:
         "productRepository should call save, returning the saved Product object"
@@ -79,7 +78,6 @@ class ProductResourceSpec extends Specification {
         result instanceof ProductDto
         result.getId() == 120L
         result.getName() == "US Data"
-        result.getMulticastGroups() == multicastGroups
     }
 
     void "listProducts() should return the current products" () {
@@ -103,11 +101,9 @@ class ProductResourceSpec extends Specification {
 
         result[0].getId() == 1L
         result[0].getName() == "Product 1"
-        result[0].getMulticastGroups() == multicastGroups
 
         result[1].getId() == 2L
         result[1].getName() == "Product 2"
-        result[1].getMulticastGroups() == multicastGroups
     }
 
     void "listProducts() should use default parameters given invalid parameters" () {
@@ -144,7 +140,7 @@ class ProductResourceSpec extends Specification {
 
     void "updateProduct() should call save() to save product and return new product" () {
         given:
-        ProductDto productDto = new ProductDto(1, "New Name", multicastGroups)
+        ProductDto productDto = new ProductDto(1, "New Name")
 
         when:
         "updateProduct() is called"
@@ -154,7 +150,7 @@ class ProductResourceSpec extends Specification {
         "save() should be called"
         1 * productResource.productRepository.save({ Product product ->
             product.getId() == 1L &&
-                    product.getName() == "New Name" && product.getMulticastGroups() == multicastGroups
+                    product.getName() == "New Name"
         }) >> new Product(1L, "New Name", multicastGroups)
 
         and:
@@ -162,6 +158,5 @@ class ProductResourceSpec extends Specification {
         result instanceof ProductDto
         result.getId() == productDto.getId()
         result.getName() == productDto.getName()
-        result.getMulticastGroups() == multicastGroups
     }
 }

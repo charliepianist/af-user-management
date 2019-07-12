@@ -5,7 +5,6 @@ export class Product{
 
     id: number;
     name: string;
-    multicastGroups: any[];
   
     constructor(id: number = null, name: string = null) {
       this.id = id;
