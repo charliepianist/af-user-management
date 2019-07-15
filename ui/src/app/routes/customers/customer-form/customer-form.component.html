@@ -65,9 +65,9 @@
         <span *ngIf="validatePassword()">Please enter a valid password.<br></span>
       </div>
       <br>
-
-      <app-customer-entitlements
-        [update]="true">
-      </app-customer-entitlements>
     </form>
 </div>
+<app-customer-entitlements
+        [update]="true"
+        [entitlements]="isUpdating() ? null : []">
+      </app-customer-entitlements>

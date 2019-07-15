@@ -20,6 +20,12 @@ table, th, td {
     border: 1px solid black;
     text-align: center;
 }
+th, thead td {
+    padding: 0.3em 2em;
+}
+td {
+    padding: 0.3em 0.5em;
+}
 tr {
     height: 2em;
     font-size: 1.2em;

@@ -6,9 +6,8 @@ td div { /*Two halves of bigger div*/
     padding-top: 0.1em;
     padding-bottom: 0.1em;
 }
-thead td {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
+td {
+    padding: 0px 0px; 
 }
 .row-options {
     width: 11%
@@ -237,4 +236,23 @@ td:hover .full-text {
 }
 .view-not-subscribed {
     background-color: inherit;
+}
+
+/* ===== Horizontal formatting across screen ===== */
+.element-container {
+    display: flex;
+    width: 100%;
+}
+.entitlements-table {
+    min-width: 48%;
+    margin: 0px 1em;
+} 
+.inner-element {
+    width: 100%;
+}
+.float-right {
+    float: right;
+}
+.float-left {
+    float: left;
 }
