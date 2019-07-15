@@ -35,6 +35,100 @@ export class CustomerEntitlementsComponent implements OnInit {
   hoverP: number; // when user hovers over a trial prompt,
   hoverL: number; // these highlight the corresponding table cell
 
+  readonly legendStyles = [
+    {
+      'meaning': 'N/A',
+      'styles': {
+        'background-color': 'inherit'
+      }
+    },
+    {
+      'meaning': 'Subscribed',
+      'styles': {
+        'background-color': 'forestgreen'
+      }
+    },
+    {
+      'meaning': 'Unsubscribe',
+      'styles': {
+        'background-color': 'rgba(255, 0, 0, 0.2)'
+      }
+    },
+    {
+      'meaning': 'Trial',
+      'styles': {
+        'background-color': 'cornflowerblue'
+      }
+    },
+    {
+      'meaning': `Subscribed`,
+      'subtitle': 'updated',
+      'styles': {
+        'background': `repeating-linear-gradient(
+          45deg,
+          rgba(36, 196, 4, 0.89),
+          rgba(36, 196, 4, 0.89) 5px,
+          rgba(37, 168, 10, 0.89) 5px,
+          rgba(37, 168, 10, 0.89) 10px
+      )`
+      }
+    },
+    {
+      'meaning': `Unsubscribed`,
+      'subtitle': 'updated',
+      'styles': {
+        'background': `repeating-linear-gradient(
+          45deg, 
+          rgba(255, 0, 0, 0.226),
+          rgba(255, 0, 0, 0.226) 5px,
+          rgba(194, 0, 0, 0.322) 5px,
+          rgba(194, 0, 0, 0.322)  10px
+      )`
+      }
+    },
+    {
+      'meaning': `Trial Prompt`,
+      'subtitle': 'unselected',
+      'styles': {
+        'background': `repeating-linear-gradient(
+          45deg,
+          rgba(72, 198, 248, 0.74),
+          rgba(72, 198, 248, 0.74) 5px,
+          rgba(136, 205, 245, 0.877) 5px,
+          rgba(136, 205, 245, 0.877) 10px
+      )`
+      }
+    },
+    {
+      'meaning': `Trial Prompt`,
+      'subtitle': 'selected',
+      'styles': {
+        'background': `repeating-linear-gradient(
+          45deg,
+          rgba(0, 127, 177, 0.877),
+          rgba(0, 127, 177, 0.877) 5px,
+          rgba(2, 143, 224, 0.877) 5px,
+          rgba(2, 143, 224, 0.877) 10px
+      )`
+      }
+    },
+    {
+      'meaning': `Trial`,
+      'subtitle': 'updated',
+      'styles': {
+        'background': `repeating-linear-gradient(
+          45deg,
+          rgba(0, 127, 177, 0.877),
+          rgba(0, 127, 177, 0.877) 5px,
+          rgba(2, 143, 224, 0.877) 5px,
+          rgba(2, 143, 224, 0.877) 10px
+      )`
+      },
+      'styleText': `Trial
+      4/5/22`
+    },
+  ];
+
   constructor(private productService: ProductService,
     private locationService: LocationService) {}
 

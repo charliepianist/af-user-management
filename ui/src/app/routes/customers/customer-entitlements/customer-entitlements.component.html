@@ -1,110 +1,138 @@
-<ng-container *ngIf="update; else viewEntitlements">
-  <table class="container">
-    <thead>
-      <tr>
-        <td colspan="1000"><b>Entitlements</b></td>
-      </tr>
-      <tr>
-        <td><b>Product</b></td>
-        <td *ngFor="let location of locations" style="font-size:0.95em;">
-          <b>{{ location.getCode() }}</b>
-        </td>
-      </tr>
-    </thead>
-    <tr *ngFor="let product of products; let p = index">
-      <td class="product-name"><b>{{ product.getName() }}</b></td>
-      <td *ngFor="let location of locations; let l = index"
-        [ngClass]="cellClasses(p, l)"
-        (click)="cellClick(p, l)">
-  
-          <div class="upper-half">
-            <span *ngIf="expirationDate(p, l)" 
-              class="full-text cell-text">
-              Trial
-              <br>{{ expirationDate(p, l) }}
-            </span>
-            <span *ngIf="isSubscribed(p, l); else subscribeText" 
-              class="upper-text cell-text">
-              Unsub
-            </span>
-            <ng-template #subscribeText>
-              <span *ngIf="!hasTrialPrompt(p, l)" class="upper-text cell-text">
-                Sub
+<div class="element-container">
+  <div class="inner-element">
+      <table #legend class="float-right">
+          <thead>
+            <tr>
+              <th colspan="1000">Legend</th>
+            </tr>
+            <tr>
+              <th>
+                Color
+              </th>
+              <th>
+                Meaning
+              </th>
+            </tr>
+          </thead>
+          <tr *ngFor="let styleObj of legendStyles">
+            <td [ngStyle]="styleObj.styles" style="white-space: pre-line">
+              <b>{{styleObj.styleText}}</b>
+            </td>
+            <td>
+              <b>{{styleObj.meaning}}</b><br>
+              <span *ngIf="styleObj.subtitle" style="font-size: 0.9em; line-height: 0.9em;">
+                ({{styleObj.subtitle}})
               </span>
-            </ng-template>
-          </div>
-  
-          <div class="lower-half" 
-            (click)="$event.stopPropagation(); lowerHalfClick(p, l)">
-            <span *ngIf="!expirationDate(p, l) && !hasTrialPrompt(p, l); else unsub" 
-              class="lower-text cell-text">
-              Trial
-            </span>
-            <ng-template #unsub>
-              <span class="lower-text cell-text">Unsub</span>
-            </ng-template>
-          </div>
-      </td>
-    </tr>
-    <tr class="title-row">
-        <td><b>Locations</b></td>
-        <td *ngFor="let location of locations" style="font-size: 0.95em;">
-          <b>{{ location.getCode() }}</b>
-        </td>
-      </tr>
-  </table>
-  <br>
-  
-  <div style="display:flex;">
-    <table *ngIf="changes.length > 0" id="changes">
+            </td>
+          </tr>
+        </table>
+  </div>
+  <ng-container *ngIf="update; else viewEntitlements">
+    <table class="entitlements-table">
       <thead>
         <tr>
-          <th colspan="1000">
-            Changes
-          </th>
+          <th colspan="1000">Entitlements</th>
         </tr>
         <tr>
-          <td>Undo</td>
-          <td>Product</td>
-          <td>Location</td>
-          <td>Old</td>
-          <td>New</td>
+          <td><b>Product</b></td>
+          <td *ngFor="let location of locations" style="font-size:0.95em;">
+            <b>{{ location.getCode() }}</b>
+          </td>
         </tr>
       </thead>
-      <tr *ngFor="let change of changes; let i = index" 
-          [class.first-change]="isFirstChange(i)"
-          (click)="undoChange(i)"
-          (mouseover)="changeMouseover(i)"
-          (mouseleave)="changeMouseleave(i)">
-        <td>
-          <button>Undo</button>
-        </td>
-        <td *ngIf="isFirstChange(i)" 
-            [attr.rowspan]="numChangesByProduct(i)"
-            (click)="$event.stopPropagation()" 
-            (mouseover)="$event.stopPropagation()"
-            (mouseleave)="$event.stopPropagation()">
-          {{ change.getProductName() }}
-        </td>
-        <td>{{ change.getLocationCode() }}</td>
-        <td [ngClass]="change.oldClasses()">
-          {{ change.oldString() }}
-        </td>
-        <td [ngClass]="change.newClasses()">
-          {{ change.newString() }}
+      <tr *ngFor="let product of products; let p = index">
+        <td class="product-name"><b>{{ product.getName() }}</b></td>
+        <td *ngFor="let location of locations; let l = index"
+          [ngClass]="cellClasses(p, l)"
+          (click)="cellClick(p, l)">
+    
+            <div class="upper-half">
+              <span *ngIf="expirationDate(p, l)" 
+                class="full-text cell-text">
+                Trial
+                <br>{{ expirationDate(p, l) }}
+              </span>
+              <span *ngIf="isSubscribed(p, l); else subscribeText" 
+                class="upper-text cell-text">
+                Unsub
+              </span>
+              <ng-template #subscribeText>
+                <span *ngIf="!hasTrialPrompt(p, l)" class="upper-text cell-text">
+                  Sub
+                </span>
+              </ng-template>
+            </div>
+    
+            <div class="lower-half" 
+              (click)="$event.stopPropagation(); lowerHalfClick(p, l)">
+              <span *ngIf="!expirationDate(p, l) && !hasTrialPrompt(p, l); else unsub" 
+                class="lower-text cell-text">
+                Trial
+              </span>
+              <ng-template #unsub>
+                <span class="lower-text cell-text">Unsub</span>
+              </ng-template>
+            </div>
         </td>
       </tr>
+      <tr class="title-row">
+          <td><b>Locations</b></td>
+          <td *ngFor="let location of locations" style="font-size: 0.95em;">
+            <b>{{ location.getCode() }}</b>
+          </td>
+        </tr>
     </table>
-  
-    <table id="trial-prompts">
-      <thead *ngIf="trialPrompts.length > 0">
+    <br>
+  </ng-container>
+
+  <ng-template #viewEntitlements>
+    <table class="container entitlements-table">
+      <thead>
         <tr>
-          <th colspan="1000">
-            Trial Lengths
-          </th>
+          <th colspan="1000">Entitlements</th>
+        </tr>
+        <tr>
+          <td><b>Product</b></td>
+          <td *ngFor="let location of locations" style="font-size:0.95em;">
+            <b>{{ location.getCode() }}</b>
+          </td>
         </tr>
       </thead>
-        <tr *ngIf="trialPrompts.length > 0">
+      <tr *ngFor="let product of products; let p = index">
+        <td class="product-name"><b>{{ product.getName() }}</b></td>
+        <td *ngFor="let location of locations; let l = index"
+          [ngClass]="cellClasses(p, l)">
+          <span *ngIf="expirationDate(p, l); else filler" 
+            class="cell-text">
+            Trial
+            <br>{{ expirationDate(p, l) }}
+          </span>
+          <ng-template #filler>
+            <span style="visibility: hidden;" class="cell-text">
+              Unsub<br>&nbsp; <!-- For spacing -->
+            </span>
+          </ng-template>
+        </td>
+      </tr>
+      <tr class="title-row">
+          <td><b>Locations</b></td>
+          <td *ngFor="let location of locations" style="font-size:0.95em;">
+            <b>{{ location.getCode() }}</b>
+          </td>
+        </tr>
+    </table>
+    <br>
+  </ng-template>
+  <div class="inner-element">
+      <table *ngIf="trialPrompts.length > 0" id="trial-prompts">
+        <thead>
+          <tr>
+            <th colspan="1000">
+              Trial Lengths
+            </th>
+          </tr>
+        </thead>
+        <tr>
             <td (click)="toggleTrialPrompts()" class="trial-prompt">
               <input type="checkbox" [(ngModel)]="allChecked">
               <b> Check/Uncheck All</b>
@@ -115,57 +143,64 @@
               <br><button (click)="addTrials()">Add Trials</button>
               <span *ngIf="invalidTrialTimeError" class="text-danger">
                 <br>{{ invalidTrialTimeError }}
-              </span>
+                  </span>
             </td>
-          </tr>
-          
+          </tr>    
+              
           <tr *ngFor="let i of getOrderedIndices();">
             <td (click)="toggleTrialPrompt(i)" class="trial-prompt"
               (mouseover)="trialPromptMouseover(i)" (mouseleave)="trialPromptMouseleave(i)">
               <input type="checkbox" [checked]="trialPromptIsSelected(i)">
               Add trial for <b>{{ trialPromptEntitlement(i).getProductName() }}</b> at 
-              <b>{{ trialPromptEntitlement(i).getLocationCode() }}</b>
+            <b>{{ trialPromptEntitlement(i).getLocationCode() }}</b>
+          </td>
+        </tr>
+      </table>
+      <br>
+      <table *ngIf="changes.length > 0" id="changes">
+          <thead>
+            <tr>
+              <th colspan="1000">
+                Changes
+              </th>
+            </tr>
+            <tr>
+              <td>Undo</td>
+              <td>Product</td>
+              <td>Location</td>
+              <td>Old</td>
+              <td>New</td>
+            </tr>
+          </thead>
+          <tr *ngFor="let change of changes; let i = index" 
+              [class.first-change]="isFirstChange(i)"
+              (click)="undoChange(i)"
+              (mouseover)="changeMouseover(i)"
+              (mouseleave)="changeMouseleave(i)">
+            <td>
+              <button>Undo</button>
+            </td>
+            <td *ngIf="isFirstChange(i)" 
+                [attr.rowspan]="numChangesByProduct(i)"
+                (click)="$event.stopPropagation()" 
+                (mouseover)="$event.stopPropagation()"
+                (mouseleave)="$event.stopPropagation()">
+              {{ change.getProductName() }}
+            </td>
+            <td>{{ change.getLocationCode() }}</td>
+            <td [ngClass]="change.oldClasses()">
+              {{ change.oldString() }}
+            </td>
+            <td [ngClass]="change.newClasses()">
+              {{ change.newString() }}
             </td>
           </tr>
         </table>
   </div>
-</ng-container>
+</div>
 
-<ng-template #viewEntitlements>
-  <table class="container">
-    <thead>
-      <tr>
-        <td colspan="1000"><b>Entitlements</b></td>
-      </tr>
-      <tr>
-        <td><b>Product</b></td>
-        <td *ngFor="let location of locations" style="font-size:0.95em;">
-          <b>{{ location.getCode() }}</b>
-        </td>
-      </tr>
-    </thead>
-    <tr *ngFor="let product of products; let p = index">
-      <td class="product-name"><b>{{ product.getName() }}</b></td>
-      <td *ngFor="let location of locations; let l = index"
-        [ngClass]="cellClasses(p, l)">
-        <span *ngIf="expirationDate(p, l); else filler" 
-          class="cell-text">
-          Trial
-          <br>{{ expirationDate(p, l) }}
-        </span>
-        <ng-template #filler>
-          <span style="visibility: hidden;" class="cell-text">
-            Unsub<br>&nbsp; <!-- For spacing -->
-          </span>
-        </ng-template>
-      </td>
-    </tr>
-    <tr class="title-row">
-        <td><b>Locations</b></td>
-        <td *ngFor="let location of locations" style="font-size:0.95em;">
-          <b>{{ location.getCode() }}</b>
-        </td>
-      </tr>
-  </table>
-  <br>
-</ng-template>
+<ng-container *ngIf="update">
+    <div style="display:flex;">
+        
+      </div>
+</ng-container>
