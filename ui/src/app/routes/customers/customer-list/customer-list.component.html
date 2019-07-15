@@ -2,13 +2,6 @@
   <table class="container">
     <thead>
       <tr>
-        <th style="width:7%" (click)="sort('id')">
-          ID
-          <span style="transform: rotate(270deg); display: inline-block"
-          *ngIf="isSortAsc('id')">&#10148;</span>
-          <span style="transform: rotate(90deg); display: inline-block"
-          *ngIf="isSortDesc('id')">&#10148;</span>
-        </th>
         <th style="width:28%" (click)="sort('name')">
           Name
           <span style="transform: rotate(270deg); display: inline-block"
@@ -36,9 +29,6 @@
     <ng-container *ngIf="customerPage; else loading">
       <ng-container *ngIf="customers.length > 0; else noCustomers">
         <tr *ngFor="let customer of customers" [routerLink]="[customer.getId()]" class="row-entry">
-          <td>
-            {{ customer.getId() }}
-          </td>
           <td>
             {{ customer.getName() }}
           </td>
