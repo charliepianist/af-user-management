@@ -2,7 +2,7 @@ import { Entitlement } from "../model/entitlement";
 import { Location } from "../model/location";
 import { Product } from "../model/product";
 
-export class EChange {
+export class EntitlementChange {
     newEntitlement: Entitlement;
     oldEntitlement: Entitlement;
     pIndex: number;
@@ -16,14 +16,14 @@ export class EChange {
         this.lIndex = lIndex;
     }
 
-    static copy(eChange: EChange, {
+    static copy(eChange: EntitlementChange, {
         newEntitlement = eChange.getNewEntitlement(),
         oldEntitlement = eChange.getOldEntitlement(),
         pIndex = eChange.getProductIndex(),
         lIndex = eChange.getLocationIndex(),
     }: {newEntitlement?: Entitlement, oldEntitlement?: Entitlement, 
         pIndex?: number, lIndex?: number} = {}) {
-        return new EChange(
+        return new EntitlementChange(
             newEntitlement, oldEntitlement, pIndex, lIndex
         )
     }
@@ -47,6 +47,12 @@ export class EChange {
     getLocation(): Location {
         let nonNull = this.newEntitlement ? this.newEntitlement : this.oldEntitlement;
         return nonNull.getLocation();
+    }
+    getProductName(): string {
+        return this.getProduct().getName();
+    }
+    getLocationCode(): string {
+        return this.getLocation().getCode();
     }
 
     oldString(): string {

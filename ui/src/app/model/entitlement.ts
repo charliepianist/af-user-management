@@ -43,8 +43,14 @@ export class Entitlement {
     getProduct(): Product {
         return this.product;
     }
+    getProductName(): string {
+        return this.getProduct().getName();
+    }
     getLocation(): Location {
         return this.location;
+    }
+    getLocationCode(): string {
+        return this.getLocation().getCode();
     }
     getClient(): Customer {
         return this.client;

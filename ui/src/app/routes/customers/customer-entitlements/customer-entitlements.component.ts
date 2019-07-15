@@ -4,9 +4,11 @@ import { Location } from 'src/app/model/location';
 import { Product } from 'src/app/model/product';
 import { ProductService } from 'src/app/services/product.service';
 import { LocationService } from 'src/app/services/location.service';
-import { EChange } from 'src/app/helper/entitlement-change';
+import { EntitlementChange } from 'src/app/helper/entitlement-change';
 import { isNullOrUndefined } from 'util';
 import { DateUtil } from 'src/app/helper/date-util';
+import { EntitlementEntry } from './entitlement-entry';
+import { TrialPrompt } from './trial-prompt';
 
 @Component({
   selector: 'app-customer-entitlements',
@@ -18,21 +20,15 @@ export class CustomerEntitlementsComponent implements OnInit {
 
   @Input() update: boolean = false;
   @Input() entitlements: Entitlement[];
-  entitlementGrid: Entitlement[][]; // entitlementGrid[prodIndex][locIndex]
+  // Null -> no entitlement, entitlement without date -> subscribed, with date -> trial
+  entitlementGrid: EntitlementEntry[][]; // entitlementGrid[prodIndex][locIndex]
   products: Product[];
   locations: Location[];
   processed: boolean = false; // Has entitlementGrid been processed yet?
 
-  origEntitlements: Entitlement[][];
-  changes: EChange[] = [];
+  changes: EntitlementChange[] = [];
 
-  trialPrompts: Entitlement[] = []; // Trials to add, but need time input
-  orderedIndices: number[] = []; // Indices of entitlements in trialPrompts in order 
-  toSetTime: boolean[] = [];
-  prodIndices: number[] = [];
-  locIndices: number[] = [];
-  trialPromptIndex: number[][];
-  selectedTrialPrompt: boolean[][]; // Whether checkbox is checked
+  trialPrompts: TrialPrompt[] = []; // Trials to add, but need time input
   allChecked: boolean = true;
   endTime: string;
   invalidTrialTimeError: string;
@@ -88,7 +84,7 @@ export class CustomerEntitlementsComponent implements OnInit {
   // Customer's trial's expiration date, or null otherwise
   expirationDate(pIndex: number, lIndex: number): string {
     if(this.processed) {
-      let entitlement = this.entitlementGrid[pIndex][lIndex];
+      let entitlement = this.getEntitlement(pIndex, lIndex);
       if(entitlement && entitlement.getExpirationDate())
         return entitlement.getExpirationDate().toLocaleString(
           'en-US', {
@@ -100,10 +96,10 @@ export class CustomerEntitlementsComponent implements OnInit {
     }else return null;
   }
 
-  // Customer is currently subscribed and not on trial for prod/loc combo
+  // Customer is currently subscribed
   isSubscribed(pIndex: number, lIndex: number): boolean {
     if(this.processed) {
-      let entitlement = this.entitlementGrid[pIndex][lIndex];
+      let entitlement = this.getEntitlement(pIndex, lIndex);
       if(entitlement)
         return entitlement.getExpirationDate() === null;
       else return false;
@@ -113,7 +109,7 @@ export class CustomerEntitlementsComponent implements OnInit {
   // is not subscribed, according to entitlement grid, but can display differently
   notSubscribed(pIndex: number, lIndex: number): boolean {
     if(!this.processed) return true;
-    return this.entitlementGrid[pIndex][lIndex] === null
+    return this.getEntitlementCell(pIndex, lIndex) === null
   }
 
   // should display as not subscribed
@@ -123,9 +119,54 @@ export class CustomerEntitlementsComponent implements OnInit {
           !this.hasTrialPrompt(pIndex, lIndex)
   }
 
+  getEntitlementCell(prodIndex: number, locIndex: number): EntitlementEntry {
+    return this.entitlementGrid[prodIndex][locIndex];
+  }
+
+  setEntitlementCell(prodIndex: number, locIndex: number, cell: EntitlementEntry) {
+    this.entitlementGrid[prodIndex][locIndex] = cell;
+  }
+
+  getEntitlement(prodIndex: number, locIndex: number): Entitlement {
+    return this.getEntitlementCell(prodIndex, locIndex)
+      .getCurrentEntitlement();
+  }
+
+  getPromptCell(promptIndex: number): EntitlementEntry {
+    return this.getEntitlementCell(
+      this.getTrialPrompt(promptIndex).getProductIndex(), 
+      this.getTrialPrompt(promptIndex).getLocationIndex()
+    );
+  }
+
+  getEntitlementGrid(): EntitlementEntry[][] {
+    return this.entitlementGrid;
+  }
+
+  initEntitlementGrid() {
+    if(this.products && this.locations) {
+      this.entitlementGrid = [];
+      for(let i = 0; i < this.products.length; i++) {
+        this.entitlementGrid[i] = [];
+        for(let j = 0; j < this.locations.length; j++) {
+          this.entitlementGrid[i][j] = new EntitlementEntry(null, null)
+        }
+      }
+    }
+  }
+
+  entitlementGridToEntitlements(): Entitlement[][] {
+    return this.entitlementGrid.map(
+      arr => arr.map(
+        entitlementCell => entitlementCell.getCurrentEntitlement()
+      )
+    );
+  }
+
   getEntitlements(): Entitlement[] {
     let newEntitlements = [];
-    for(let arr of this.entitlementGrid) {
+    let entitlementArray = this.entitlementGridToEntitlements();
+    for(let arr of entitlementArray) {
       for(let entitlement of arr) {
         if(entitlement) newEntitlements.push(entitlement);
       }
@@ -141,29 +182,14 @@ export class CustomerEntitlementsComponent implements OnInit {
   processEntitlements(): boolean {
     if(this.processed) return true;
     if(this.products && this.locations && this.entitlements) {
-      this.entitlementGrid = [];
-      this.origEntitlements = [];
-      this.trialPromptIndex = [];
-      this.selectedTrialPrompt = [];
-      for(let i = 0; i < this.products.length; i++) {
-        this.entitlementGrid[i] = [];
-        this.origEntitlements[i] = [];
-        this.trialPromptIndex[i] = [];
-        this.selectedTrialPrompt[i] = [];
-        for(let j = 0; j < this.locations.length; j++) {
-          this.entitlementGrid[i][j] = null;
-          this.origEntitlements[i][j] = null;
-          this.trialPromptIndex[i][j] = null;
-          this.selectedTrialPrompt[i][j] = false;
-        }
-      }
+      this.initEntitlementGrid();
       for(let entitlement of this.entitlements) {
         let pIndex = 
           this.getProductIndexByName(entitlement.getProduct().getName());
         let lIndex = 
           this.getLocationIndexByCode(entitlement.getLocation().getCode());
-        this.entitlementGrid[pIndex][lIndex] = entitlement;
-        this.origEntitlements[pIndex][lIndex] = entitlement;
+        this.setEntitlementCell(pIndex, lIndex, 
+          new EntitlementEntry(entitlement, entitlement));
       }
       this.processed = true;
       return true;
@@ -218,7 +244,7 @@ export class CustomerEntitlementsComponent implements OnInit {
         }
       }else {
         // has trial prompt, want to remove
-        let i = this.trialPromptIndex[pIndex][lIndex];
+        let i = this.getEntitlementCell(pIndex, lIndex).getTrialPromptIndex();
         this.removeTrialPrompt(i);
       }
     }
@@ -235,7 +261,7 @@ export class CustomerEntitlementsComponent implements OnInit {
           this.addTrialPrompt(pIndex, lIndex);
         }else {
           // has trial prompt, want to remove
-          let i = this.trialPromptIndex[pIndex][lIndex];
+          let i = this.getEntitlementCell(pIndex, lIndex).getTrialPromptIndex();
           this.removeTrialPrompt(i);
         }
       }
@@ -243,8 +269,15 @@ export class CustomerEntitlementsComponent implements OnInit {
   }
 
   setEntitlement(pIndex: number, lIndex: number, entitlement: Entitlement) {
-    this.entitlementGrid[pIndex][lIndex] = entitlement;
-    let origEntitlement = this.origEntitlements[pIndex][lIndex];
+    let prevEntry = this.getEntitlementCell(pIndex, lIndex);
+    this.setEntitlementCell(pIndex, lIndex, 
+      EntitlementEntry.copy(
+        prevEntry, 
+        {
+          currentEntitlement: entitlement
+        }
+    ));
+    let origEntitlement = prevEntry.getOriginalEntitlement();
     let updateChange: Boolean; // need to update changes array
 
     if(isNullOrUndefined(entitlement)) updateChange = !isNullOrUndefined(origEntitlement);
@@ -256,7 +289,7 @@ export class CustomerEntitlementsComponent implements OnInit {
         this.changes[i].getLocationIndex() === lIndex) {
         if(updateChange) {
           // push updated change to most recent
-          this.changes.push(EChange.copy(
+          this.changes.push(EntitlementChange.copy(
             this.changes[i], {newEntitlement: entitlement}
           ));
         }
@@ -266,11 +299,11 @@ export class CustomerEntitlementsComponent implements OnInit {
       }
     }
     if(updateChange) {
-      this.changes.push(new EChange(
+      this.changes.push(new EntitlementChange(
         entitlement, origEntitlement, pIndex, lIndex
       ));
     }
-    this.changes.sort((a: EChange, b: EChange) => {
+    this.changes.sort((a: EntitlementChange, b: EntitlementChange) => {
       if(a.getProduct().getName() === b.getProduct().getName()) {
         return a.getLocation().getCode() > b.getLocation().getCode() ? 1 : -1;
       }else return a.getProduct().getName() > b.getProduct().getName() ? 1 : -1;
@@ -279,24 +312,29 @@ export class CustomerEntitlementsComponent implements OnInit {
 
   hasTrialPrompt(pIndex: number, lIndex: number): boolean {
     if(!this.processed) return false;
-    return this.trialPromptIndex[pIndex][lIndex] != null;
+    return this.getEntitlementCell(pIndex, lIndex).hasTrialPrompt();
   }
 
   hasSelectedTrialPrompt(pIndex: number, lIndex: number): boolean {
     if(!this.processed) return false;
-    return this.selectedTrialPrompt[pIndex][lIndex];
+    return this.getEntitlementCell(pIndex, lIndex).hasSelectedTrialPrompt();
   }
 
   hasChanged(pIndex: number, lIndex: number): boolean {
     if(!this.processed) return false;
-    return !Entitlement.areEqual(this.origEntitlements[pIndex][lIndex],
-      this.entitlementGrid[pIndex][lIndex])
+    return this.getEntitlementCell(pIndex, lIndex).hasChanged();
+  }
+
+  getOrderedIndices(): number[] {
+    return this.trialPrompts.map(
+      prompt => prompt.getOrderedIndex()
+    );
   }
 
   sortOrderedIndices() {
-    this.orderedIndices = [];
     let dummyArr = this.trialPrompts.map(
-      (e, i) => { 
+      (prompt, i) => {
+        let e = prompt.getEntitlement(); 
         return { 
           prod: e.getProduct().getName(),
           loc: e.getLocation().getCode(),
@@ -311,62 +349,86 @@ export class CustomerEntitlementsComponent implements OnInit {
     })
     
     for(let i = 0; i < dummyArr.length; i++) {
-      this.orderedIndices[i] = dummyArr[i].index;
+      this.getTrialPrompt(i).setOrderedIndex(dummyArr[i].index);
     }
+  }
+
+  getTrialPrompt(i: number): TrialPrompt {
+    return this.trialPrompts[i];
   }
 
   addTrialPrompt(pIndex: number, lIndex: number): number {
-    this.trialPrompts.push(new Entitlement(
-      null, this.products[pIndex], this.locations[lIndex], null, null));
-    this.trialPromptIndex[pIndex][lIndex] = this.toSetTime.length;
-    this.selectedTrialPrompt[pIndex][lIndex] = true;
-    this.toSetTime.push(true);
-    this.prodIndices.push(pIndex);
-    this.locIndices.push(lIndex);
-
+    this.getEntitlementCell(pIndex, lIndex).setTrialPrompt(this.trialPrompts.length);
+    
+    this.trialPrompts.push(new TrialPrompt(
+      new Entitlement(
+        null, 
+        this.products[pIndex], 
+        this.locations[lIndex], 
+        null, 
+        null),
+      pIndex,
+      lIndex
+    ));
     this.sortOrderedIndices();
 
-    return this.toSetTime.length - 1; // Index of new value
+    return this.trialPrompts.length - 1; // Index of new value
+  }
+
+  trialPromptProductIndex(i: number): number {
+    return this.trialPrompts[i].getProductIndex();
+  }
+
+  trialPromptLocationIndex(i: number): number {
+    return this.trialPrompts[i].getLocationIndex();
+  }
+
+  trialPromptIsSelected(i: number): boolean {
+    return this.trialPrompts[i].isSelected();
+  }
+
+  trialPromptEntitlement(i: number): Entitlement {
+    return this.trialPrompts[i].getEntitlement();
   }
 
   removeTrialPrompt(i: number) {
-    let p = this.prodIndices[i];
-    let l = this.locIndices[i];
-    this.prodIndices.splice(i, 1);
-    this.locIndices.splice(i, 1);
-    this.toSetTime.splice(i, 1);
+    let p = this.trialPromptProductIndex(i);
+    let l = this.trialPromptLocationIndex(i)
     this.trialPrompts.splice(i, 1);
-    this.selectedTrialPrompt[p][l] = false;
-    let prevPromptIndex = this.trialPromptIndex[p][l]
-    for(let arr of this.trialPromptIndex) {
+
+    let entitlementCell = this.getEntitlementCell(p, l);
+    let prevPromptIndex = entitlementCell.getTrialPromptIndex();
+    entitlementCell.removeTrialPrompt();
+    for(let arr of this.getEntitlementGrid()) {
       for(let index = 0; index < arr.length; index++) {
-        if(arr[index] > prevPromptIndex) {
-          arr[index]--;
+        if(arr[index].getTrialPromptIndex() > prevPromptIndex) {
+          arr[index].decrementTrialPromptIndex();
         }
       }
     }
-    this.trialPromptIndex[p][l] = null;
 
     this.sortOrderedIndices();
   }
 
   toggleTrialPrompts() {
     this.allChecked = !this.allChecked;
-    for(let i = 0; i < this.toSetTime.length; i++) {
-      this.toSetTime[i] = this.allChecked;
-      this.selectedTrialPrompt[this.prodIndices[i]][this.locIndices[i]] = this.allChecked;
+    for(let i = 0; i < this.trialPrompts.length; i++) {
+      this.trialPrompts[i].setSelected(this.allChecked);
+      this.getEntitlementCell(
+        this.trialPromptProductIndex(i), 
+        this.trialPromptLocationIndex(i)).setSelected(this.allChecked);
     }
   }
 
   toggleTrialPrompt(i: number) {
-    this.toSetTime[i] = !this.toSetTime[i];
-    this.selectedTrialPrompt[this.prodIndices[i]][this.locIndices[i]] = this.toSetTime[i];
-    if(!this.toSetTime[i]) this.allChecked = false;
+    this.getTrialPrompt(i).toggleSelected();
+    this.getPromptCell(i).setSelected(this.trialPromptIsSelected(i));
+    if(!this.trialPromptIsSelected(i)) this.allChecked = false;
   }
 
   trialPromptMouseover(i: number) {
-    this.hoverP = this.prodIndices[i];
-    this.hoverL = this.locIndices[i];
+    this.hoverP = this.trialPromptProductIndex(i);
+    this.hoverL = this.trialPromptLocationIndex(i);
   }
 
   trialPromptMouseleave(i: number) {
@@ -386,12 +448,13 @@ export class CustomerEntitlementsComponent implements OnInit {
     }else if(isNaN(endDate.getTime())) {
       this.invalidTrialTimeError = 'Invalid Time Format.'
     }else {
-      let toDelete = [];
+      // Valid Time inputted
+      let toDelete = []; // Trial Prompts to Delete
       for(let i = 0; i < this.trialPrompts.length; i++) {
-        if(this.toSetTime[i]) {
-          let entitlement = this.trialPrompts[i];
-          let pIndex = this.prodIndices[i];
-          let lIndex = this.locIndices[i];
+        if(this.trialPromptIsSelected(i)) {
+          let entitlement = this.trialPromptEntitlement(i);
+          let pIndex = this.trialPromptProductIndex(i);
+          let lIndex = this.trialPromptLocationIndex(i);
           this.setEntitlement(pIndex, lIndex, Entitlement.copy(
             entitlement,
             {expirationDate: endDate}
@@ -409,14 +472,17 @@ export class CustomerEntitlementsComponent implements OnInit {
 
   undoChange(changeIndex: number) {
     let change = this.changes[changeIndex];
-    let trialIndex = this.trialPromptIndex[change.getProductIndex()][change.getLocationIndex()];
+    let pIndex = change.getProductIndex();
+    let lIndex = change.getLocationIndex();
+    let entitlementCell = this.getEntitlementCell(pIndex, lIndex);
+
+    let trialIndex = entitlementCell.getTrialPromptIndex();
     if(trialIndex !== null) {
       this.removeTrialPrompt(trialIndex);
     }
 
     this.resetHover();
-    this.entitlementGrid[change.getProductIndex()]
-    [change.getLocationIndex()] = change.getOldEntitlement();
+    entitlementCell.undoChange();
 
     this.changes.splice(changeIndex, 1);
   }
