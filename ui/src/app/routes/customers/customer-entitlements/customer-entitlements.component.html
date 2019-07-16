@@ -126,39 +126,41 @@
     <br>
   </ng-template>
   <div class="inner-element">
-      <table *ngIf="trialPrompts.length > 0" id="trial-prompts">
-        <thead>
+      <ng-container *ngIf="trialPrompts.length > 0">
+        <table id="trial-prompts">
+          <thead>
+            <tr>
+              <th colspan="1000">
+                Trial Lengths
+              </th>
+            </tr>
+          </thead>
           <tr>
-            <th colspan="1000">
-              Trial Lengths
-            </th>
+              <td (click)="toggleTrialPrompts()" class="trial-prompt">
+                <input type="checkbox" [(ngModel)]="allChecked">
+                <b> Check/Uncheck All</b>
+              </td>
+              <td rowspan="1000" style="text-align: center;">
+                ending
+                <input type="datetime-local" [(ngModel)]="endTime" required>
+                <br><button (click)="addTrials()">Add Trials</button>
+                <span *ngIf="invalidTrialTimeError" class="text-danger">
+                  <br>{{ invalidTrialTimeError }}
+                    </span>
+              </td>
+            </tr>    
+                
+            <tr *ngFor="let i of getOrderedIndices();">
+              <td (click)="toggleTrialPrompt(i)" class="trial-prompt"
+                (mouseover)="trialPromptMouseover(i)" (mouseleave)="trialPromptMouseleave(i)">
+                <input type="checkbox" [checked]="trialPromptIsSelected(i)">
+                Add trial for <b>{{ trialPromptEntitlement(i).getProductName() }}</b> at 
+              <b>{{ trialPromptEntitlement(i).getLocationCode() }}</b>
+            </td>
           </tr>
-        </thead>
-        <tr>
-            <td (click)="toggleTrialPrompts()" class="trial-prompt">
-              <input type="checkbox" [(ngModel)]="allChecked">
-              <b> Check/Uncheck All</b>
-            </td>
-            <td rowspan="1000" style="text-align: center;">
-              ending
-              <input type="datetime-local" [(ngModel)]="endTime" required>
-              <br><button (click)="addTrials()">Add Trials</button>
-              <span *ngIf="invalidTrialTimeError" class="text-danger">
-                <br>{{ invalidTrialTimeError }}
-                  </span>
-            </td>
-          </tr>    
-              
-          <tr *ngFor="let i of getOrderedIndices();">
-            <td (click)="toggleTrialPrompt(i)" class="trial-prompt"
-              (mouseover)="trialPromptMouseover(i)" (mouseleave)="trialPromptMouseleave(i)">
-              <input type="checkbox" [checked]="trialPromptIsSelected(i)">
-              Add trial for <b>{{ trialPromptEntitlement(i).getProductName() }}</b> at 
-            <b>{{ trialPromptEntitlement(i).getLocationCode() }}</b>
-          </td>
-        </tr>
-      </table>
-      <br>
+        </table>
+        <br>
+      </ng-container>
       <table *ngIf="changes.length > 0" id="changes">
           <thead>
             <tr>
@@ -200,9 +202,3 @@
         </table>
   </div>
 </div>
-
-<ng-container *ngIf="update">
-    <div style="display:flex;">
-        
-      </div>
-</ng-container>
