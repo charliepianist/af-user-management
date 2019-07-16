@@ -71,7 +71,8 @@ export class CustomerEntitlementsComponent implements OnInit {
           rgba(37, 168, 10, 0.89) 5px,
           rgba(37, 168, 10, 0.89) 10px
       )`
-      }
+      },
+      'updateOnly': true
     },
     {
       'meaning': `Unsubscribed`,
@@ -84,7 +85,8 @@ export class CustomerEntitlementsComponent implements OnInit {
           rgba(194, 0, 0, 0.322) 5px,
           rgba(194, 0, 0, 0.322)  10px
       )`
-      }
+      },
+      'updateOnly': true
     },
     {
       'meaning': `Trial Prompt`,
@@ -97,7 +99,8 @@ export class CustomerEntitlementsComponent implements OnInit {
           rgba(136, 205, 245, 0.877) 5px,
           rgba(136, 205, 245, 0.877) 10px
       )`
-      }
+      },
+      'updateOnly': true
     },
     {
       'meaning': `Trial Prompt`,
@@ -110,7 +113,8 @@ export class CustomerEntitlementsComponent implements OnInit {
           rgba(2, 143, 224, 0.877) 5px,
           rgba(2, 143, 224, 0.877) 10px
       )`
-      }
+      },
+      'updateOnly': true
     },
     {
       'meaning': `Trial`,
@@ -125,7 +129,8 @@ export class CustomerEntitlementsComponent implements OnInit {
       )`
       },
       'styleText': `Trial
-      4/5/22`
+      4/5/22`,
+      'updateOnly': true
     },
   ];
 

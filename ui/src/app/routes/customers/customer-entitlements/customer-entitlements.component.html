@@ -14,17 +14,19 @@
               </th>
             </tr>
           </thead>
-          <tr *ngFor="let styleObj of legendStyles">
-            <td [ngStyle]="styleObj.styles" style="white-space: pre-line">
-              <b>{{styleObj.styleText}}</b>
-            </td>
-            <td>
-              <b>{{styleObj.meaning}}</b><br>
-              <span *ngIf="styleObj.subtitle" style="font-size: 0.9em; line-height: 0.9em;">
-                ({{styleObj.subtitle}})
-              </span>
-            </td>
-          </tr>
+          <ng-container *ngFor="let styleObj of legendStyles">
+            <tr *ngIf="update || !styleObj.updateOnly">
+              <td [ngStyle]="styleObj.styles" style="white-space: pre-line">
+                <b>{{styleObj.styleText}}</b>
+              </td>
+              <td>
+                <b>{{styleObj.meaning}}</b><br>
+                <span *ngIf="styleObj.subtitle" style="font-size: 0.9em; line-height: 0.9em;">
+                  ({{styleObj.subtitle}})
+                </span>
+              </td>
+            </tr>
+          </ng-container>
         </table>
   </div>
   <ng-container *ngIf="update; else viewEntitlements">
