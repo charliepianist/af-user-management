@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CustomerService } from 'src/app/services/customer.service';
 import { Customer } from 'src/app/model/customer';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
+import { CustomerEntitlementsComponent } from '../customer-entitlements/customer-entitlements.component';
 
 @Component({
   selector: 'app-customer-details',
@@ -11,6 +11,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class CustomerDetailsComponent implements OnInit {
 
+  @ViewChild(CustomerEntitlementsComponent) 
+  customerEntitlementsComponent: CustomerEntitlementsComponent;
   customer: Customer;
   toDelete: boolean = false;
 
@@ -20,7 +22,12 @@ export class CustomerDetailsComponent implements OnInit {
     this.route.paramMap.subscribe(
       params => {
         this.customerService.getCustomerWithEntitlements(params.get('id'),
-          p => this.customer = p
+          p => {
+            this.customer = p
+            this.customerEntitlementsComponent.useEntitlements(
+              this.customer.getEntitlements()
+            );
+          }
         );
       }
     );
