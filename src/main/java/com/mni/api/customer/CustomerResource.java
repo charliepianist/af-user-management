@@ -102,22 +102,22 @@ public class CustomerResource {
                 .map(this::translateCustomerToCustomerDto);
     }
 
-    @GetMapping("{id}")
-    public CustomerDto getCustomer(@PathVariable("id") Long id){
+    private Customer getPersistedCustomer(Long id) {
         Optional<Customer> customer = customerRepository.findById(id);
-
         if(!customer.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND); // Invalid ID
-        return translateCustomerToCustomerDto(customer.get()); //Valid ID
+
+        return customer.get(); // Valid ID
+    }
+
+    @GetMapping("{id}")
+    public CustomerDto getCustomer(@PathVariable("id") Long id){
+        return translateCustomerToCustomerDto(getPersistedCustomer(id));
     }
 
     @GetMapping("{id}/entitlements")
     public Collection<EntitlementDto> getCustomerEntitlements(@PathVariable("id") Long id){
-        Optional<Customer> customer = customerRepository.findById(id);
-        if(!customer.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND); // Invalid ID
-
-        Collection<Entitlement> entitlements = customer.get().getEntitlements();
+        Collection<Entitlement> entitlements = getPersistedCustomer(id).getEntitlements();
         return EntitlementDto.entitlementsToEntitlementDtos(entitlements); //Valid ID
     }
 
@@ -131,8 +131,11 @@ public class CustomerResource {
 
     @PutMapping("{id}")
     public CustomerDto updateCustomer(@PathVariable Long id, @Valid @RequestBody CustomerDto customerDto) {
+        Customer customer = getPersistedCustomer(id);
+
         Customer inputCustomer = translateCustomerDtoToCustomer(customerDto);
         inputCustomer.setId(id);
+        inputCustomer.setEntitlements(customer.getEntitlements());
 
         return translateCustomerToCustomerDto(trySaveCustomer(inputCustomer));
     }
@@ -140,10 +143,7 @@ public class CustomerResource {
     @PutMapping("{id}/entitlements")
     public Collection<EntitlementDto> updateCustomerEntitlements(@PathVariable Long id,
                                                                  @NotNull @RequestBody Collection<EntitlementDto> entitlementDtos) {
-        Optional<Customer> customerOptional = customerRepository.findById(id);
-        if(!customerOptional.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND); // Invalid ID
-        Customer customer = customerOptional.get();
+        Customer customer = getPersistedCustomer(id);
 
         Collection<Entitlement> entitlements = EntitlementDto.entitlementDtosToEntitlements(entitlementDtos);
         entitlements.forEach(e -> {

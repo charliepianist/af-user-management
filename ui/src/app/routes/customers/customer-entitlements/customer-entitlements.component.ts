@@ -262,6 +262,10 @@ export class CustomerEntitlementsComponent implements OnInit {
     );
   }
 
+  haveEntitlementsChanged(): boolean {
+    return this.changes && this.changes.length > 0;
+  }
+
   getEntitlements(): Entitlement[] {
     let newEntitlements = [];
     let entitlementArray = this.entitlementGridToEntitlements();

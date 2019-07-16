@@ -94,15 +94,26 @@ export class CustomerFormComponent implements OnInit {
                                   e.error.message;
         console.log(e);
       }
-
-      if(this.isUpdating()) {
-        // Updating an already existing user
-        this.customerService.updateCustomerWithEntitlements(newCustomer, successFunc, 
-          errorFunc);
+      if(this.customerEntitlementsComponent.haveEntitlementsChanged()) {
+        if(this.isUpdating()) {
+          // Updating an already existing user
+          this.customerService.updateCustomerWithEntitlements(newCustomer, successFunc, 
+            errorFunc);
+        }else {
+          // Creating a new user
+          this.customerService.createCustomerWithEntitlements(newCustomer, successFunc,
+            errorFunc);
+        }
       }else {
-        // Creating a new user
-        this.customerService.createCustomerWithEntitlements(newCustomer, successFunc,
-          errorFunc);
+        if(this.isUpdating()) {
+          // Updating an already existing user without entitlements
+          this.customerService.updateCustomer(newCustomer, successFunc, 
+            errorFunc);
+        }else {
+          // Creating a new user without entitlements
+          this.customerService.createCustomer(newCustomer, successFunc,
+            errorFunc);
+        }
       }
     }
   }
