@@ -51,19 +51,6 @@ describe('CustomerDetailsComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should correctly process a returned customer', () => {
-
-    expect(component).toBeTruthy();
-    
-    const customer = new Customer(3, 'Name', 'User ID', 'a!2Edfawofjipasdofjpoawfj');
-
-    const req = httpMock.expectOne(`${CustomerService.BASE_URL}/3`);
-    expect(req.request.method).toBe("GET");
-    req.flush(customer);
-    
-    expect(component.customer).toEqual(customer);
-  });
-
   it('should have no customer object on error', () => {
     const req = httpMock.expectOne(`${CustomerService.BASE_URL}/3`);
     req.error(new ErrorEvent('Network error'));
@@ -73,8 +60,7 @@ describe('CustomerDetailsComponent', () => {
 
   it('should call customerService.deleteCustomer() on delete', () => {
     let customer = new Customer(3, 'name', 'uid', 'awefhafuaoi!23RRGFasa');
-    const req = httpMock.expectOne(`${CustomerService.BASE_URL}/3`);
-    req.flush(customer);
+    component.customer = customer;
 
     spyOn(service, 'deleteCustomer');
     component.deleteCustomer();

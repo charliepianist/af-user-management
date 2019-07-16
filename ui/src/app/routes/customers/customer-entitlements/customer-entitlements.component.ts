@@ -208,7 +208,7 @@ export class CustomerEntitlementsComponent implements OnInit {
   // is not subscribed, according to entitlement grid, but can display differently
   notSubscribed(pIndex: number, lIndex: number): boolean {
     if(!this.processed) return true;
-    return this.getEntitlementCell(pIndex, lIndex) === null
+    return this.getEntitlement(pIndex, lIndex) === null;
   }
 
   // should display as not subscribed

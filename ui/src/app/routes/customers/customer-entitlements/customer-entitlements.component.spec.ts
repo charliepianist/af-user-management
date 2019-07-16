@@ -161,7 +161,6 @@ describe('CustomerEntitlementsComponent', () => {
     // New Entitlements
     component.addTrialPrompt(2, 1);
     component.endTime = DateUtil.dateToInputString(date);
-    console.log(date);
     component.addTrials();
     component.subscribe(0, 0);
     component.addTrialPrompt(2, 3); // should NOT be in getEntitlements()
@@ -198,7 +197,6 @@ describe('CustomerEntitlementsComponent', () => {
       component.changes[0] = component.changes[1];
       component.changes[1] = temp;
     }
-    console.log(component.changes);
     expect(component.changes[0].getProductIndex()).toBe(0);
     expect(component.changes[0].getLocationIndex()).toBe(0);
     
