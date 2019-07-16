@@ -218,3 +218,64 @@ describe('CustomerEntitlementsComponent', () => {
     expect(component.changes.length).toBe(1);
   })
 });
+
+describe('CustomerEntitlementsComponent with one of products and locations', () => {
+  let component: CustomerEntitlementsComponent;
+  let fixture: ComponentFixture<CustomerEntitlementsComponent>;
+  let prods: Product[];
+  let locs: Location[];
+  let entitlements: Entitlement[];
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ CustomerEntitlementsComponent ],
+      imports: [ TestingModule ]
+    })
+    .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(CustomerEntitlementsComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    //Setup
+    prods = [
+      new Product(1, "Product 1"),
+      new Product(2, "Product 2"),
+      new Product(3, "Product 3")
+    ];
+    locs = [
+      new Location(1000, "LOC1", "Location 1"),
+      new Location(2000, "LOC2", "Location 2"),
+      new Location(3000, "LOC3", "Location 3"),
+      new Location(4000, "LOC4", "Location 4")
+    ];
+
+    entitlements = [
+      new Entitlement(10000, prods[1], locs[0], null, null),
+      new Entitlement(20000, prods[1], locs[1], null, null)
+    ];
+  });
+    
+  it('should not be processed without products', () => {
+    component.locations = locs;
+    component.entitlements = entitlements;
+    component.processEntitlements();
+    expect(component.processed).toBeFalsy();
+  });
+    
+  it('should not be processed without locations', () => {
+    component.products = prods;
+    component.entitlements = entitlements;
+    component.processEntitlements();
+    expect(component.processed).toBeFalsy();
+  });
+    
+  it('should not be processed without entitlements', () => {
+    component.products = prods;
+    component.locations = locs;
+    component.processEntitlements();
+    expect(component.processed).toBeFalsy();
+  });
+});
