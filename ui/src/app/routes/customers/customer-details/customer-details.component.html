@@ -5,7 +5,7 @@
             &lt; Back
         </button>
     </div><br>
-    <h3 *ngIf="error" align="center details-table">
+    <h3 *ngIf="error" align="center" class="text-danger">
         Could not get customer, see console for details:<br>
         {{ error.message }}
     </h3>
@@ -34,6 +34,13 @@
                     <td>Password</td>
                     <td>{{ customer.getPassword() }}</td>
                 </tr>
+                <tr>
+                    <td>Status</td>
+                    <td [class.text-danger]="customer.isDisabled()"
+                        [class.text-success]="!customer.isDisabled()">
+                        {{ customer.isDisabled() ? 'Disabled' : 'Active'}}
+                    </td>
+                </tr>
             </ng-container>
         </table>
         <br>
@@ -45,8 +52,7 @@
             </app-delete-confirmation>
         </div>
         <br>
-        <app-customer-entitlements
-            [entitlements]="customer.getEntitlements()">
-        </app-customer-entitlements>
     </div>
+    <app-customer-entitlements #entitlementsComponent>
+    </app-customer-entitlements>
 </div>

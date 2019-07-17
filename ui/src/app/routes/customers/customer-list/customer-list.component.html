@@ -2,6 +2,22 @@
   <table class="container">
     <thead>
       <tr>
+        <th colspan="1000" class="no-hover-highlight">
+          <ng-container *ngIf="queryParams.disabled; else active">
+            <span (click)="toggleDisabled()" class="link">
+              Active Customers</span>
+            &nbsp;|&nbsp;
+            Disabled Customers
+          </ng-container>
+          <ng-template #active>
+            Active Customers
+            &nbsp;|&nbsp;
+            <span (click)="toggleDisabled()" class="link">
+              Disabled Customers</span>
+          </ng-template>
+        </th>
+      </tr>
+      <tr>
         <th style="width:28%" (click)="sort('name')">
           Name
           <span style="transform: rotate(270deg); display: inline-block"
@@ -54,7 +70,9 @@
       <tr class="full-width-centered">
         <td colspan=100>
           <b *ngIf="customerPage.totalElements === 0; else wrongPage">
-            There are currently no customers.
+            There are currently no 
+            {{queryParams.disabled ? 'disabled' : 'active'}}
+            customers.
           </b>
           <ng-template #wrongPage><b>
             This page is empty. 

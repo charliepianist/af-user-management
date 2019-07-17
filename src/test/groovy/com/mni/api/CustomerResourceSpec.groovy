@@ -135,11 +135,11 @@ class CustomerResourceSpec extends Specification {
 
         when:
         "listCustomers() is called"
-        def result = customerResource.listCustomers(0, 20, "id", true).getContent()
+        def result = customerResource.listCustomers(0, 20, "id", true, true).getContent()
 
         then:
         "Call findAll(), returning list of customers"
-        1 * customerResource.customerRepository.findAll(_) >> customers
+        1 * customerResource.customerRepository.findByDisabled(_, true) >> customers
 
         and:
         "Correct customers are returned"
@@ -165,17 +165,17 @@ class CustomerResourceSpec extends Specification {
 
         when:
         "listCustomers() is given invalid parameters"
-        customerResource.listCustomers(-1, -1, "NOT A SORT FIELD", false)
+        customerResource.listCustomers(-1, -1, "NOT A SORT FIELD", false, false)
 
         then:
         "findAll should be called with default page, size, and sortBy parameters, and false desc"
-        1 * customerResource.customerRepository.findAll({ Pageable pageRequest ->
+        1 * customerResource.customerRepository.findByDisabled({ Pageable pageRequest ->
                     pageRequest.getPageNumber() == 0 &&
                     pageRequest.getPageSize() == CustomerResource.MIN_PAGE_SIZE &&
                     pageRequest.getSort().first().getProperty() == CustomerResource.DEFAULT_SORT_FIELD &&
                     pageRequest.getSort().getOrderFor(
                             CustomerResource.DEFAULT_SORT_FIELD).getDirection() == Sort.Direction.ASC
-        }) >> customers
+        }, false) >> customers
     }
 
     void "deleteCustomer(id) should call deleteById() to delete the customer" () {
@@ -190,6 +190,7 @@ class CustomerResourceSpec extends Specification {
 
     void "updateCustomer() should call save() to save customer and return new customer" () {
         given:
+        Customer c = new Customer(1, "Name", "UserID", "password", entitlements)
         CustomerDto customerDto = new CustomerDto(1, "New Name", "New UserID", "abcdefghijklmno")
 
         when:
@@ -197,7 +198,8 @@ class CustomerResourceSpec extends Specification {
         def result = customerResource.updateCustomer(1, customerDto)
 
         then:
-        "save() should be called"
+        "should get old customer and save() should be called"
+        1 * customerResource.customerRepository.findById(1) >> Optional.of(c)
         1 * customerResource.customerRepository.save({ Customer customer ->
                                                                     customer.getId() == 1L &&
                                                                     customer.getName() == "New Name" &&

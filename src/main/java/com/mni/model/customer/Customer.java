@@ -1,6 +1,5 @@
 package com.mni.model.customer;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mni.model.entitlement.Entitlement;
 
 import javax.persistence.*;
@@ -32,11 +31,14 @@ public class Customer {
     @Column(length=MAX_PASSWORD_LENGTH)
     private String password;
 
+    @NotNull
+    private boolean disabled;
+
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
     @NotNull
     Collection<Entitlement> entitlements;
 
-    public Customer(){}
+    public Customer() {}
 
     public Customer(Long id, String name, String userId, String password,
                     Collection<Entitlement> entitlements) {
@@ -88,4 +90,8 @@ public class Customer {
         this.entitlements.clear();
         this.entitlements.addAll(entitlements);
     }
+
+    public void setDisabled(boolean disabled) { this.disabled = disabled; }
+
+    public boolean isDisabled() { return disabled; }
 }

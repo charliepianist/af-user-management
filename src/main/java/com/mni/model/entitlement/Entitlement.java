@@ -1,6 +1,5 @@
 package com.mni.model.entitlement;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.mni.model.customer.Customer;
 import com.mni.model.location.Location;
 import com.mni.model.product.Product;

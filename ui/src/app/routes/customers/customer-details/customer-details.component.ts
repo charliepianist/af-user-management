@@ -3,6 +3,7 @@ import { CustomerService } from 'src/app/services/customer.service';
 import { Customer } from 'src/app/model/customer';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CustomerEntitlementsComponent } from '../customer-entitlements/customer-entitlements.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-customer-details',
@@ -11,10 +12,11 @@ import { CustomerEntitlementsComponent } from '../customer-entitlements/customer
 })
 export class CustomerDetailsComponent implements OnInit {
 
-  @ViewChild(CustomerEntitlementsComponent) 
+  @ViewChild('entitlementsComponent') 
   customerEntitlementsComponent: CustomerEntitlementsComponent;
   customer: Customer;
   toDelete: boolean = false;
+  error: HttpErrorResponse;
 
   constructor(private customerService: CustomerService, private route: ActivatedRoute, private router: Router) { }
 
@@ -22,11 +24,15 @@ export class CustomerDetailsComponent implements OnInit {
     this.route.paramMap.subscribe(
       params => {
         this.customerService.getCustomerWithEntitlements(params.get('id'),
-          p => {
+          (p: Customer) => {
             this.customer = p
             this.customerEntitlementsComponent.useEntitlements(
               this.customer.getEntitlements()
             );
+          },
+          (e: HttpErrorResponse) => { 
+            this.error = e;
+            console.log(e);
           }
         );
       }

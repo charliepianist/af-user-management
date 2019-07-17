@@ -33,6 +33,8 @@ public class CustomerDto {
     @Password
     private String password;
 
+    private boolean disabled;
+
     public CustomerDto() {}
 
     public CustomerDto(Long id, String name, String userId, String password) {
@@ -72,5 +74,13 @@ public class CustomerDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
     }
 }
