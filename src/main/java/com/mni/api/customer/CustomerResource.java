@@ -41,6 +41,7 @@ public class CustomerResource {
         customerDto.setName(customer.getName());
         customerDto.setUserId(customer.getUserId());
         customerDto.setPassword(customer.getPassword());
+        customerDto.setDisabled(customer.isDisabled());
         return customerDto;
     }
 
@@ -51,6 +52,7 @@ public class CustomerResource {
         customer.setName(customerDto.getName());
         customer.setUserId(customerDto.getUserId());
         customer.setPassword(customerDto.getPassword());
+        customer.setDisabled(customerDto.isDisabled());
         return customer;
     }
 
@@ -84,7 +86,8 @@ public class CustomerResource {
                                               int size,
                                            @RequestParam(value="sortBy", defaultValue=DEFAULT_SORT_FIELD)
                                                   String sortBy,
-                                           @RequestParam(value="desc", defaultValue="false") boolean desc
+                                           @RequestParam(value="desc", defaultValue="false") boolean desc,
+                                           @RequestParam(value="disabled", defaultValue="false") boolean disabled
     ){
         if(page < 0) page = 0;
         if(size < MIN_PAGE_SIZE) size = MIN_PAGE_SIZE;
@@ -98,7 +101,7 @@ public class CustomerResource {
         Pageable pageRequest = PageRequest.of(page, size, sort);
 
         return customerRepository
-                .findAll(pageRequest)
+                .findByDisabled(pageRequest, disabled)
                 .map(this::translateCustomerToCustomerDto);
     }
 

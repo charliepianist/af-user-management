@@ -14,6 +14,9 @@ export class CustomerListComponent implements OnInit {
   constructor(private customerService:CustomerService, private router: Router, private route: ActivatedRoute) { }
 
   static readonly DEFAULT_SORT_FIELD = 'name';
+  static readonly MAX_PAGE_SIZE = 100;
+  static readonly DEFAULT_PAGE_SIZE = 20;
+  static readonly MIN_PAGE_SIZE = 1;
 
   customerPage:Page<Customer>;
   customers:Customer[];
@@ -23,6 +26,7 @@ export class CustomerListComponent implements OnInit {
     size: number,
     sortBy: string,
     desc: boolean,
+    disabled: boolean,
   }
 
   ngOnInit() {
@@ -33,13 +37,18 @@ export class CustomerListComponent implements OnInit {
         size: parseInt(queryParams.get('size')),
         sortBy: queryParams.get('sortBy'),
         desc: queryParams.get('desc') === 'true' ? true : false,
+        disabled: queryParams.get('disabled') === 'true' ? true : false
       }
       if(isNaN(this.queryParams.page) || this.queryParams.page < 0)
        this.queryParams.page = 0;
 
-      if(isNaN(this.queryParams.size) || this.queryParams.size < 1) 
-        this.queryParams.size = 20;
-      if(this.queryParams.size > 100) this.queryParams.size = 100;
+      if(isNaN(this.queryParams.size) || 
+        this.queryParams.size < CustomerListComponent.MIN_PAGE_SIZE) {
+          this.queryParams.size = CustomerListComponent.DEFAULT_PAGE_SIZE;
+        }
+      if(this.queryParams.size > CustomerListComponent.MAX_PAGE_SIZE) {
+        this.queryParams.size = CustomerListComponent.MAX_PAGE_SIZE;
+      }
 
       if(!this.isCustomerField(this.queryParams.sortBy)) 
         this.queryParams.sortBy = CustomerListComponent.DEFAULT_SORT_FIELD;
@@ -57,9 +66,28 @@ export class CustomerListComponent implements OnInit {
   }
 
   // Reinitalize component AND parameters
-  refresh() {
+  refresh({
+    page = this.queryParams.page,
+    size = this.queryParams.size,
+    sortBy = this.queryParams.sortBy,
+    desc = this.queryParams.desc,
+    disabled = this.queryParams.disabled
+  }: {
+    page?: number,
+    size?: number,
+    sortBy?: string,
+    desc?: boolean,
+    disabled?: boolean
+  } = this.queryParams) {
+
     this.router.navigate(['/customers'], {
-      queryParams: this.queryParams
+      queryParams: {
+        page: page,
+        size: size,
+        sortBy: sortBy,
+        desc: desc,
+        disabled: disabled
+      }
     }).then(() => {
       this.reinitialize();
     });
@@ -79,6 +107,12 @@ export class CustomerListComponent implements OnInit {
   goToPage(num: number) { // input number indexed at 0 (same as Spring)
     this.queryParams.page = num;
     this.refresh();
+  }
+
+  toggleDisabled() {
+    let params = this.defaultParams();
+    params.disabled = !this.queryParams.disabled;
+    this.refresh(params);
   }
 
   isSortAsc(property: string) {
@@ -113,5 +147,15 @@ export class CustomerListComponent implements OnInit {
     if(str === 'userId') return true;
     if(str === 'password') return true;
     return false;
+  }
+  
+  defaultParams() {
+    return {
+      page: 0,
+      size: CustomerListComponent.DEFAULT_PAGE_SIZE,
+      sortBy: CustomerListComponent.DEFAULT_SORT_FIELD,
+      desc: false,
+      disabled: false
+    }
   }
 }

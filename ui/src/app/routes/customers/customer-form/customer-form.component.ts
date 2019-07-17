@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CustomerService } from 'src/app/services/customer.service';
 import { Customer } from 'src/app/model/customer';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Entitlement } from 'src/app/model/entitlement';
 import { CustomerEntitlementsComponent } from '../customer-entitlements/customer-entitlements.component';
 
 @Component({
@@ -23,6 +22,7 @@ export class CustomerFormComponent implements OnInit {
   name: string = null;
   userId: string = null;
   password: string = null;
+  disabled: boolean = false;
   passLength: number = 15;
   invalidSubmit: boolean = false; // when submit clicked with invalid input
   submissionErrorMsg: string = null;
@@ -45,10 +45,14 @@ export class CustomerFormComponent implements OnInit {
             this.name = this.origName;
             this.userId = this.customer.getUserId();
             this.password = this.customer.getPassword();
+            this.disabled = this.customer.isDisabled();
             this.customerEntitlementsComponent.useEntitlements(
               this.customer.getEntitlements());
           },
-          e => { this.id = null; errorFunc(e);});
+          e => { 
+            this.id = null; 
+            errorFunc(e);
+          });
       },
       errorFunc);
   }
@@ -83,8 +87,14 @@ export class CustomerFormComponent implements OnInit {
     if(this.validateName() || this.validateUserId() || this.validatePassword()) {
       this.invalidSubmit = true;
     }else {
-      let newCustomer = new Customer(this.idNum, this.name, this.userId, 
-        this.password, this.customerEntitlementsComponent.getEntitlements());
+      let newCustomer = new Customer(
+        this.idNum, 
+        this.name, 
+        this.userId, 
+        this.password, 
+        this.customerEntitlementsComponent.getEntitlements(),
+        this.disabled);
+
       let successFunc = (p: Customer) => {
         this.router.navigate(['/customers', p.getId()]);
       };

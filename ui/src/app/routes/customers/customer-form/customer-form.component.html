@@ -6,45 +6,64 @@
     </h4>
     <h1>{{ origName ? 'Update ' + origName : 'Create New Customer' }}</h1>
     <form autocomplete="off">
-      <div class="form-group">
-        <label for="name">Name (up to 100 characters)</label>
-        <input type="text" [(ngModel)]="name" name="name" 
-                #nameInput="ngModel" class="form-control" 
-                (ngModelChange)="submissionErrorMsg=null" required>
-        <div [hidden]="!validateName() || nameInput.pristine" 
-              class="alert alert-danger">
-          {{ validateName() }}
-        </div>
+      <div id="labels">
+        <label for="name" class="long-field">
+          Name (up to 100 characters)
+        </label>
+        <label for="userId" class="short-field">
+          User ID (up to 20 characters)
+        </label>
+        <label for="password" class="long-field">
+          Password (15 to 100 characters, must contain lowercase letter, 
+          uppercase letter, number, and special character)
+        </label>
       </div>
- 
-      <div class="form-group">
-        <label for="userId">User ID (up to 20 characters)</label>
-        <input type="text" [(ngModel)]="userId" name="userId" 
-                #userIdInput="ngModel" class="form-control" 
-                (ngModelChange)="submissionErrorMsg=null" required>
-        <div [hidden]="!validateUserId() || userIdInput.pristine" 
-              class="alert alert-danger">
-          {{ validateUserId() }}
+      <div id="inputs">
+        <div class="long-field">
+          <input type="text" [(ngModel)]="name" name="name" 
+                  #nameInput="ngModel" class="form-control" 
+                  (ngModelChange)="submissionErrorMsg=null" required>
+          <div [hidden]="!validateName() || nameInput.pristine" 
+                class="alert alert-danger">
+            {{ validateName() }}
+          </div>
+          <div class="slight-margin-top" style="font-size: 1.2em;">
+              <input id="disabled" name="disabled" type="checkbox"
+                    [(ngModel)]="disabled">
+              <label for="disabled" class="text-danger">
+                  &nbsp;Disabled
+              </label>
+          </div>
         </div>
-      </div>
- 
-      <div class="form-group">
-        <label for="password">Password (15 to 100 characters, must contain lowercase letter, uppercase letter, number, and special character)</label>
-        <input type="text" [(ngModel)]="password" name="password" 
-                #passwordInput="ngModel" class="form-control" id="password"
-                (ngModelChange)="submissionErrorMsg=null" required>
-        <div [hidden]="!validatePassword() || passwordInput.pristine" 
-              class="alert alert-danger">
-          {{ validatePassword() }}
+       
+        <div class="short-field">
+          <input type="text" [(ngModel)]="userId" name="userId" 
+                  #userIdInput="ngModel" class="form-control" 
+                  (ngModelChange)="submissionErrorMsg=null" required>
+          <div [hidden]="!validateUserId() || userIdInput.pristine" 
+                class="alert alert-danger">
+            {{ validateUserId() }}
+          </div>
         </div>
-        <button (click)="generatePassword()" style="margin-top: 0.2em;">
-          Generate Password
-        </button>
-         of length <input [(ngModel)]="passLength" name="passLength"
+   
+        <div class="long-field">
+          <input type="text" [(ngModel)]="password" name="password" 
+                  #passwordInput="ngModel" class="form-control" id="password"
+                  (ngModelChange)="submissionErrorMsg=null" required>
+          <div [hidden]="!validatePassword() || passwordInput.pristine" 
+                class="alert alert-danger" style="margin-bottom: 0px;">
+            {{ validatePassword() }}
+          </div>
+          <button (click)="generatePassword()" class="slight-margin-top">
+            Generate Password
+          </button>
+          of length <input [(ngModel)]="passLength" name="passLength"
                         type="number" style="width:2.25em;"> characters
+        </div>
       </div>
-      
+
       <br>
+
       <button (click)="submitButton()" 
       class="btn btn-success form-button">
         Submit

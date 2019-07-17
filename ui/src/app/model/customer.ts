@@ -9,15 +9,17 @@ export class Customer {
   userId: string;
   password: string;
   entitlements: Entitlement[];
+  disabled: boolean;
 
   constructor(id: number = null, name: string = null, 
     userId: string = null, password: string = null,
-    entitlements: Entitlement[] = null) {
+    entitlements: Entitlement[] = null, disabled: boolean = false) {
     this.id = id;
     this.name = name;
     this.userId = userId;
     this.password = password;
     this.entitlements = entitlements;
+    this.disabled = disabled;
   }
   
   static copy(customer: Customer, {
@@ -25,15 +27,17 @@ export class Customer {
       name = customer.getName(),
       userId = customer.getUserId(),
       password = customer.getPassword(),
-      entitlements = customer.getEntitlements()
+      entitlements = customer.getEntitlements(),
+      disabled = customer.isDisabled()
     }: {
       id?: number,
       name?: string,
       userId?: string,
       password?: string,
-      entitlements?: Entitlement[]
+      entitlements?: Entitlement[],
+      disabled?: boolean
     } = {}): Customer {
-      return new Customer(id, name, userId, password, entitlements);
+      return new Customer(id, name, userId, password, entitlements, disabled);
   }
 
   getId(): number {
@@ -53,6 +57,9 @@ export class Customer {
   }
   setEntitlements(entitlements: Entitlement[]) {
     this.entitlements = entitlements;
+  }
+  isDisabled(): boolean {
+    return this.disabled;
   }
 
   equals(other: Customer): boolean {

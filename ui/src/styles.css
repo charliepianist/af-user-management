@@ -1,20 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import url('https://unpkg.com/bootstrap@3.3.7/dist/css/bootstrap.min.css');
 
-/*Hide Up and Down arrows in Number Input elements*/
-input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-input[type="number"] {
-    -moz-appearance: textfield;
-}
-/* Hide Arrows and X Button for Datetime Input */
-input[type=datetime-local]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    display: none;
-}
-
 /* ================= Table Styling ================= */
 table, th, td {
     border: 1px solid black;
@@ -50,7 +36,8 @@ thead th { background-color: lightsteelblue;}
     padding-left: 0.5em;
     padding-right: 0.5em;
 }
-.list-component .row-entry:hover, .list-component th:hover {
+.list-component .row-entry:hover, 
+.list-component th:not(.no-hover-highlight):hover {
     background-color: lightskyblue;
     cursor:pointer;
 }
@@ -66,6 +53,22 @@ thead th { background-color: lightsteelblue;}
     margin-right: 0.25em;
 }
 
+/* ================= Input Styling ================= */
+
+/*Hide Up and Down arrows in Number Input elements*/
+input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+/* Hide Arrows and X Button for Datetime Input */
+input[type=datetime-local]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    display: none;
+}
+
 /* ================ General Styling ================ */
 button.new-entry {
     font-size: 115%;
@@ -78,4 +81,7 @@ button.new-entry {
 .full-width-centered {
     width: 100%;
     text-align: center;
+}
+.slight-margin-top {
+    margin-top: 0.25em;
 }

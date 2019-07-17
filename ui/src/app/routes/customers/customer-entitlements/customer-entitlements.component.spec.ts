@@ -42,20 +42,17 @@ describe('CustomerEntitlementsComponent', () => {
       new Location(4000, "LOC4", "Location 4")
     ];
     component.locations = locs;
-
+    
     date = new Date();
     date.setDate(date.getDate() + 1);
     date.setHours(date.getHours(), date.getMinutes(), date.getSeconds(), 0);
-    component.entitlements = [
+    component.useEntitlements([
       new Entitlement(10000, prods[1], locs[0], null, null),
       new Entitlement(20000, prods[1], locs[1], null, null),
       new Entitlement(30000, prods[2], locs[2], null, date),
       new Entitlement(40000, prods[2], locs[3], null, date)
-    ];
+    ]);
 
-
-    component.processEntitlements();
-    
     /* 
               Locations
     Products  [null, null, null, null]
@@ -70,11 +67,37 @@ describe('CustomerEntitlementsComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should have the correct entitlements in entitlementGrid', () => {
+    expect(component.entitlementGrid.length).toBe(3);
+    expect(component.entitlementGrid[0].length).toBe(4);
+    for(let i = 0; i < 3; i++) {
+      for(let j = 0; j < 4; j++) {
+        let cell = component.getEntitlementCell(i, j);
+        let ent = cell.getCurrentEntitlement();
+        expect(ent).toBe(cell.getOriginalEntitlement());
+        
+        if(i === 1) {
+          if(j === 0 || j === 1) {
+            expect(ent.getProduct()).toBe(prods[i]);
+            expect(ent.getLocation()).toBe(locs[j]);
+          }else expect(ent).toBe(null);
+        }else if(i === 2) {
+          if(j === 2 || j === 3) {
+            expect(ent.getProduct()).toBe(prods[i]);
+            expect(ent.getLocation()).toBe(locs[j]);
+          }else expect(ent).toBe(null);
+        }else expect(ent).toBe(null);
+      }
+    }
+  });
+
   it('should properly process Unsubbed -> Subbed', () => {
     component.subscribe(0, 0);
     expect(component.isSubscribed(0, 0)).toBeTruthy();
     expect(component.expirationDate(0, 0)).toBeFalsy();
     expect(component.notSubscribed(0, 0)).toBeFalsy();
+    expect(component.hasChanged(0, 0)).toBeTruthy();
+    expect(component.changes.length).toBe(1);
   });
 
   it('should properly process Unsubbed -> Trial', () => {
@@ -83,6 +106,8 @@ describe('CustomerEntitlementsComponent', () => {
     expect(component.isSubscribed(0, 0)).toBeFalsy();
     expect(component.expirationDate(0, 0)).toBeTruthy();
     expect(component.notSubscribed(0, 0)).toBeFalsy();
+    expect(component.hasChanged(0, 0)).toBeTruthy();
+    expect(component.changes.length).toBe(1);
   });
 
   it('should properly process Subbed -> Unsubbed', () => {
@@ -90,6 +115,8 @@ describe('CustomerEntitlementsComponent', () => {
     expect(component.isSubscribed(1, 0)).toBeFalsy();
     expect(component.expirationDate(1, 0)).toBeFalsy();
     expect(component.notSubscribed(1, 0)).toBeTruthy();
+    expect(component.hasChanged(1, 0)).toBeTruthy();
+    expect(component.changes.length).toBe(1);
   });
 
   it('should properly process Subbed -> Trial', () => {
@@ -99,6 +126,8 @@ describe('CustomerEntitlementsComponent', () => {
     expect(component.isSubscribed(1, 0)).toBeFalsy();
     expect(component.expirationDate(1, 0)).toBeTruthy();
     expect(component.notSubscribed(1, 0)).toBeFalsy();
+    expect(component.hasChanged(1, 0)).toBeTruthy();
+    expect(component.changes.length).toBe(1);
   });
 
   it('should properly process Trial -> Subbed', () => {
@@ -106,6 +135,8 @@ describe('CustomerEntitlementsComponent', () => {
     expect(component.isSubscribed(2, 3)).toBeTruthy();
     expect(component.expirationDate(2, 3)).toBeFalsy();
     expect(component.notSubscribed(2, 3)).toBeFalsy();
+    expect(component.hasChanged(2, 3)).toBeTruthy();
+    expect(component.changes.length).toBe(1);
   });
 
   it('should properly process Trial -> Unsubbed', () => {
@@ -113,6 +144,8 @@ describe('CustomerEntitlementsComponent', () => {
     expect(component.isSubscribed(2, 3)).toBeFalsy();
     expect(component.expirationDate(2, 3)).toBeFalsy();
     expect(component.notSubscribed(2, 3)).toBeTruthy();
+    expect(component.hasChanged(2, 3)).toBeTruthy();
+    expect(component.changes.length).toBe(1);
   });
 
   it('should not allow an invalid trial time (initially unsubbed)', () => {
@@ -219,7 +252,7 @@ describe('CustomerEntitlementsComponent', () => {
   })
 });
 
-describe('CustomerEntitlementsComponent with one of products and locations', () => {
+describe('CustomerEntitlementsComponent with one missing array', () => {
   let component: CustomerEntitlementsComponent;
   let fixture: ComponentFixture<CustomerEntitlementsComponent>;
   let prods: Product[];
@@ -260,15 +293,13 @@ describe('CustomerEntitlementsComponent with one of products and locations', () 
     
   it('should not be processed without products', () => {
     component.locations = locs;
-    component.entitlements = entitlements;
-    component.processEntitlements();
+    component.useEntitlements(entitlements)
     expect(component.processed).toBeFalsy();
   });
     
   it('should not be processed without locations', () => {
     component.products = prods;
-    component.entitlements = entitlements;
-    component.processEntitlements();
+    component.useEntitlements(entitlements);
     expect(component.processed).toBeFalsy();
   });
     
