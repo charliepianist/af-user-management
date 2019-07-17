@@ -49,6 +49,12 @@ public class Customer {
         this.entitlements = entitlements;
     }
 
+    public Customer(Long id, String name, String userId, String password,
+                    Collection<Entitlement> entitlements, boolean disabled) {
+        this(id, name, userId, password, entitlements);
+        this.disabled = disabled;
+    }
+
     public Long getId() {
         return id;
     }

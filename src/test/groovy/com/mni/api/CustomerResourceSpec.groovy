@@ -195,6 +195,7 @@ class CustomerResourceSpec extends Specification {
 
         when:
         "updateCustomer() is called"
+        customerDto.setDisabled(true)
         def result = customerResource.updateCustomer(1, customerDto)
 
         then:
@@ -205,7 +206,8 @@ class CustomerResourceSpec extends Specification {
                                                                     customer.getName() == "New Name" &&
                                                                     customer.getUserId() == "New UserID" &&
                                                                     customer.getPassword() == "abcdefghijklmno"
-        }) >> new Customer(1L, "New Name", "New UserID", "abcdefghijklmno", entitlements)
+                                                                    customer.isDisabled() == true
+        }) >> new Customer(1L, "New Name", "New UserID", "abcdefghijklmno", entitlements, true)
 
         and:
         "Correct result should be returned"
@@ -214,6 +216,7 @@ class CustomerResourceSpec extends Specification {
         result.getPassword() == customerDto.getPassword()
         result.getName() == customerDto.getName()
         result.getUserId() == customerDto.getUserId()
+        result.isDisabled() == customerDto.isDisabled()
     }
 
     void "updateCustomerEntitlements() should call save() and return updated customer" () {
