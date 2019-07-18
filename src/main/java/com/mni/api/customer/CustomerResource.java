@@ -19,6 +19,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
+import static com.mni.api.customer.CustomerDto.translateCustomerDtoToCustomer;
+import static com.mni.api.customer.CustomerDto.translateCustomerToCustomerDto;
+
 /**
  * Created by will.schick on 6/17/19.
  */
@@ -33,28 +36,6 @@ public class CustomerResource {
     public static final int DEFAULT_PAGE_SIZE = 20;
     public static final int MIN_PAGE_SIZE = 1;
     public static final String DEFAULT_SORT_FIELD = "name";
-
-    // Translates Customer object to CustomerDto object
-    private CustomerDto translateCustomerToCustomerDto(Customer customer){
-        CustomerDto customerDto = new CustomerDto();
-        customerDto.setId(customer.getId());
-        customerDto.setName(customer.getName());
-        customerDto.setUserId(customer.getUserId());
-        customerDto.setPassword(customer.getPassword());
-        customerDto.setDisabled(customer.isDisabled());
-        return customerDto;
-    }
-
-    // Translates CustomerDto object to Customer object
-    private Customer translateCustomerDtoToCustomer(CustomerDto customerDto) {
-        Customer customer = new Customer();
-        customer.setId(customerDto.getId());
-        customer.setName(customerDto.getName());
-        customer.setUserId(customerDto.getUserId());
-        customer.setPassword(customerDto.getPassword());
-        customer.setDisabled(customerDto.isDisabled());
-        return customer;
-    }
 
     // Returns whether a String is a field of Customer
     private boolean isCustomerField(String field) {
@@ -102,7 +83,7 @@ public class CustomerResource {
 
         return customerRepository
                 .findByDisabled(pageRequest, disabled)
-                .map(this::translateCustomerToCustomerDto);
+                .map(CustomerDto::translateCustomerToCustomerDto);
     }
 
     private Customer getPersistedCustomer(Long id) {

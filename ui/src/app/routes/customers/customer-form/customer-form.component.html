@@ -1,92 +1,94 @@
-<div class="container">
-    <button style="font-size: 18px;" [routerLink]="['/customers']">&lt; Back</button>
-    <h4 *ngIf="errorMsg">
-      An Error Occurred: {{ errorMsg }}<br>
-      See Console for Details.
-    </h4>
-    <h1>{{ origName ? 'Update ' + origName : 'Create New Customer' }}</h1>
-    <form autocomplete="off">
-      <div id="labels">
-        <label for="name" class="long-field">
-          Name (up to 100 characters)
-        </label>
-        <label for="userId" class="short-field">
-          User ID (up to 20 characters)
-        </label>
-        <label for="password" class="long-field">
-          Password (15 to 100 characters, must contain lowercase letter, 
-          uppercase letter, number, and special character)
-        </label>
-      </div>
-      <div id="inputs">
-        <div class="long-field">
-          <input type="text" [(ngModel)]="name" name="name" 
-                  #nameInput="ngModel" class="form-control" 
-                  (ngModelChange)="submissionErrorMsg=null" required>
-          <div [hidden]="!validateName() || nameInput.pristine" 
-                class="alert alert-danger">
-            {{ validateName() }}
+<div class="form-component">
+  <div class="container">
+      <button style="font-size: 18px;" [routerLink]="['/customers']">&lt; Back</button>
+      <h4 *ngIf="errorMsg">
+        An Error Occurred: {{ errorMsg }}<br>
+        See Console for Details.
+      </h4>
+      <h1>{{ origName ? 'Update ' + origName : 'Create New Customer' }}</h1>
+      <form autocomplete="off">
+        <div id="labels">
+          <label for="name" class="long-field">
+            Name (up to 100 characters)
+          </label>
+          <label for="userId" class="short-field">
+            User ID (up to 20 characters)
+          </label>
+          <label for="password" class="long-field">
+            Password (15 to 100 characters, must contain lowercase letter, 
+            uppercase letter, number, and special character)
+          </label>
+        </div>
+        <div id="inputs">
+          <div class="long-field">
+            <input type="text" [(ngModel)]="name" name="name" 
+                    #nameInput="ngModel" class="form-control" 
+                    (ngModelChange)="submissionErrorMsg=null" required>
+            <div [hidden]="!validateName() || nameInput.pristine" 
+                  class="alert alert-danger">
+              {{ validateName() }}
+            </div>
+            <div class="slight-margin-top" style="font-size: 1.2em;">
+                <input id="disabled" name="disabled" type="checkbox"
+                      [(ngModel)]="disabled">
+                <label for="disabled" class="text-danger">
+                    &nbsp;Disabled
+                </label>
+            </div>
           </div>
-          <div class="slight-margin-top" style="font-size: 1.2em;">
-              <input id="disabled" name="disabled" type="checkbox"
-                    [(ngModel)]="disabled">
-              <label for="disabled" class="text-danger">
-                  &nbsp;Disabled
-              </label>
+        
+          <div class="short-field">
+            <input type="text" [(ngModel)]="userId" name="userId" 
+                    #userIdInput="ngModel" class="form-control" 
+                    (ngModelChange)="submissionErrorMsg=null" required>
+            <div [hidden]="!validateUserId() || userIdInput.pristine" 
+                  class="alert alert-danger">
+              {{ validateUserId() }}
+            </div>
+          </div>
+    
+          <div class="long-field">
+            <input type="text" [(ngModel)]="password" name="password" 
+                    #passwordInput="ngModel" class="form-control" id="password"
+                    (ngModelChange)="submissionErrorMsg=null" required>
+            <div [hidden]="!validatePassword() || passwordInput.pristine" 
+                  class="alert alert-danger" style="margin-bottom: 0px;">
+              {{ validatePassword() }}
+            </div>
+            <button (click)="generatePassword()" class="slight-margin-top">
+              Generate Password
+            </button>
+            of length <input [(ngModel)]="passLength" name="passLength"
+                          type="number" style="width:2.25em;"> characters
           </div>
         </div>
-       
-        <div class="short-field">
-          <input type="text" [(ngModel)]="userId" name="userId" 
-                  #userIdInput="ngModel" class="form-control" 
-                  (ngModelChange)="submissionErrorMsg=null" required>
-          <div [hidden]="!validateUserId() || userIdInput.pristine" 
-                class="alert alert-danger">
-            {{ validateUserId() }}
-          </div>
-        </div>
-   
-        <div class="long-field">
-          <input type="text" [(ngModel)]="password" name="password" 
-                  #passwordInput="ngModel" class="form-control" id="password"
-                  (ngModelChange)="submissionErrorMsg=null" required>
-          <div [hidden]="!validatePassword() || passwordInput.pristine" 
-                class="alert alert-danger" style="margin-bottom: 0px;">
-            {{ validatePassword() }}
-          </div>
-          <button (click)="generatePassword()" class="slight-margin-top">
-            Generate Password
-          </button>
-          of length <input [(ngModel)]="passLength" name="passLength"
-                        type="number" style="width:2.25em;"> characters
-        </div>
-      </div>
 
-      <br>
+        <br>
 
-      <button (click)="submitButton()" 
-      class="btn btn-success form-button">
-        Submit
-      </button>
-      <button (click)="cancelButton()" 
-      class="btn form-button">
-        Cancel
-      </button>
-      
-      <br><br>
-      <div [hidden]="!submissionErrorMsg" class="text-danger">
-        {{ submissionErrorMsg }}<br>
-        See console for details.<br><br>
-      </div>
-      <div [hidden]="!invalidSubmit" class="text-danger">
-        <span *ngIf="validateName()">Please enter a valid name.<br></span>
-        <span *ngIf="validateUserId()">Please enter a valid user ID.<br></span>
-        <span *ngIf="validatePassword()">Please enter a valid password.<br></span>
-      </div>
-      <br>
-    </form>
+        <button (click)="submitButton()" 
+        class="btn btn-success form-button">
+          Submit
+        </button>
+        <button (click)="cancelButton()" 
+        class="btn form-button">
+          Cancel
+        </button>
+        
+        <br><br>
+        <div [hidden]="!submissionErrorMsg" class="text-danger">
+          {{ submissionErrorMsg }}<br>
+          See console for details.<br><br>
+        </div>
+        <div [hidden]="!invalidSubmit" class="text-danger">
+          <span *ngIf="validateName()">Please enter a valid name.<br></span>
+          <span *ngIf="validateUserId()">Please enter a valid user ID.<br></span>
+          <span *ngIf="validatePassword()">Please enter a valid password.<br></span>
+        </div>
+        <br>
+      </form>
+  </div>
+  <app-customer-entitlements
+          [update]="true"
+          [entitlements]="isUpdating() ? null : []">
+  </app-customer-entitlements>
 </div>
-<app-customer-entitlements
-        [update]="true"
-        [entitlements]="isUpdating() ? null : []">
-</app-customer-entitlements>

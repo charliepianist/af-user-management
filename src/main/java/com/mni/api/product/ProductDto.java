@@ -1,6 +1,6 @@
 package com.mni.api.product;
 
-import com.mni.api.multicastgroup.MulticastGroupDto;
+import com.mni.model.product.Product;
 
 import javax.validation.constraints.NotBlank;
 
@@ -16,6 +16,21 @@ public class ProductDto {
     public ProductDto(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public static ProductDto translateProductToProductDto(Product product) {
+        if(product == null) return null;
+        ProductDto productDto = new ProductDto();
+        productDto.setId(product.getId());
+        productDto.setName(product.getName());
+        return productDto;
+    }
+    public static Product translateProductDtoToProduct(ProductDto productDto) {
+        if(productDto == null) return null;
+        Product product = new Product();
+        product.setId(productDto.getId());
+        product.setName(productDto.getName());
+        return product;
     }
 
     public Long getId() { return id; }

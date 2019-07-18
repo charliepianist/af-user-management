@@ -1,0 +1,49 @@
+<div class="form-component">
+  <div class="container">
+    <button style="font-size: 18px;" [routerLink]="['/products']">&lt; Back</button>
+    <h4 *ngIf="errorMsg">
+      An Error Occurred: {{ errorMsg }}<br>
+      See Console for Details.
+    </h4>
+    <h1>{{ origName ? 'Update ' + origName : 'Create New Product' }}</h1>
+    <form autocomplete="off">
+      <div id="labels">
+        <label for="name">
+          Name
+        </label>
+      </div>
+      <div id="inputs">
+        <div>
+          <input type="text" [(ngModel)]="name" name="name" 
+                  #nameInput="ngModel" class="form-control" 
+                  (ngModelChange)="submissionErrorMsg=null" required>
+          <div [hidden]="!validateName() || nameInput.pristine" 
+                class="alert alert-danger">
+            {{ validateName() }}
+          </div>
+        </div>
+      </div>
+
+      <br>
+
+      <button (click)="submitButton()" 
+      class="btn btn-success form-button">
+        Submit
+      </button>
+      <button (click)="cancelButton()" 
+      class="btn form-button">
+        Cancel
+      </button>
+      
+      <br><br>
+      <div [hidden]="!submissionErrorMsg" class="text-danger">
+        {{ submissionErrorMsg }}<br>
+        See console for details.<br><br>
+      </div>
+      <div [hidden]="!invalidSubmit" class="text-danger">
+        <span *ngIf="validateName()">Please enter a valid name.<br></span>
+      </div>
+      <br>
+    </form>
+  </div>
+</div>

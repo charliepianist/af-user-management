@@ -22,6 +22,23 @@ public class LocationDto {
         this.name = name;
     }
 
+    public static LocationDto translateLocationToLocationDto(Location location) {
+        if(location == null) return null;
+        LocationDto locationDto = new LocationDto();
+        locationDto.setId(location.getId());
+        locationDto.setCode(location.getCode());
+        locationDto.setName(location.getName());
+        return locationDto;
+    }
+    public static Location translateLocationDtoToLocation(LocationDto locationDto) {
+        if(locationDto == null) return null;
+        Location location = new Location();
+        location.setId(locationDto.getId());
+        location.setCode(locationDto.getCode());
+        location.setName(locationDto.getName());
+        return location;
+    }
+
     public Long getId() {
         return id;
     }

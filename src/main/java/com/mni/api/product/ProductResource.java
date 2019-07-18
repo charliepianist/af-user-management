@@ -16,6 +16,9 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 import java.util.Optional;
 
+import static com.mni.api.product.ProductDto.translateProductDtoToProduct;
+import static com.mni.api.product.ProductDto.translateProductToProductDto;
+
 /**
  * Created by charles.liu on 6/26/19.
  */
@@ -32,18 +35,7 @@ public class ProductResource {
     public static final int MIN_PAGE_SIZE = 1;
     public static final String DEFAULT_SORT_FIELD = "name";
 
-    private ProductDto translateProductToProductDto(Product product) {
-        ProductDto productDto = new ProductDto();
-        productDto.setId(product.getId());
-        productDto.setName(product.getName());
-        return productDto;
-    }
-    private Product translateProductDtoToProduct(ProductDto productDto) {
-        Product product = new Product();
-        product.setId(productDto.getId());
-        product.setName(productDto.getName());
-        return product;
-    }
+
 
     // Returns whether a String is a sortable field of Product
     private boolean isSortableField(String field) {
@@ -86,7 +78,7 @@ public class ProductResource {
         Pageable pageRequest = PageRequest.of(page, size, sort);
         return productRepository
                 .findAll(pageRequest)
-                .map(this::translateProductToProductDto);
+                .map(ProductDto::translateProductToProductDto);
     }
 
 

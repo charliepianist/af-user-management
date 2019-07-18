@@ -59,10 +59,14 @@ export class Entitlement {
         return this.expirationDate;
     }
 
-    equals(other: Entitlement): boolean {
+    equals(other: Entitlement, {
+        strictClientEquals = false
+    }: {
+        strictClientEquals?: boolean
+    } = {}): boolean {
         let nullProducts = false;
         let nullLocations = false;
-        let nullClients = false;
+        let nullClient = false;
         let nullDates = false;
         if(isNullOrUndefined(other)) {
             return false;
@@ -78,9 +82,11 @@ export class Entitlement {
             }else return false;
         }
         if(isNullOrUndefined(this.getClient()) || isNullOrUndefined(other.getClient())) {
-            if(isNullOrUndefined(this.getClient() && isNullOrUndefined(other.getClient()))) {
-                nullClients = true;
-            }else return false;
+            if(strictClientEquals) {
+                if(isNullOrUndefined(this.getClient()) && isNullOrUndefined(other.getClient())) {
+                    nullClient = true;
+                }else return false;
+            }else nullClient = true;
         }
         if(isNullOrUndefined(this.getExpirationDate()) || isNullOrUndefined(other.getExpirationDate())) {
             if(isNullOrUndefined(this.getExpirationDate()) && isNullOrUndefined(other.getExpirationDate())) {
@@ -89,7 +95,7 @@ export class Entitlement {
         }
         return (nullProducts || this.getProduct().equals(other.getProduct())) && 
         (nullLocations || this.getLocation().equals(other.getLocation())) &&
-        (nullClients || this.getClient().equals(other.getClient())) &&
+        (nullClient || this.getClient().equals(other.getClient())) &&
         (nullDates || this.getExpirationDate().getTime() === other.getExpirationDate().getTime());
     }
 

@@ -1,6 +1,8 @@
 package com.mni.model.customer;
 
 import com.mni.model.entitlement.Entitlement;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -34,7 +36,7 @@ public class Customer {
     @NotNull
     private boolean disabled;
 
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "client")
     @NotNull
     Collection<Entitlement> entitlements;
 

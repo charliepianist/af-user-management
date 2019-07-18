@@ -16,6 +16,9 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 import java.util.Optional;
 
+import static com.mni.api.location.LocationDto.translateLocationDtoToLocation;
+import static com.mni.api.location.LocationDto.translateLocationToLocationDto;
+
 /**
  * Created by charles.liu on 6/26/19.
  */
@@ -31,21 +34,6 @@ public class LocationResource {
     public static final int DEFAULT_PAGE_SIZE = 20;
     public static final int MIN_PAGE_SIZE = 1;
     public static final String DEFAULT_SORT_FIELD = "code";
-
-    private LocationDto translateLocationToLocationDto(Location location) {
-        LocationDto locationDto = new LocationDto();
-        locationDto.setId(location.getId());
-        locationDto.setCode(location.getCode());
-        locationDto.setName(location.getName());
-        return locationDto;
-    }
-    private Location translateLocationDtoToLocation(LocationDto locationDto) {
-        Location location = new Location();
-        location.setId(locationDto.getId());
-        location.setCode(locationDto.getCode());
-        location.setName(locationDto.getName());
-        return location;
-    }
 
     // Returns whether a String is a sortable field of Location
     private boolean isSortableField(String field) {
@@ -88,7 +76,7 @@ public class LocationResource {
         Pageable pageRequest = PageRequest.of(page, size, sort);
         return locationRepository
                 .findAll(pageRequest)
-                .map(this::translateLocationToLocationDto);
+                .map(LocationDto::translateLocationToLocationDto);
     }
 
 

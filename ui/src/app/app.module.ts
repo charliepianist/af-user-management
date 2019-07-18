@@ -12,6 +12,8 @@ import { PaginatorComponent } from './components/paginator/paginator.component';
 import { ProductListComponent } from './routes/products/product-list/product-list.component';
 import { CustomerEntitlementsComponent } from './routes/customers/customer-entitlements/customer-entitlements.component';
 import { DeleteConfirmationComponent } from './components/delete-confirmation/delete-confirmation.component';
+import { ProductDetailsComponent } from './routes/products/product-details/product-details.component';
+import { ProductFormComponent } from './routes/products/product-form/product-form.component';
 
 
 const appRoutes: Routes = [
@@ -20,6 +22,9 @@ const appRoutes: Routes = [
   { path: 'customers/:id',      component: CustomerDetailsComponent },
   { path: 'customers/:id/update',      component: CustomerFormComponent },
   { path: 'products', component: ProductListComponent },
+  { path: 'products/new', component: ProductFormComponent },
+  { path: 'products/:id', component: ProductDetailsComponent },
+  { path: 'products/:id/update', component: ProductFormComponent },
 
   //the default page
   { path: '**', redirectTo: 'customers' }
@@ -38,6 +43,8 @@ const appRoutes: Routes = [
     ProductListComponent,
     CustomerEntitlementsComponent,
     DeleteConfirmationComponent,
+    ProductDetailsComponent,
+    ProductFormComponent,
   ],
   imports: [
     BrowserModule,
