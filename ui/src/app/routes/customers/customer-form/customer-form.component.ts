@@ -20,8 +20,11 @@ export class CustomerFormComponent implements OnInit {
   customer: Customer = new Customer();
   origName: string = null;
   name: string = null;
+  origUserId: string = null;
   userId: string = null;
+  origPassword: string = null;
   password: string = null;
+  origDisabled: boolean = false;
   disabled: boolean = false;
   passLength: number = 15;
   invalidSubmit: boolean = false; // when submit clicked with invalid input
@@ -40,12 +43,20 @@ export class CustomerFormComponent implements OnInit {
         if(this.isUpdating()) this.customerService.getCustomerWithEntitlements(this.id, 
           p => {
             this.customer = p
-            this.origName = this.customer.getName();
             this.idNum = this.customer.getId();
+
+            this.origName = this.customer.getName();
             this.name = this.origName;
-            this.userId = this.customer.getUserId();
-            this.password = this.customer.getPassword();
-            this.disabled = this.customer.isDisabled();
+
+            this.origUserId = this.customer.getUserId();
+            this.userId = this.origUserId;
+
+            this.origPassword = this.customer.getPassword();
+            this.password = this.origPassword;
+
+            this.origDisabled = this.customer.isDisabled();
+            this.disabled = this.origDisabled;
+
             this.customerEntitlementsComponent.useEntitlements(
               this.customer.getEntitlements());
           },

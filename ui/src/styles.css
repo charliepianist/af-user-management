@@ -53,6 +53,12 @@ thead th { background-color: lightsteelblue;}
     margin-right: 0.25em;
 }
 
+/* =========== Form Component Styling ============ */
+.form-component .form-button {
+    width: 50%;
+    padding: 0.5em 0em;
+}
+
 /* ================= Input Styling ================= */
 
 /*Hide Up and Down arrows in Number Input elements*/

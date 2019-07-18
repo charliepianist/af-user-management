@@ -1,33 +1,38 @@
 package com.mni.api.entitlement;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.mni.model.customer.Customer;
+import com.mni.api.customer.CustomerDto;
+import com.mni.api.location.LocationDto;
+import com.mni.api.product.ProductDto;
 import com.mni.model.entitlement.Entitlement;
-import com.mni.model.location.Location;
-import com.mni.model.product.Product;
 
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+import static com.mni.api.customer.CustomerDto.translateCustomerDtoToCustomer;
+import static com.mni.api.customer.CustomerDto.translateCustomerToCustomerDto;
+import static com.mni.api.location.LocationDto.translateLocationDtoToLocation;
+import static com.mni.api.location.LocationDto.translateLocationToLocationDto;
+import static com.mni.api.product.ProductDto.translateProductDtoToProduct;
+import static com.mni.api.product.ProductDto.translateProductToProductDto;
+
 public class EntitlementDto {
     private Long id;
 
     @NotNull
-    private Product product;
+    private ProductDto product;
 
     @NotNull
-    private Location location;
+    private LocationDto location;
 
-    @JsonBackReference
-    private Customer client;
+    private CustomerDto client;
 
     private Date expirationDate;
 
     public EntitlementDto() {}
 
-    public EntitlementDto(Long id, Product product, Location location, Customer client) {
+    public EntitlementDto(Long id, ProductDto product, LocationDto location, CustomerDto client) {
         this.id = id;
         this.product = product;
         this.location = location;
@@ -35,7 +40,7 @@ public class EntitlementDto {
         this.expirationDate = null;
     }
 
-    public EntitlementDto(Long id, Product product, Location location, Customer client, Date expirationDate) {
+    public EntitlementDto(Long id, ProductDto product, LocationDto location, CustomerDto client, Date expirationDate) {
         this.id = id;
         this.product = product;
         this.location = location;
@@ -44,21 +49,29 @@ public class EntitlementDto {
     }
 
     public static EntitlementDto entitlementToEntitlementDto(Entitlement entitlement) {
+        if(entitlement == null) return null;
         EntitlementDto entitlementDto = new EntitlementDto();
         entitlementDto.setId(entitlement.getId());
-        entitlementDto.setProduct(entitlement.getProduct());
-        entitlementDto.setLocation(entitlement.getLocation());
-        entitlementDto.setClient(entitlement.getClient());
+        entitlementDto.setProduct(
+                translateProductToProductDto(entitlement.getProduct()));
+        entitlementDto.setLocation(
+                translateLocationToLocationDto(entitlement.getLocation()));
+        entitlementDto.setClient(
+                translateCustomerToCustomerDto(entitlement.getClient()));
         entitlementDto.setExpirationDate(entitlement.getExpirationDate());
         return entitlementDto;
     }
 
     public static Entitlement entitlementDtoToEntitlement(EntitlementDto entitlementDto) {
+        if(entitlementDto == null) return null;
         Entitlement entitlement = new Entitlement();
         entitlement.setId(entitlementDto.getId());
-        entitlement.setProduct(entitlementDto.getProduct());
-        entitlement.setLocation(entitlementDto.getLocation());
-        entitlement.setClient(entitlementDto.getClient());
+        entitlement.setProduct(
+                translateProductDtoToProduct(entitlementDto.getProduct()));
+        entitlement.setLocation(
+                translateLocationDtoToLocation(entitlementDto.getLocation()));
+        entitlement.setClient(
+                translateCustomerDtoToCustomer(entitlementDto.getClient()));
         entitlement.setExpirationDate(entitlementDto.getExpirationDate());
         return entitlement;
     }
@@ -83,27 +96,27 @@ public class EntitlementDto {
         this.id = id;
     }
 
-    public Product getProduct() {
+    public ProductDto getProduct() {
         return product;
     }
 
-    public void setProduct(Product product) {
+    public void setProduct(ProductDto product) {
         this.product = product;
     }
 
-    public Location getLocation() {
+    public LocationDto getLocation() {
         return location;
     }
 
-    public void setLocation(Location location) {
+    public void setLocation(LocationDto location) {
         this.location = location;
     }
 
-    public Customer getClient() {
+    public CustomerDto getClient() {
         return client;
     }
 
-    public void setClient(Customer client) {
+    public void setClient(CustomerDto client) {
         this.client = client;
     }
 

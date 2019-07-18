@@ -1,4 +1,4 @@
-import { Component, OnInit, enableProdMode, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Page } from 'src/app/model/page';
 import { Customer } from 'src/app/model/customer';
@@ -138,7 +138,7 @@ export class CustomerListComponent implements OnInit {
 
   deleteCustomer(id: number) {
     this.customerService.deleteCustomer(id,
-      () => { this.ngOnInit() }); //reload component on success 
+      () => { this.reinitialize() }); //reload component on success 
   }
 
   isCustomerField(str: string): boolean {

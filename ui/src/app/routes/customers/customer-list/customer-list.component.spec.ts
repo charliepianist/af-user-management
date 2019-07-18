@@ -78,6 +78,7 @@ describe('CustomerListComponent without Query parameters', () => {
     
     expect(component.customerPage).toBe(customerPage);
     expect(component.customers.length).toBe(8);
+    expect(component.customers[0] instanceof Customer).toBe(true);
   });
 
   it('should have errorMsg variable and no customers or page on error', () => {
@@ -103,15 +104,11 @@ describe('CustomerListComponent without Query parameters', () => {
   });
 
   it('should go to default query values', () => {
-    // current defaults:
-    // page: 0 (should not change)
-    // size: 20
-    // sortBy: 'id'
-    // desc: false
     expect(component.queryParams.page).toBe(0);
-    expect(component.queryParams.size).toBeGreaterThan(0);
-    expect(component.queryParams.sortBy).toBeTruthy(); 
+    expect(component.queryParams.size).toBe(CustomerListComponent.DEFAULT_PAGE_SIZE);
+    expect(component.queryParams.sortBy).toBe(CustomerListComponent.DEFAULT_SORT_FIELD); 
     expect(component.queryParams.desc).toBe(false);
+    expect(component.queryParams.disabled).toBe(false);
   })
 });
 
@@ -143,6 +140,7 @@ describe('CustomerListComponent with invalid query parameters', () => {
                   case 'size': return '-2';
                   case 'sortBy': return 'invalidsort';
                   case 'desc': return 'true';
+                  case 'disabled': return 'true';
                 }
               }
             })
@@ -166,9 +164,10 @@ describe('CustomerListComponent with invalid query parameters', () => {
 
   it('should validate queryParams', () => {
     expect(component.queryParams.page).toBe(0);
-    expect(component.queryParams.size).toBeGreaterThan(0);
-    expect(component.queryParams.sortBy).toBeTruthy(); 
+    expect(component.queryParams.size).toBe(CustomerListComponent.DEFAULT_PAGE_SIZE);
+    expect(component.queryParams.sortBy).toBe(CustomerListComponent.DEFAULT_SORT_FIELD); 
     expect(component.queryParams.desc).toBe(true);
+    expect(component.queryParams.disabled).toBe(true);
   });
 });
 
@@ -199,8 +198,9 @@ describe('Customer ListComponent with valid query parameters', () => {
                 switch(field) {
                   case 'page': return '1';
                   case 'size': return '15';
-                  case 'sortBy': return 'name';
+                  case 'sortBy': return 'id';
                   case 'desc': return 'true';
+                  case 'disabled': return 'true';
                 }
               }
             })
@@ -224,9 +224,10 @@ describe('Customer ListComponent with valid query parameters', () => {
 
   it('should have correct queryParams and call listCustomers()', () => {
     expect(component.queryParams.page).toBe(1);
-    expect(component.queryParams.size).toBeGreaterThan(0);
-    expect(component.queryParams.sortBy).toBeTruthy(); 
+    expect(component.queryParams.size).toBe(15);
+    expect(component.queryParams.sortBy).toBe('id'); 
     expect(component.queryParams.desc).toBe(true);
+    expect(component.queryParams.disabled).toBe(true);
     
     spyOn(service, 'listCustomers');
     component.ngOnInit();

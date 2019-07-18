@@ -28,6 +28,7 @@ export class CustomerService {
       entitlements.forEach(e => {
         e.product = Object.assign(new Product(), e.product);
         e.location = Object.assign(new Location(), e.location);
+        e.client = Object.assign(new Customer(), e.client);
         if(e.expirationDate) 
           e.expirationDate = new Date(e.expirationDate);
       });
@@ -102,8 +103,8 @@ export class CustomerService {
     // Don't send entitlements
     customer = Customer.copy(customer, {entitlements: null});
     
-    this.httpClient.post(CustomerService.BASE_URL, customer)
-    .subscribe((c: Customer) => {
+    this.httpClient.post<Customer>(CustomerService.BASE_URL, customer)
+    .subscribe(c => {
       successFunc(this.objectToCustomer(c));
     }, errorFunc);
 
@@ -136,8 +137,8 @@ export class CustomerService {
     // Don't send entitlements
     customer = Customer.copy(customer, {entitlements: null});
 
-    this.httpClient.put(CustomerService.BASE_URL + '/' + customer.getId(), customer)
-    .subscribe((c: Customer) => {
+    this.httpClient.put<Customer>(CustomerService.BASE_URL + '/' + customer.getId(), customer)
+    .subscribe(c => {
       successFunc(this.objectToCustomer(c));
     }, errorFunc);
 
@@ -148,9 +149,9 @@ export class CustomerService {
     errorFunc: (e: HttpErrorResponse) => any) {
     if(isNullOrUndefined(entitlements)) entitlements = [];
     
-    this.httpClient.put(CustomerService.BASE_URL + '/' + 
+    this.httpClient.put<Entitlement[]>(CustomerService.BASE_URL + '/' + 
       id + "/entitlements", entitlements)
-      .subscribe((e: Entitlement[]) => {
+      .subscribe(e => {
         successFunc(this.objectArrToEntitlementArr(e));
       }, errorFunc);
 

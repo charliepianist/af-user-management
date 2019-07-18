@@ -12,6 +12,9 @@ export class ProductService {
 
   constructor(private httpClient:HttpClient) { }
 
+  private objectToProduct(prod: {id: number, name: string}): Product {
+    return Object.assign(new Product(), prod);
+  }
 
   listProducts(successFunc: (p: Page<Product>) => any, 
               errorFunc: (e: HttpErrorResponse) => any,
@@ -21,7 +24,7 @@ export class ProductService {
     }).subscribe(
       page => {
         page.content = page.content.map(
-          p => Object.assign(new Product(), p));
+          p => this.objectToProduct(p));
         successFunc(page);
       }, errorFunc);
   }
@@ -29,7 +32,7 @@ export class ProductService {
   getProduct(id: string, successFunc: (p: Product) => any,
             errorFunc: (e: HttpErrorResponse) => any) {
     this.httpClient.get<Product>(ProductService.BASE_URL + '/' + id).subscribe(
-      p => successFunc(Object.assign(new Product(), p)),
+      p => successFunc(this.objectToProduct(p)),
       errorFunc);
   }
 
@@ -44,13 +47,15 @@ export class ProductService {
 
   createProduct(product: Product, successFunc: (...args: any[]) => any,
                 errorFunc: (e: HttpErrorResponse) => any) {
-    this.httpClient.post(ProductService.BASE_URL, product).subscribe(
-      successFunc, errorFunc);
+    this.httpClient.post<Product>(ProductService.BASE_URL, product).subscribe(
+      p => successFunc(this.objectToProduct(p)), 
+      errorFunc);
   }
   updateProduct(product: Product, successFunc: (...args: any[]) => any,
       errorFunc: (e: HttpErrorResponse) => any) {
-    this.httpClient.put(ProductService.BASE_URL + '/' + product.getId(), product).subscribe(
-    successFunc, errorFunc);
+    this.httpClient.put<Product>(ProductService.BASE_URL + '/' + product.getId(), product).subscribe(
+      p => successFunc(this.objectToProduct(p)),
+      errorFunc);
   }
 
 }

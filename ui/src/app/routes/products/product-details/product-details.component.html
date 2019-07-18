@@ -1,0 +1,45 @@
+<div class="details-component">
+  <div align="center">
+      <br>
+      <button [routerLink]="['/products']">
+          &lt; Back
+      </button>
+  </div><br>
+  <h3 *ngIf="error" align="center" class="text-danger">
+      Could not get product, see console for details:<br>
+      {{ error.message }}
+  </h3>
+
+  <div *ngIf="product">
+      <table class="container">
+          <thead>
+              <tr>
+                  <td colspan="100"><b>{{ product.getName() }} Details</b></td>
+              </tr>
+              <tr>
+                  <th style="width:35%">Field</th>
+                  <th style="width:65%">Value</th>
+              </tr>
+          </thead>
+          <ng-container>
+              <tr>
+                  <td>Name</td>
+                  <td>{{ product.getName() }}</td>
+              </tr>
+              <tr>
+                <td>ID</td>
+                <td>{{ product.getId() }}</td>
+              </tr>
+          </ng-container>
+      </table>
+      <br>
+      <div align="center">
+          <button [routerLink]="['update']">Update</button>
+          <app-delete-confirmation
+              [button]="true"
+              (onDelete)="deleteProduct()">
+          </app-delete-confirmation>
+      </div>
+      <br>
+  </div>
+</div>

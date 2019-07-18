@@ -44,6 +44,29 @@ public class CustomerDto {
         this.password = password;
     }
 
+    public static CustomerDto translateCustomerToCustomerDto(Customer customer){
+        if(customer == null) return null;
+        CustomerDto customerDto = new CustomerDto();
+        customerDto.setId(customer.getId());
+        customerDto.setName(customer.getName());
+        customerDto.setUserId(customer.getUserId());
+        customerDto.setPassword(customer.getPassword());
+        customerDto.setDisabled(customer.isDisabled());
+        return customerDto;
+    }
+
+    // Translates CustomerDto object to Customer object
+    public static Customer translateCustomerDtoToCustomer(CustomerDto customerDto) {
+        if(customerDto == null) return null;
+        Customer customer = new Customer();
+        customer.setId(customerDto.getId());
+        customer.setName(customerDto.getName());
+        customer.setUserId(customerDto.getUserId());
+        customer.setPassword(customerDto.getPassword());
+        customer.setDisabled(customerDto.isDisabled());
+        return customer;
+    }
+
     public String getName() {
         return name;
     }

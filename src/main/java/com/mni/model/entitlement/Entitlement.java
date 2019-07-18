@@ -3,6 +3,7 @@ package com.mni.model.entitlement;
 import com.mni.model.customer.Customer;
 import com.mni.model.location.Location;
 import com.mni.model.product.Product;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -18,6 +19,7 @@ public class Entitlement {
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @NotNull
     private Product product;
 
     @ManyToOne
