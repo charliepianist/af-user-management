@@ -20,24 +20,30 @@
       <tr>
         <th style="width:28%" (click)="sort('name')">
           Name
-          <span style="transform: rotate(270deg); display: inline-block"
-          *ngIf="isSortAsc('name')">&#10148;</span>
-          <span style="transform: rotate(90deg); display: inline-block"
-          *ngIf="isSortDesc('name')">&#10148;</span>
+          <span class="up-arrow" *ngIf="isSortAsc('name')">
+            &#10148;
+          </span>
+          <span class="down-arrow" *ngIf="isSortDesc('name')">
+            &#10148;
+          </span>
         </th>
         <th style="width:15%" (click)="sort('userId')">
           User ID
-          <span style="transform: rotate(270deg); display: inline-block"
-          *ngIf="isSortAsc('userId')">&#10148;</span>
-          <span style="transform: rotate(90deg); display: inline-block"
-          *ngIf="isSortDesc('userId')">&#10148;</span>
+          <span class="up-arrow" *ngIf="isSortAsc('userId')">
+            &#10148;
+          </span>
+          <span class="down-arrow" *ngIf="isSortDesc('userId')">
+            &#10148;
+          </span>
         </th>
         <th style="width:25%" (click)="sort('password')">
           Password
-          <span style="transform: rotate(270deg); display: inline-block"
-          *ngIf="isSortAsc('password')">&#10148;</span>
-          <span style="transform: rotate(90deg); display: inline-block"
-          *ngIf="isSortDesc('password')">&#10148;</span>
+          <span class="up-arrow" *ngIf="isSortAsc('password')">
+            &#10148;
+          </span>
+          <span class="down-arrow" *ngIf="isSortDesc('password')">
+            &#10148;
+          </span>
         </th>
         <th style="width:25%; cursor:default;">Actions</th>
       </tr>

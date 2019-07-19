@@ -111,7 +111,7 @@ describe('Updating Customer', () => {
         useValue: {
           paramMap: new Observable(subscriber => {
             subscriber.next({
-              get: () => {
+              get: (field: string) => {
                 return '1';
               }
             });

@@ -41,6 +41,14 @@ thead th { background-color: lightsteelblue;}
     background-color: lightskyblue;
     cursor:pointer;
 }
+.list-component .down-arrow {
+    transform: rotate(90deg);
+    display: inline-block;
+}
+.list-component .up-arrow {
+    transform: rotate(270deg);
+    display: inline-block;
+}
 
 /* =========== Details Component Styling ============ */
 .details-component .details-table td, .details-component .details-table th {

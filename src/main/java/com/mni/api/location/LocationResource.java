@@ -48,7 +48,7 @@ public class LocationResource {
             if(e instanceof DataIntegrityViolationException)
                 // Unique index violation (ID or Name)
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "Name already taken");
+                        "Name or Code already taken");
 
             // In case of exception that isn't due to unique index or primary key violation
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,

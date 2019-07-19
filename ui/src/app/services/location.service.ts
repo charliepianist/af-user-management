@@ -12,16 +12,25 @@ export class LocationService {
 
   constructor(private httpClient:HttpClient) { }
 
+  private objectToLocation(loc: {
+    id: number, 
+    code: string, 
+    name: string
+  }): Location {
+    
+    return Object.assign(new Location(), loc);
+  }
 
   listLocations(successFunc: (p: Page<Location>) => any, 
               errorFunc: (e: HttpErrorResponse) => any,
               queryParams?: any) {
+
     this.httpClient.get<Page<Location>>(LocationService.BASE_URL, {
       params: queryParams
     }).subscribe(
       page => {
         page.content = page.content.map(
-          l => Object.assign(new Location(), l)
+          l => this.objectToLocation(l)
         );
         successFunc(page);
       }, errorFunc);
@@ -29,8 +38,9 @@ export class LocationService {
 
   getLocation(id: string, successFunc: (p: Location) => any,
             errorFunc: (e: HttpErrorResponse) => any) {
+
     this.httpClient.get<Location>(LocationService.BASE_URL + '/' + id).subscribe(
-      l => successFunc(Object.assign(new Location(), l)), errorFunc);
+      l => successFunc(this.objectToLocation(l)), errorFunc);
   }
 
   deleteLocation(id: number, successFunc: () => any, 
@@ -38,19 +48,28 @@ export class LocationService {
                   console.log(e);
                   alert('Delete failed, see console for error.')
                 }) {
+
     this.httpClient.delete(LocationService.BASE_URL + '/' + id).subscribe(
       successFunc, errorFunc);
   }
 
   createLocation(location: Location, successFunc: (...args: any[]) => any,
                 errorFunc: (e: HttpErrorResponse) => any) {
-    this.httpClient.post(LocationService.BASE_URL, location).subscribe(
-      successFunc, errorFunc);
+
+    this.httpClient.post<Location>(LocationService.BASE_URL, location)
+    .subscribe(
+      l => successFunc(this.objectToLocation(l)), 
+      errorFunc
+    );
   }
   updateLocation(location: Location, successFunc: (...args: any[]) => any,
       errorFunc: (e: HttpErrorResponse) => any) {
-    this.httpClient.put(LocationService.BASE_URL + '/' + location.getId(), location).subscribe(
-    successFunc, errorFunc);
+
+    this.httpClient.put<Location>(LocationService.BASE_URL + '/' + location.getId(), location)
+    .subscribe(
+      l => successFunc(this.objectToLocation(l)), 
+      errorFunc
+    );
   }
 
 }

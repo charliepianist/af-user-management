@@ -1,27 +1,25 @@
 import { async, ComponentFixture, TestBed, getTestBed } from '@angular/core/testing';
 
-import { CustomerDetailsComponent } from './customer-details.component';
+import { LocationDetailsComponent } from './location-details.component';
 import { TestingModule } from 'src/app/test/TestingModule';
-import { CustomerService } from 'src/app/services/customer.service';
+import { LocationService } from 'src/app/services/location.service';
 import { HttpTestingController } from '@angular/common/http/testing';
-import { Customer } from 'src/app/model/customer';
+import { Location } from 'src/app/model/location';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { Observable } from 'rxjs';
 import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
-import { CustomerEntitlementsComponent } from '../customer-entitlements/customer-entitlements.component';
 
-describe('CustomerDetailsComponent', () => {
-  let component: CustomerDetailsComponent;
-  let fixture: ComponentFixture<CustomerDetailsComponent>;
+describe('LocationDetailsComponent', () => {
+  let component: LocationDetailsComponent;
+  let fixture: ComponentFixture<LocationDetailsComponent>;
   let injector: TestBed;
-  let service: CustomerService;
+  let service: LocationService;
   let httpMock: HttpTestingController;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CustomerDetailsComponent, 
-        DeleteConfirmationComponent,
-        CustomerEntitlementsComponent],
+      declarations: [ LocationDetailsComponent, 
+        DeleteConfirmationComponent],
       imports: [
         TestingModule
       ],
@@ -43,27 +41,27 @@ describe('CustomerDetailsComponent', () => {
 
   beforeEach(() => {
     injector = getTestBed();
-    service = injector.get(CustomerService);
+    service = injector.get(LocationService);
     httpMock = injector.get(HttpTestingController);
 
-    fixture = TestBed.createComponent(CustomerDetailsComponent);
+    fixture = TestBed.createComponent(LocationDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should have no customer object on error', () => {
-    const req = httpMock.expectOne(`${CustomerService.BASE_URL}/3`);
+  it('should have no location object on error', () => {
+    const req = httpMock.expectOne(`${LocationService.BASE_URL}/3`);
     req.error(new ErrorEvent('Network error'));
     
-    expect(component.customer).toBeFalsy();
+    expect(component.location).toBeFalsy();
   });
 
-  it('should call customerService.deleteCustomer() on delete', () => {
-    let customer = new Customer(3, 'name', 'uid', 'awefhafuaoi!23RRGFasa');
-    component.customer = customer;
+  it('should call locationService.deleteLocation() on delete', () => {
+    let location = new Location(3, 'name');
+    component.location = location;
 
-    spyOn(service, 'deleteCustomer');
-    component.deleteCustomer();
-    expect(service.deleteCustomer).toHaveBeenCalled();
+    spyOn(service, 'deleteLocation');
+    component.deleteLocation();
+    expect(service.deleteLocation).toHaveBeenCalled();
   });
 });

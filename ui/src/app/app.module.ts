@@ -14,6 +14,9 @@ import { CustomerEntitlementsComponent } from './routes/customers/customer-entit
 import { DeleteConfirmationComponent } from './components/delete-confirmation/delete-confirmation.component';
 import { ProductDetailsComponent } from './routes/products/product-details/product-details.component';
 import { ProductFormComponent } from './routes/products/product-form/product-form.component';
+import { LocationListComponent } from './routes/locations/location-list/location-list.component';
+import { LocationDetailsComponent } from './routes/locations/location-details/location-details.component';
+import { LocationFormComponent } from './routes/locations/location-form/location-form.component';
 
 
 const appRoutes: Routes = [
@@ -25,6 +28,10 @@ const appRoutes: Routes = [
   { path: 'products/new', component: ProductFormComponent },
   { path: 'products/:id', component: ProductDetailsComponent },
   { path: 'products/:id/update', component: ProductFormComponent },
+  { path: 'locations', component: LocationListComponent },
+  { path: 'locations/new', component: LocationFormComponent },
+  { path: 'locations/:id', component: LocationDetailsComponent },
+  { path: 'locations/:id/update', component: LocationFormComponent },
 
   //the default page
   { path: '**', redirectTo: 'customers' }
@@ -45,6 +52,9 @@ const appRoutes: Routes = [
     DeleteConfirmationComponent,
     ProductDetailsComponent,
     ProductFormComponent,
+    LocationListComponent,
+    LocationDetailsComponent,
+    LocationFormComponent,
   ],
   imports: [
     BrowserModule,
