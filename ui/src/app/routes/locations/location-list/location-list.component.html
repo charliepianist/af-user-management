@@ -1,0 +1,100 @@
+<div class="list-component">
+  <table class="container">
+    <thead>
+      <tr>
+        <th colspan="1000" class="no-hover-highlight">
+          Locations
+        </th>
+      </tr>
+      <tr>
+          <th style="width:14%" (click)="sort('id')">
+              ID
+              <span class="up-arrow" *ngIf="isSortAsc('id')">
+                &#10148;
+              </span>
+              <span class="down-arrow" *ngIf="isSortDesc('id')">
+                &#10148;
+              </span>
+          </th>
+          <th style="width:34%" (click)="sort('name')">
+              Name
+              <span class="up-arrow" *ngIf="isSortAsc('name')">
+                &#10148;
+              </span>
+              <span class="down-arrow" *ngIf="isSortDesc('name')">
+                &#10148;
+              </span>
+          </th>
+          <th style="width:24%" (click)="sort('code')">
+              Code
+              <span class="up-arrow" *ngIf="isSortAsc('code')">
+                &#10148;
+              </span>
+              <span class="down-arrow" *ngIf="isSortDesc('code')">
+                &#10148;
+              </span>
+          </th>
+          <th style="width:28%; cursor:default;">Actions</th>
+      </tr>
+    </thead>
+    <ng-container *ngIf="locationPage; else loading">
+      <ng-container *ngIf="locations.length > 0; else noLocations">
+        <tr *ngFor="let location of locations" [routerLink]="[location.getId()]" class="row-entry">
+          <td>
+            {{ location.getId() }}
+          </td>
+          <td>
+            {{ location.getName() }}
+          </td>
+          <td>
+            {{ location.getCode() }}
+          </td>
+          <!-- Details, Update, Delete-->
+          <td (click)="$event.stopPropagation()" class="row-options"> 
+            <span [routerLink]="[location.getId()]" class="link row-option">Details</span>
+            <span [routerLink]="[location.getId(), 'update']" class="link row-option">Update</span>
+            <app-delete-confirmation
+              [button]="false"
+              (onDelete)="deleteLocation(location.getId())">
+            </app-delete-confirmation>
+          </td>
+        </tr>
+      </ng-container>
+    </ng-container>
+    <ng-template #noLocations>
+      <tr class="full-width-centered">
+        <td colspan=100>
+          <b *ngIf="locationPage.totalElements === 0; else wrongPage">
+            There are currently no locations.
+          </b>
+          <ng-template #wrongPage><b>
+            This page is empty. 
+            <span (click)="toFirstPage()" class="link">Go to first page</span>
+          </b></ng-template>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template #loading>
+      <tr class="full-width-centered">
+        <td colspan=100>
+          <span *ngIf="errorMsg; else loading">
+            An error occured, see console for details:<br>
+            {{ errorMsg }}
+          </span>
+          <ng-template #loading><b>Loading...</b></ng-template>
+        </td>
+      </tr>
+    </ng-template>
+  </table>
+  <br>
+  <div class="full-width-centered">
+    <button [routerLink]="['new']" class="new-entry">Add New Location</button>
+    <br><br>
+    <span *ngIf="locationPage && locations.length > 0" style="font-size: 1.1em;">
+      <app-paginator #paginator
+        [page]="locationPage"
+        (pageChange)="goToPage($event)">
+      </app-paginator>
+    </span>
+  </div>
+</div>

@@ -9,17 +9,21 @@
         <tr>
             <th style="width:18%" (click)="sort('id')">
                 ID
-                <span style="transform: rotate(270deg); display: inline-block"
-                *ngIf="isSortAsc('id')">&#10148;</span>
-                <span style="transform: rotate(90deg); display: inline-block"
-                *ngIf="isSortDesc('id')">&#10148;</span>
+                <span class="up-arrow" *ngIf="isSortAsc('id')">
+                  &#10148;
+                </span>
+                <span class="down-arrow" *ngIf="isSortDesc('id')">
+                  &#10148;
+                </span>
             </th>
             <th style="width:42%" (click)="sort('name')">
                 Name
-                <span style="transform: rotate(270deg); display: inline-block"
-                *ngIf="isSortAsc('name')">&#10148;</span>
-                <span style="transform: rotate(90deg); display: inline-block"
-                *ngIf="isSortDesc('name')">&#10148;</span>
+                <span class="up-arrow" *ngIf="isSortAsc('name')">
+                  &#10148;
+                </span>
+                <span class="down-arrow" *ngIf="isSortDesc('name')">
+                  &#10148;
+                </span>
             </th>
             <th style="width:40%; cursor:default;">Actions</th>
         </tr>

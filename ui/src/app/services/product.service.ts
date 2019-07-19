@@ -12,7 +12,10 @@ export class ProductService {
 
   constructor(private httpClient:HttpClient) { }
 
-  private objectToProduct(prod: {id: number, name: string}): Product {
+  private objectToProduct(prod: {
+    id: number, 
+    name: string
+  }): Product {
     return Object.assign(new Product(), prod);
   }
 
@@ -47,15 +50,19 @@ export class ProductService {
 
   createProduct(product: Product, successFunc: (...args: any[]) => any,
                 errorFunc: (e: HttpErrorResponse) => any) {
-    this.httpClient.post<Product>(ProductService.BASE_URL, product).subscribe(
+    this.httpClient.post<Product>(ProductService.BASE_URL, product)
+    .subscribe(
       p => successFunc(this.objectToProduct(p)), 
-      errorFunc);
+      errorFunc
+    );
   }
   updateProduct(product: Product, successFunc: (...args: any[]) => any,
       errorFunc: (e: HttpErrorResponse) => any) {
-    this.httpClient.put<Product>(ProductService.BASE_URL + '/' + product.getId(), product).subscribe(
+    this.httpClient.put<Product>(ProductService.BASE_URL + '/' + product.getId(), product)
+    .subscribe(
       p => successFunc(this.objectToProduct(p)),
-      errorFunc);
+      errorFunc
+    );
   }
 
 }

@@ -16,9 +16,13 @@ export class CustomerService {
 
   constructor(private httpClient:HttpClient) { }
 
-  private objectToCustomer(cust: {name: string, userId: string, 
-    id: number, password: string, entitlements: Entitlement[]}): Customer {
-    
+  private objectToCustomer(cust: {
+    name: string, 
+    userId: string, 
+    id: number, 
+    password: string, 
+    entitlements: Entitlement[]
+  }): Customer {  
     if(isNullOrUndefined(cust.entitlements)) cust.entitlements = new Array();
     return Object.assign(new Customer(), cust);
   }

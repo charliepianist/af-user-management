@@ -48,7 +48,6 @@ export class ProductFormComponent implements OnInit {
 
   validateName(): string {
     if(!this.name) return 'Please enter a name.';
-    if(this.name.length > 100) return 'Name is too long (100 characters max).';
     return null;
   }
 
@@ -75,11 +74,11 @@ export class ProductFormComponent implements OnInit {
         console.log(e);
       }
       if(this.isUpdating()) {
-        // Updating an already existing user without entitlements
+        // Updating an already existing product without entitlements
         this.productService.updateProduct(newProduct, successFunc, 
           errorFunc);
       }else {
-        // Creating a new user without entitlements
+        // Creating a new product without entitlements
         this.productService.createProduct(newProduct, successFunc,
           errorFunc);
       }

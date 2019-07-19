@@ -2,6 +2,8 @@
     width: 35%;
     display: inline-block;
     vertical-align: top;
+    padding-left: 0em;
+    padding-right: 0em;
 }
 .short-field {
     width: 30%;

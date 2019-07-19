@@ -1,0 +1,63 @@
+<div class="form-component">
+    <div class="container">
+        <button style="font-size: 18px;" [routerLink]="['/locations']">&lt; Back</button>
+        <h4 *ngIf="errorMsg">
+          An Error Occurred: {{ errorMsg }}<br>
+          See Console for Details.
+        </h4>
+        <h1>{{ origName ? 'Update ' + origName : 'Create New Location' }}</h1>
+        <form autocomplete="off">
+          <div id="labels">
+            <label for="name" class="field left-field">
+              Name
+            </label>
+            <label for="code" class="field right-field">
+              Code
+            </label>
+          </div>
+          <div id="inputs">
+            <div class="field left-field">
+              <input type="text" [(ngModel)]="name" name="name" 
+                      #nameInput="ngModel" class="form-control" 
+                      (ngModelChange)="submissionErrorMsg=null" required>
+              <div [hidden]="!validateName() || nameInput.pristine" 
+                    class="alert alert-danger">
+                {{ validateName() }}
+              </div>
+            </div>
+          
+            <div class="field right-field">
+              <input type="text" [(ngModel)]="code" name="code" 
+                      #codeInput="ngModel" class="form-control" 
+                      (ngModelChange)="submissionErrorMsg=null" required>
+              <div [hidden]="!validateCode() || codeInput.pristine" 
+                    class="alert alert-danger">
+                {{ validateCode() }}
+              </div>
+            </div>
+          </div>
+  
+          <br>
+  
+          <button (click)="submitButton()" 
+          class="btn btn-success form-button">
+            Submit
+          </button>
+          <button (click)="cancelButton()" 
+          class="btn form-button">
+            Cancel
+          </button>
+          
+          <br><br>
+          <div [hidden]="!submissionErrorMsg" class="text-danger">
+            {{ submissionErrorMsg }}<br>
+            See console for details.<br><br>
+          </div>
+          <div [hidden]="!invalidSubmit" class="text-danger">
+            <span *ngIf="validateName()">Please enter a valid name.<br></span>
+            <span *ngIf="validateCode()">Please enter a valid code.<br></span>
+          </div>
+          <br>
+        </form>
+    </div>
+  </div>

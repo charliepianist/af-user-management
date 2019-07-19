@@ -1,0 +1,13 @@
+.field {
+    width: 50%;
+    display: inline-block;
+    vertical-align: top;
+}
+.left-field {
+    padding-left: 0em;
+    padding-right: 0.375em;
+}
+.right-field {
+    padding-right: 0em;
+    padding-left: 0.375em;
+}

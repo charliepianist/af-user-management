@@ -1,23 +1,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProductFormComponent } from './product-form.component';
+import { LocationFormComponent } from './location-form.component';
 import { TestingModule } from 'src/app/test/TestingModule';
 import { FormsModule } from '@angular/forms';
 import { HttpTestingController } from '@angular/common/http/testing';
-import { ProductService } from 'src/app/services/product.service';
+import { LocationService } from 'src/app/services/location.service';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 
-
-describe('Creating new Product', () => {
-  let component: ProductFormComponent;
-  let fixture: ComponentFixture<ProductFormComponent>;
-  let service: ProductService;
+describe('Creating new Location', () => {
+  let component: LocationFormComponent;
+  let fixture: ComponentFixture<LocationFormComponent>;
+  let service: LocationService;
   let httpMock: HttpTestingController;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProductFormComponent ],
+      declarations: [ LocationFormComponent],
       imports: [
         TestingModule,
         FormsModule
@@ -27,10 +26,10 @@ describe('Creating new Product', () => {
   }));
 
   beforeEach(() => {
-    service = TestBed.get(ProductService);
+    service = TestBed.get(LocationService);
     httpMock = TestBed.get(HttpTestingController);
 
-    fixture = TestBed.createComponent(ProductFormComponent);
+    fixture = TestBed.createComponent(LocationFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -45,32 +44,45 @@ describe('Creating new Product', () => {
 
   it('should validate name, no creation if invalid', () => {
     spyOn(component, 'validateName').and.returnValue('error');
+    spyOn(component, 'validateCode').and.returnValue(null);
     component.submitButton();
     
     expect(component.validateName).toHaveBeenCalled();
     expect(component.invalidSubmit).toBeTruthy();
-    httpMock.expectNone(`${ProductService.BASE_URL}`);
+    httpMock.expectNone(`${LocationService.BASE_URL}`);
   })
 
-  it('should call productService.createProduct() for valid inputs', () => {
+  it('should validate userId, no creation if invalid', () => {
     spyOn(component, 'validateName').and.returnValue(null);
-    spyOn(service, 'createProduct');
+    spyOn(component, 'validateCode').and.returnValue('error');
+    component.submitButton();
+    
+    expect(component.validateCode).toHaveBeenCalled();
+    expect(component.invalidSubmit).toBeTruthy();
+    httpMock.expectNone(`${LocationService.BASE_URL}`);
+  })
+
+  it('should call locationService.createLocation() for valid inputs', () => {
+    spyOn(component, 'validateName').and.returnValue(null);
+    spyOn(component, 'validateCode').and.returnValue(null);
+    spyOn(service, 'createLocation');
     component.submitButton();
 
     expect(component.validateName).toHaveBeenCalled();
-    expect(service.createProduct).toHaveBeenCalled();
+    expect(component.validateCode).toHaveBeenCalled();
+    expect(service.createLocation).toHaveBeenCalled();
   })
 });
 
-describe('Updating Product', () => {
-  let component: ProductFormComponent;
-  let fixture: ComponentFixture<ProductFormComponent>;
-  let service: ProductService;
+describe('Updating Location', () => {
+  let component: LocationFormComponent;
+  let fixture: ComponentFixture<LocationFormComponent>;
+  let service: LocationService;
   let httpMock: HttpTestingController;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProductFormComponent ],
+      declarations: [ LocationFormComponent ],
       imports: [
         TestingModule
       ],
@@ -91,10 +103,10 @@ describe('Updating Product', () => {
   }));
 
   beforeEach(() => {
-    service = TestBed.get(ProductService);
+    service = TestBed.get(LocationService);
     httpMock = TestBed.get(HttpTestingController);
 
-    fixture = TestBed.createComponent(ProductFormComponent);
+    fixture = TestBed.createComponent(LocationFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -109,19 +121,32 @@ describe('Updating Product', () => {
 
   it('should validate name, no creation if invalid', () => {
     spyOn(component, 'validateName').and.returnValue('error');
+    spyOn(component, 'validateCode').and.returnValue(null);
     component.submitButton();
     
     expect(component.validateName).toHaveBeenCalled();
     expect(component.invalidSubmit).toBeTruthy();
-    httpMock.expectNone(`${ProductService.BASE_URL}`);
+    httpMock.expectNone(`${LocationService.BASE_URL}`);
   })
 
-  it('should call productService.updateProduct() for valid inputs', () => {
+  it('should validate userId, no creation if invalid', () => {
     spyOn(component, 'validateName').and.returnValue(null);
-    spyOn(service, 'updateProduct');
+    spyOn(component, 'validateCode').and.returnValue('error');
+    component.submitButton();
+    
+    expect(component.validateCode).toHaveBeenCalled();
+    expect(component.invalidSubmit).toBeTruthy();
+    httpMock.expectNone(`${LocationService.BASE_URL}`);
+  })
+
+  it('should call locationService.updateLocation() for valid inputs', () => {
+    spyOn(component, 'validateName').and.returnValue(null);
+    spyOn(component, 'validateCode').and.returnValue(null);
+    spyOn(service, 'updateLocation');
     component.submitButton();
 
     expect(component.validateName).toHaveBeenCalled();
-    expect(service.updateProduct).toHaveBeenCalled();
+    expect(component.validateCode).toHaveBeenCalled();
+    expect(service.updateLocation).toHaveBeenCalled();
   })
 });
