@@ -99,8 +99,10 @@ public class LocationResource {
 
     @PutMapping("{id}")
     public LocationDto updateLocation(@PathVariable Long id, @Valid @RequestBody LocationDto locationDto) {
-        Location inputLocation = translateLocationDtoToLocation(locationDto);
+        if(!locationRepository.existsById(id))
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
+        Location inputLocation = translateLocationDtoToLocation(locationDto);
         inputLocation.setId(id);
         return translateLocationToLocationDto(trySaveLocation(inputLocation));
     }
