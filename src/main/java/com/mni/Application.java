@@ -66,13 +66,13 @@ public class Application {
         ArrayList<MulticastGroup> multicastGroupsA = new ArrayList<>();
         ArrayList<MulticastGroup> multicastGroupsB = new ArrayList<>();
         MulticastGroup multicastGroup1 = multicastGroupRepository.save(
-                new MulticastGroup(11L, "Group 1", "192.168.1.1", 1001));
+                new MulticastGroup(11L, "Test Multicast 1", "192.168.1.1", 1001));
         MulticastGroup multicastGroup2 = multicastGroupRepository.save(
-                new MulticastGroup(12L, "Group 2", "192.168.1.2", 1002));
+                new MulticastGroup(12L, "Test Multicast 2", "192.168.1.2", 1002));
         MulticastGroup multicastGroup3 = multicastGroupRepository.save(
-                new MulticastGroup(13L, "Group 3", "192.168.1.3", 1003));
+                new MulticastGroup(13L, "Test Multicast 3", "192.168.1.3", 1003));
         MulticastGroup multicastGroup4 = multicastGroupRepository.save(
-                new MulticastGroup(14L, "Group 4", "192.168.1.4", 1004));
+                new MulticastGroup(14L, "Test Multicast 4", "192.168.1.4", 1004));
         multicastGroupsA.add(multicastGroup1);
         multicastGroupsA.add(multicastGroup2);
         multicastGroupsA.add(multicastGroup3);

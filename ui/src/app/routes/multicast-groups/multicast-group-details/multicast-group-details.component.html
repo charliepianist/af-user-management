@@ -1,20 +1,20 @@
 <div class="details-component">
   <div align="center">
       <br>
-      <button [routerLink]="['/products']">
+      <button [routerLink]="['/multicast-groups']">
           &lt; Back
       </button>
   </div><br>
   <h3 *ngIf="error" align="center" class="text-danger">
-      Could not get product, see console for details:<br>
+      Could not get multicast group, see console for details:<br>
       {{ error.message }}
   </h3>
 
-  <div *ngIf="product">
+  <div *ngIf="multicastGroup">
       <table class="container">
           <thead>
               <tr>
-                  <td colspan="100"><b>{{ product.getName() }} Details</b></td>
+                  <td colspan="100"><b>{{ multicastGroup.getName() }} Details</b></td>
               </tr>
               <tr>
                   <th style="width:35%">Field</th>
@@ -23,11 +23,15 @@
           </thead>
           <tr>
               <td>Name</td>
-              <td>{{ product.getName() }}</td>
+              <td>{{ multicastGroup.getName() }}</td>
           </tr>
           <tr>
-            <td>ID</td>
-            <td>{{ product.getId() }}</td>
+            <td>IP</td>
+            <td>{{ multicastGroup.getIp() }}</td>
+          </tr>
+          <tr>
+            <td>Port</td>
+            <td>{{ multicastGroup.getPort() }}</td>
           </tr>
       </table>
       <br>
@@ -35,7 +39,7 @@
           <button [routerLink]="['update']">Update</button>
           <app-delete-confirmation
               [button]="true"
-              (onDelete)="deleteProduct()">
+              (onDelete)="deleteMulticastGroup()">
           </app-delete-confirmation>
       </div>
       <br>

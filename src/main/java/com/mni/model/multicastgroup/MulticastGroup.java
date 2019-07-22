@@ -1,8 +1,11 @@
 package com.mni.model.multicastgroup;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.mni.model.product.Product;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Entity
 public class MulticastGroup {
@@ -10,19 +13,25 @@ public class MulticastGroup {
     @GeneratedValue
     private Long id;
 
+    @Column(unique=true)
     private String name;
 
     private String ip;
 
-    private int port;
+    private Integer port;
+
+    @NotNull
+    @ManyToMany(mappedBy="multicastGroups")
+    Collection<Product> products;
 
     public MulticastGroup() {}
 
-    public MulticastGroup(Long id, String name, String ip, int port) {
+    public MulticastGroup(Long id, String name, String ip, Integer port) {
         this.id = id;
         this.name = name;
         this.ip = ip;
         this.port = port;
+        this.products = new ArrayList();
     }
 
     public Long getId() {
@@ -49,11 +58,21 @@ public class MulticastGroup {
         this.ip = ip;
     }
 
-    public int getPort() {
+    public Integer getPort() {
         return port;
     }
 
-    public void setPort(int port) {
+    public void setPort(Integer port) {
         this.port = port;
+    }
+
+    public Collection<Product> getProducts() {
+        return this.products;
+    }
+
+    public void setProducts(Collection<Product> products) {
+        if(this.products == null) this.products = new ArrayList();
+        this.products.clear();
+        this.products.addAll(products);
     }
 }

@@ -7,16 +7,7 @@
           </th>
         </tr>
         <tr>
-            <th style="width:18%" (click)="sort('id')">
-                ID
-                <span class="up-arrow" *ngIf="isSortAsc('id')">
-                  &#10148;
-                </span>
-                <span class="down-arrow" *ngIf="isSortDesc('id')">
-                  &#10148;
-                </span>
-            </th>
-            <th style="width:42%" (click)="sort('name')">
+            <th style="width:50%" (click)="sort('name')">
                 Name
                 <span class="up-arrow" *ngIf="isSortAsc('name')">
                   &#10148;
@@ -25,15 +16,12 @@
                   &#10148;
                 </span>
             </th>
-            <th style="width:40%; cursor:default;">Actions</th>
+            <th style="width:50%;" class="default-cursor">Actions</th>
         </tr>
       </thead>
       <ng-container *ngIf="productPage; else loading">
         <ng-container *ngIf="products.length > 0; else noProducts">
           <tr *ngFor="let product of products" [routerLink]="[product.getId()]" class="row-entry">
-            <td>
-              {{ product.getId() }}
-            </td>
             <td>
               {{ product.getName() }}
             </td>

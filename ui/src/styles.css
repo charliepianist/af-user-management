@@ -41,6 +41,9 @@ thead th { background-color: lightsteelblue;}
     background-color: lightskyblue;
     cursor:pointer;
 }
+.list-component th.default-cursor, .list-component th.default-cursor:hover {
+    cursor: default;
+}
 .list-component .down-arrow {
     transform: rotate(90deg);
     display: inline-block;

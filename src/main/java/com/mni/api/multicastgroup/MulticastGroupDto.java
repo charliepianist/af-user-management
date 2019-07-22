@@ -2,19 +2,24 @@ package com.mni.api.multicastgroup;
 
 import com.mni.model.multicastgroup.MulticastGroup;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
 public class MulticastGroupDto {
     private Long id;
 
+    @NotBlank
     private String name;
 
+    @NotBlank
     private String ip;
 
-    private int port;
+    @NotNull
+    private Integer port;
 
-    public static MulticastGroupDto multicastGroupToMulticastGroupDto(MulticastGroup multicastGroup) {
+    public static MulticastGroupDto translateMulticastGroupToMulticastGroupDto(MulticastGroup multicastGroup) {
         MulticastGroupDto multicastGroupDto = new MulticastGroupDto();
         multicastGroupDto.setId(multicastGroup.getId());
         multicastGroupDto.setIp(multicastGroup.getIp());
@@ -23,7 +28,7 @@ public class MulticastGroupDto {
         return multicastGroupDto;
     }
 
-    public static MulticastGroup multicastGroupDtoToMulticastGroup(MulticastGroupDto multicastGroupDto) {
+    public static MulticastGroup translateMulticastGroupDtoToMulticastGroup(MulticastGroupDto multicastGroupDto) {
         MulticastGroup multicastGroup = new MulticastGroup();
         multicastGroup.setId(multicastGroupDto.getId());
         multicastGroup.setIp(multicastGroupDto.getIp());
@@ -34,19 +39,19 @@ public class MulticastGroupDto {
 
     public static Collection<MulticastGroupDto> multicastGroupsToMulticastGroupDtos(Collection<MulticastGroup> multicastGroups) {
         return multicastGroups.stream()
-                .map(m -> multicastGroupToMulticastGroupDto(m))
+                .map(m -> translateMulticastGroupToMulticastGroupDto(m))
                 .collect(Collectors.toSet());
     }
 
     public static Collection<MulticastGroup> multicastGroupDtosToMulticastGroups(Collection<MulticastGroupDto> multicastGroupDtos) {
         return multicastGroupDtos.stream()
-                .map(m -> multicastGroupDtoToMulticastGroup(m))
+                .map(m -> translateMulticastGroupDtoToMulticastGroup(m))
                 .collect(Collectors.toSet());
     }
 
     public MulticastGroupDto() {}
 
-    public MulticastGroupDto(Long id, String name, String ip, int port) {
+    public MulticastGroupDto(Long id, String name, String ip, Integer port) {
         this.id = id;
         this.name = name;
         this.ip = ip;
@@ -77,11 +82,11 @@ public class MulticastGroupDto {
         this.ip = ip;
     }
 
-    public int getPort() {
+    public Integer getPort() {
         return port;
     }
 
-    public void setPort(int port) {
+    public void setPort(Integer port) {
         this.port = port;
     }
 }

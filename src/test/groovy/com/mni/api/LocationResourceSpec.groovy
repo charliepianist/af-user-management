@@ -10,12 +10,10 @@ import org.springframework.data.domain.Sort
 import org.springframework.web.server.ResponseStatusException
 import spock.lang.Specification
 
-/**
- * Created by charles.liu on 6/26/19.
- */
 class LocationResourceSpec extends Specification {
 
     LocationResource locationResource
+
     void setup(){
         locationResource = new LocationResource()
         locationResource.locationRepository = Mock(LocationRepository)
@@ -143,6 +141,7 @@ class LocationResourceSpec extends Specification {
 
         then:
         "save() should be called"
+        1 * locationResource.locationRepository.existsById(1) >> true
         1 * locationResource.locationRepository.save({ Location location ->
             location.getId() == 1L &&
                     location.getName() == "New Name" && location.getCode() == "CHI1"
