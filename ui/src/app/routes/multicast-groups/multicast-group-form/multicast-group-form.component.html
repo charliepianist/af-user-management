@@ -1,0 +1,78 @@
+<div class="form-component">
+  <div class="container">
+      <button style="font-size: 18px;" [routerLink]="['/multicast-groups']">&lt; Back</button>
+      <h4 *ngIf="errorMsg">
+        An Error Occurred: {{ errorMsg }}<br>
+        See Console for Details.
+      </h4>
+      <h1>{{ origName ? 'Update ' + origName : 'Create New Multicast Group' }}</h1>
+      <form autocomplete="off">
+        <div id="labels">
+          <label for="name" class="field long-field">
+            Name
+          </label>
+          <label for="ip" class="field long-field">
+            IP
+          </label>
+          <label for="port" class="field short-field">
+            Port
+          </label>
+        </div>
+
+        <div id="inputs">
+          <div class="field long-field">
+            <input type="text" [(ngModel)]="name" name="name" 
+                    #nameInput="ngModel" class="form-control" 
+                    (ngModelChange)="submissionErrorMsg=null" required>
+            <div [hidden]="!validateName() || nameInput.pristine" 
+                  class="alert alert-danger">
+              {{ validateName() }}
+            </div>
+          </div>
+        
+          <div class="field long-field">
+            <input type="text" [(ngModel)]="ip" name="ip" 
+                    #ipInput="ngModel" class="form-control" 
+                    (ngModelChange)="submissionErrorMsg=null" required>
+            <div [hidden]="!validateIp() || ipInput.pristine" 
+                  class="alert alert-danger">
+              {{ validateIp() }}
+            </div>
+          </div>
+        
+          <div class="field short-field">
+            <input type="text" [(ngModel)]="port" name="port" 
+                    #portInput="ngModel" class="form-control" 
+                    (ngModelChange)="submissionErrorMsg=null" required>
+            <div [hidden]="!validatePort() || portInput.pristine" 
+                  class="alert alert-danger">
+              {{ validatePort() }}
+            </div>
+          </div>
+        </div>
+
+        <br>
+
+        <button (click)="submitButton()" 
+        class="btn btn-success form-button">
+          Submit
+        </button>
+        <button (click)="cancelButton()" 
+        class="btn form-button">
+          Cancel
+        </button>
+        
+        <br><br>
+        <div [hidden]="!submissionErrorMsg" class="text-danger">
+          {{ submissionErrorMsg }}<br>
+          See console for details.<br><br>
+        </div>
+        <div [hidden]="!invalidSubmit" class="text-danger">
+          <span *ngIf="validateName()">Please enter a valid name.<br></span>
+          <span *ngIf="validateIp()">Please enter a valid ip.<br></span>
+          <span *ngIf="validatePort()">Please enter a valid port.<br></span>
+        </div>
+        <br>
+      </form>
+  </div>
+</div>

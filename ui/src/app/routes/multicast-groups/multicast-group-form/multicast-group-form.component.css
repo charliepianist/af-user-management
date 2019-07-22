@@ -1,0 +1,13 @@
+.long-field {
+    width: 40%;
+    display: inline-block;
+    vertical-align: top;
+    padding-left: 0em;
+    padding-right: 0.75em;
+}
+.short-field {
+    width: 20%;
+    display: inline-block;
+    vertical-align: top;
+    padding: 0em;
+}

@@ -1,25 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Page } from 'src/app/model/page';
-import { LocationService } from 'src/app/services/location.service';
-import { Location } from 'src/app/model/location';
+import { MulticastGroupService } from 'src/app/services/multicast-group.service';
+import { MulticastGroup } from 'src/app/model/multicast-group';
 
 @Component({
-  selector: 'app-location-list',
-  templateUrl: './location-list.component.html',
-  styleUrls: ['./location-list.component.css']
+  selector: 'app-multicast-group-list',
+  templateUrl: './multicast-group-list.component.html',
+  styleUrls: ['./multicast-group-list.component.css']
 })
-export class LocationListComponent implements OnInit {
+export class MulticastGroupListComponent implements OnInit {
 
-  constructor(private locationService:LocationService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private multicastGroupService:MulticastGroupService, private router: Router, private route: ActivatedRoute) { }
 
   static readonly DEFAULT_SORT_FIELD = 'name';
   static readonly MAX_PAGE_SIZE = 100;
   static readonly DEFAULT_PAGE_SIZE = 20;
   static readonly MIN_PAGE_SIZE = 1;
 
-  locationPage:Page<Location>;
-  locations:Location[];
+  multicastGroupPage:Page<MulticastGroup>;
+  multicastGroups:MulticastGroup[];
   errorMsg: string;
   queryParams: {
     page: number,
@@ -41,22 +41,22 @@ export class LocationListComponent implements OnInit {
        this.queryParams.page = 0;
 
       if(isNaN(this.queryParams.size) || 
-        this.queryParams.size < LocationListComponent.MIN_PAGE_SIZE) {
-          this.queryParams.size = LocationListComponent.DEFAULT_PAGE_SIZE;
+        this.queryParams.size < MulticastGroupListComponent.MIN_PAGE_SIZE) {
+          this.queryParams.size = MulticastGroupListComponent.DEFAULT_PAGE_SIZE;
         }
-      if(this.queryParams.size > LocationListComponent.MAX_PAGE_SIZE) {
-        this.queryParams.size = LocationListComponent.MAX_PAGE_SIZE;
+      if(this.queryParams.size > MulticastGroupListComponent.MAX_PAGE_SIZE) {
+        this.queryParams.size = MulticastGroupListComponent.MAX_PAGE_SIZE;
       }
 
-      if(!this.isLocationField(this.queryParams.sortBy)) 
-        this.queryParams.sortBy = LocationListComponent.DEFAULT_SORT_FIELD;
+      if(!this.isMulticastGroupField(this.queryParams.sortBy)) 
+        this.queryParams.sortBy = MulticastGroupListComponent.DEFAULT_SORT_FIELD;
     });
 
-    this.locationService.listLocations(
+    this.multicastGroupService.listMulticastGroups(
       p => { 
-        // success, returned Page<Location> object
-        this.locationPage = p;
-        this.locations = p.content;
+        // success, returned Page<MulticastGroup> object
+        this.multicastGroupPage = p;
+        this.multicastGroups = p.content;
       },
       //onError
       e => {console.log(e); this.errorMsg = e.message;},
@@ -76,7 +76,7 @@ export class LocationListComponent implements OnInit {
     desc?: boolean
   } = this.queryParams) {
 
-    this.router.navigate(['/locations'], {
+    this.router.navigate(['/multicast-groups'], {
       queryParams: {
         page: page,
         size: size,
@@ -94,7 +94,7 @@ export class LocationListComponent implements OnInit {
   }
 
   toFirstPage() {
-    this.router.navigate(['/locations']).then(() => {
+    this.router.navigate(['/multicast-groups']).then(() => {
       this.reinitialize();
     });
   }
@@ -125,15 +125,16 @@ export class LocationListComponent implements OnInit {
     this.refresh();
   }
 
-  deleteLocation(id: number) {
-    this.locationService.deleteLocation(id,
+  deleteMulticastGroup(id: number) {
+    this.multicastGroupService.deleteMulticastGroup(id,
       () => { this.reinitialize() }); //reload component on success 
   }
 
-  isLocationField(str: string): boolean {
+  isMulticastGroupField(str: string): boolean {
     if(str === 'id') return true;
     if(str === 'name') return true;
-    if(str === 'code') return true;
+    if(str === 'ip') return true;
+    if(str === 'port') return true;
     return false;
   }
 }

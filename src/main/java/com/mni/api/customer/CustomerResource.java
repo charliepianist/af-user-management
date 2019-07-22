@@ -38,7 +38,7 @@ public class CustomerResource {
     public static final String DEFAULT_SORT_FIELD = "name";
 
     // Returns whether a String is a field of Customer
-    private boolean isCustomerField(String field) {
+    private boolean isSortableField(String field) {
         return field.equals("id") || field.equals("name") || field.equals("userId") ||
                 field.equals("password");
     }
@@ -73,7 +73,7 @@ public class CustomerResource {
         if(page < 0) page = 0;
         if(size < MIN_PAGE_SIZE) size = MIN_PAGE_SIZE;
         if(size > MAX_PAGE_SIZE) size = MAX_PAGE_SIZE;
-        if(!isCustomerField(sortBy)) sortBy = DEFAULT_SORT_FIELD;
+        if(!isSortableField(sortBy)) sortBy = DEFAULT_SORT_FIELD;
 
         Sort.Direction direction = desc ? Sort.Direction.DESC : Sort.Direction.ASC;
         Sort.Order order = new Sort.Order(direction, sortBy);
@@ -102,7 +102,7 @@ public class CustomerResource {
     @GetMapping("{id}/entitlements")
     public Collection<EntitlementDto> getCustomerEntitlements(@PathVariable("id") Long id){
         Collection<Entitlement> entitlements = getPersistedCustomer(id).getEntitlements();
-        return EntitlementDto.entitlementsToEntitlementDtos(entitlements); //Valid ID
+        return EntitlementDto.entitlementsToEntitlementDtos(entitlements);
     }
 
     @PostMapping

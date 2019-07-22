@@ -3,11 +3,11 @@
     <thead>
       <tr>
         <th colspan="1000" class="no-hover-highlight">
-          Locations
+          Multicast Groups
         </th>
       </tr>
       <tr>
-          <th style="width:40%" (click)="sort('name')">
+          <th style="width:30%" (click)="sort('name')">
               Name
               <span class="up-arrow" *ngIf="isSortAsc('name')">
                 &#10148;
@@ -16,44 +16,56 @@
                 &#10148;
               </span>
           </th>
-          <th style="width:28%" (click)="sort('code')">
-              Code
-              <span class="up-arrow" *ngIf="isSortAsc('code')">
+          <th style="width:20%" (click)="sort('ip')">
+              IP
+              <span class="up-arrow" *ngIf="isSortAsc('ip')">
                 &#10148;
               </span>
-              <span class="down-arrow" *ngIf="isSortDesc('code')">
+              <span class="down-arrow" *ngIf="isSortDesc('ip')">
                 &#10148;
               </span>
           </th>
-          <th style="width:32%;" class="default-cursor">Actions</th>
+          <th style="width:20%" (click)="sort('port')">
+              Port
+              <span class="up-arrow" *ngIf="isSortAsc('port')">
+                &#10148;
+              </span>
+              <span class="down-arrow" *ngIf="isSortDesc('port')">
+                &#10148;
+              </span>
+          </th>
+          <th style="width:30%;" class="default-cursor">Actions</th>
       </tr>
     </thead>
-    <ng-container *ngIf="locationPage; else loading">
-      <ng-container *ngIf="locations.length > 0; else noLocations">
-        <tr *ngFor="let location of locations" [routerLink]="[location.getId()]" class="row-entry">
+    <ng-container *ngIf="multicastGroupPage; else loading">
+      <ng-container *ngIf="multicastGroups.length > 0; else noMulticastGroups">
+        <tr *ngFor="let multicastGroup of multicastGroups" [routerLink]="[multicastGroup.getId()]" class="row-entry">
           <td>
-            {{ location.getName() }}
+            {{ multicastGroup.getName() }}
           </td>
           <td>
-            {{ location.getCode() }}
+            {{ multicastGroup.getIp() }}
+          </td>
+          <td>
+            {{ multicastGroup.getPort() }}
           </td>
           <!-- Details, Update, Delete-->
           <td (click)="$event.stopPropagation()" class="row-options"> 
-            <span [routerLink]="[location.getId()]" class="link row-option">Details</span>
-            <span [routerLink]="[location.getId(), 'update']" class="link row-option">Update</span>
+            <span [routerLink]="[multicastGroup.getId()]" class="link row-option">Details</span>
+            <span [routerLink]="[multicastGroup.getId(), 'update']" class="link row-option">Update</span>
             <app-delete-confirmation
               [button]="false"
-              (onDelete)="deleteLocation(location.getId())">
+              (onDelete)="deleteMulticastGroup(multicastGroup.getId())">
             </app-delete-confirmation>
           </td>
         </tr>
       </ng-container>
     </ng-container>
-    <ng-template #noLocations>
+    <ng-template #noMulticastGroups>
       <tr class="full-width-centered">
         <td colspan=100>
-          <b *ngIf="locationPage.totalElements === 0; else wrongPage">
-            There are currently no locations.
+          <b *ngIf="multicastGroupPage.totalElements === 0; else wrongPage">
+            There are currently no multicast groups.
           </b>
           <ng-template #wrongPage><b>
             This page is empty. 
@@ -76,11 +88,11 @@
   </table>
   <br>
   <div class="full-width-centered">
-    <button [routerLink]="['new']" class="new-entry">Add New Location</button>
+    <button [routerLink]="['new']" class="new-entry">Add New Multicast Group</button>
     <br><br>
-    <span *ngIf="locationPage && locations.length > 0" style="font-size: 1.1em;">
+    <span *ngIf="multicastGroupPage && multicastGroups.length > 0" style="font-size: 1.1em;">
       <app-paginator #paginator
-        [page]="locationPage"
+        [page]="multicastGroupPage"
         (pageChange)="goToPage($event)">
       </app-paginator>
     </span>

@@ -1,5 +1,8 @@
 package com.mni.api.product;
 
+import com.mni.api.multicastgroup.MulticastGroupDto;
+import com.mni.model.multicastgroup.MulticastGroup;
+import com.mni.model.multicastgroup.MulticastGroupRepository;
 import com.mni.model.product.Product;
 import com.mni.model.product.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 
 import static com.mni.api.product.ProductDto.translateProductDtoToProduct;
@@ -29,6 +35,8 @@ public class ProductResource {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private MulticastGroupRepository multicastGroupRepository;
 
     public static final int MAX_PAGE_SIZE = 100;
     public static final int DEFAULT_PAGE_SIZE = 20;
@@ -45,6 +53,7 @@ public class ProductResource {
     //Attempt to save a product, returns HTTP 400 Bad Request if something goes wrong
     private Product trySaveProduct(Product product) {
         try{
+            if(product.getMulticastGroups() == null) product.setMulticastGroups(new ArrayList());
             return productRepository.save(product);
         }catch(Exception e) {
             if(e instanceof DataIntegrityViolationException)
@@ -81,14 +90,23 @@ public class ProductResource {
                 .map(ProductDto::translateProductToProductDto);
     }
 
-
-    @GetMapping("{id}")
-    public ProductDto getProduct(@PathVariable("id") Long id){
+    private Product getPersistedProduct(Long id) {
         Optional<Product> product = productRepository.findById(id);
 
         if(!product.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND); // Invalid ID
-        return translateProductToProductDto(product.get()); //Valid ID
+        return product.get();
+    }
+
+    @GetMapping("{id}")
+    public ProductDto getProduct(@PathVariable("id") Long id){
+        return translateProductToProductDto(getPersistedProduct(id)); //Valid ID
+    }
+
+    @GetMapping("{id}/multicast-groups")
+    public Collection<MulticastGroupDto> getProductMulticastGroups(@PathVariable("id") Long id) {
+        Collection<MulticastGroup> groups = getPersistedProduct(id).getMulticastGroups();
+        return MulticastGroupDto.multicastGroupsToMulticastGroupDtos(groups);
     }
 
     @PostMapping
@@ -101,10 +119,25 @@ public class ProductResource {
 
     @PutMapping("{id}")
     public ProductDto updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDto productDto) {
-        Product inputProduct = translateProductDtoToProduct(productDto);
+        Product product = getPersistedProduct(id);
 
+        Product inputProduct = translateProductDtoToProduct(productDto);
         inputProduct.setId(id);
+        inputProduct.setMulticastGroups(product.getMulticastGroups());
+
         return translateProductToProductDto(trySaveProduct(inputProduct));
+    }
+
+    @PutMapping("{id}/multicast-groups")
+    public Collection<MulticastGroupDto> updateProductMulticastGroups(@PathVariable Long id,
+                                                   @NotNull @RequestBody Collection<MulticastGroupDto> groupDtos) {
+        Product product = getPersistedProduct(id);
+
+        // add references to product to its new multicast groups
+        product.setMulticastGroups(MulticastGroupDto.multicastGroupDtosToMulticastGroups(groupDtos));
+
+        Product persistedProduct = trySaveProduct(product);
+        return MulticastGroupDto.multicastGroupsToMulticastGroupDtos(persistedProduct.getMulticastGroups());
     }
 
     @DeleteMapping("{id}")

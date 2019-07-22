@@ -94,7 +94,7 @@ class CustomerResourceSpec extends Specification {
         def result = customerResource.getCustomerEntitlements(1)
 
         then:
-        "customerRepository should call findById(1), which will return a Customer object"
+        "customerRepository should call findById(1), which will return an empty Customer optional"
         1 * customerResource.customerRepository.findById(1) >> Optional.empty()
 
         and:
@@ -221,7 +221,7 @@ class CustomerResourceSpec extends Specification {
 
     void "updateCustomerEntitlements() should call save() and return updated customer" () {
         given:
-        Customer c = new Customer(1, "New Name", "New UserID", "abcdefghijklmno", new ArrayList())
+        Customer c = new Customer(1L, "New Name", "New UserID", "abcdefghijklmno", new ArrayList())
 
         when:
         "updateCustomerEntitlements() is called"
@@ -234,7 +234,9 @@ class CustomerResourceSpec extends Specification {
             customer.getId() == 1L &&
                     customer.getName() == "New Name" &&
                     customer.getUserId() == "New UserID" &&
-                    customer.getPassword() == "abcdefghijklmno"
+                    customer.getPassword() == "abcdefghijklmno" &&
+                    customer.getEntitlements().size() != 0 &&
+                    customer.getEntitlements()[0].getClient() == c
         }) >> new Customer(1L, "New Name", "New UserID", "abcdefghijklmno", entitlements)
 
         and:

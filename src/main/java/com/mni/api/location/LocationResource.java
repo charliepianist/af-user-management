@@ -19,10 +19,6 @@ import java.util.Optional;
 import static com.mni.api.location.LocationDto.translateLocationDtoToLocation;
 import static com.mni.api.location.LocationDto.translateLocationToLocationDto;
 
-/**
- * Created by charles.liu on 6/26/19.
- */
-
 @RestController
 @RequestMapping("/api/locations")
 public class LocationResource {

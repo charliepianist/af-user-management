@@ -21,27 +21,25 @@
                     <th style="width:65%">Value</th>
                 </tr>
             </thead>
-            <ng-container>
-                <tr>
-                    <td>Name</td>
-                    <td>{{ customer.getName() }}</td>
-                </tr>
-                <tr>
-                    <td>User ID</td>
-                    <td>{{ customer.getUserId() }}</td>
-                </tr>
-                <tr>
-                    <td>Password</td>
-                    <td>{{ customer.getPassword() }}</td>
-                </tr>
-                <tr>
-                    <td>Status</td>
-                    <td [class.text-danger]="customer.isDisabled()"
-                        [class.text-success]="!customer.isDisabled()">
-                        {{ customer.isDisabled() ? 'Disabled' : 'Active'}}
-                    </td>
-                </tr>
-            </ng-container>
+            <tr>
+                <td>Name</td>
+                <td>{{ customer.getName() }}</td>
+            </tr>
+            <tr>
+                <td>User ID</td>
+                <td>{{ customer.getUserId() }}</td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td>{{ customer.getPassword() }}</td>
+            </tr>
+            <tr>
+                <td>Status</td>
+                <td [class.text-danger]="customer.isDisabled()"
+                    [class.text-success]="!customer.isDisabled()">
+                    {{ customer.isDisabled() ? 'Disabled' : 'Active'}}
+                </td>
+            </tr>
         </table>
         <br>
         <div align="center">

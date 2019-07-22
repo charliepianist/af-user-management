@@ -4,6 +4,8 @@ package com.mni.model.product;
 import com.mni.model.multicastgroup.MulticastGroup;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
@@ -16,12 +18,8 @@ public class Product {
     @Column(unique=true)
     private String name;
 
+    @NotNull
     @ManyToMany
-    @JoinTable(
-            name = "product_multicast_groups",
-            joinColumns =  @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "multicast_group_id")
-    )
     Collection<MulticastGroup> multicastGroups;
 
     public Product(){}
@@ -51,6 +49,17 @@ public class Product {
     public Collection<MulticastGroup> getMulticastGroups() { return multicastGroups; }
 
     public void setMulticastGroups(Collection<MulticastGroup> multicastGroups) {
-        this.multicastGroups = multicastGroups;
+        if(this.multicastGroups == null) this.multicastGroups = new ArrayList();
+        this.multicastGroups.clear();
+        this.multicastGroups.addAll(multicastGroups);
+    }
+
+    public void addMulticastGroup(MulticastGroup multicastGroup) {
+        if(this.multicastGroups == null) this.multicastGroups = new ArrayList();
+        this.multicastGroups.add(multicastGroup);
+    }
+
+    public boolean removeMulticastGroup(MulticastGroup multicastGroup) {
+        return this.multicastGroups.removeIf(group -> group.getId() == multicastGroup.getId());
     }
 }

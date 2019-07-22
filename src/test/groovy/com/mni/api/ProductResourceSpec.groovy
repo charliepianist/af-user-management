@@ -1,5 +1,6 @@
 package com.mni.api
 
+import com.mni.api.multicastgroup.MulticastGroupDto
 import com.mni.api.product.ProductDto
 import com.mni.api.product.ProductResource
 import com.mni.model.multicastgroup.MulticastGroup
@@ -12,17 +13,16 @@ import org.springframework.web.server.ResponseStatusException
 import spock.lang.Shared
 import spock.lang.Specification
 
-/**
- * Created by charles.liu on 6/26/19.
- */
 class ProductResourceSpec extends Specification {
 
     @Shared ArrayList<MulticastGroup> multicastGroups
+    @Shared ArrayList<MulticastGroupDto> multicastGroupDtos
     @Shared ProductResource productResource
 
     void setupSpec() {
         multicastGroups = new ArrayList<>()
         multicastGroups.add(new MulticastGroup(1, "Example Group", "192.168.1.1", 4000))
+        multicastGroupDtos = MulticastGroupDto.multicastGroupsToMulticastGroupDtos(multicastGroups);
     }
 
     void setup(){
@@ -60,6 +60,40 @@ class ProductResourceSpec extends Specification {
         "The result from getProduct() should be null"
         thrown(ResponseStatusException)
         result == null
+    }
+
+    void "getProductMulticastGroups() should return correct groups when called with valid ID" () {
+        when:
+        "getProductMulticastGroups() is called"
+        def result = productResource.getProductMulticastGroups(1)
+
+        then:
+        "productRepository should call findById(1), which will return a Product object"
+        1 * productResource.productRepository.findById(1) >> Optional.of(
+                new Product(1, "US Data", multicastGroups)
+        )
+
+        and:
+        "result should be the correct set of Multicast Groups"
+        result instanceof Collection<MulticastGroupDto>
+        result[0].getId() == multicastGroupDtos.get(0).getId()
+        result[0].getName() == multicastGroupDtos.get(0).getName()
+        result[0].getIp() == multicastGroupDtos.get(0).getIp()
+        result[0].getPort() == multicastGroupDtos.get(0).getPort()
+    }
+
+    void "getProductMulticastGroups() should throw exception given invalid ID" () {
+        when:
+        "getProductMulticastGroups() is called"
+        def result = productResource.getProductMulticastGroups(1)
+
+        then:
+        "productRepository should call findById(1), which will return an empty Product optional"
+        1 * productResource.productRepository.findById(1) >> Optional.empty()
+
+        and:
+        "Exception should be thrown"
+        thrown(ResponseStatusException)
     }
 
     void "saveProduct() with a new name should return a new persisted product" () {
@@ -140,6 +174,7 @@ class ProductResourceSpec extends Specification {
 
     void "updateProduct() should call save() to save product and return new product" () {
         given:
+        Product p = new Product(1, "Old Name", multicastGroups)
         ProductDto productDto = new ProductDto(1, "New Name")
 
         when:
@@ -148,6 +183,7 @@ class ProductResourceSpec extends Specification {
 
         then:
         "save() should be called"
+        1 * productResource.productRepository.findById(1) >> Optional.of(p)
         1 * productResource.productRepository.save({ Product product ->
             product.getId() == 1L &&
                     product.getName() == "New Name"
@@ -158,5 +194,44 @@ class ProductResourceSpec extends Specification {
         result instanceof ProductDto
         result.getId() == productDto.getId()
         result.getName() == productDto.getName()
+    }
+
+    void "updateProductMulticastGroups() should call save() and return updated product" () {
+        given:
+        Product p = new Product(1L, "US Data", new ArrayList())
+
+        when:
+        "updateProductMulticastGroups() is called"
+        def result = productResource.updateProductMulticastGroups(1, multicastGroupDtos)
+
+        then:
+        "save() should be called"
+        1 * productResource.productRepository.findById(1) >> Optional.of(p)
+        1 * productResource.productRepository.save({ Product product ->
+            product.getId() == 1L && product.getName() == "US Data" &&
+                    product.getMulticastGroups().size() != 0
+        }) >> new Product(1L, "US Data", multicastGroups)
+
+        and:
+        "Correct result should be returned"
+        result instanceof Collection<MulticastGroupDto>
+        result[0].getId() == multicastGroupDtos.get(0).getId()
+        result[0].getName() == multicastGroupDtos.get(0).getName()
+        result[0].getIp() == multicastGroupDtos.get(0).getIp()
+        result[0].getPort() == multicastGroupDtos.get(0).getPort()
+    }
+
+    void "updateProductMulticastGroups() should throw an exception when invalid ID" () {
+        when:
+        "updateProductMulticastGroups() with invalid ID is called"
+        def result = productResource.updateProductMulticastGroups(1, multicastGroupDtos)
+
+        then:
+        "findById() should be called"
+        1 * productResource.productRepository.findById(1) >> Optional.empty()
+
+        and:
+        "Exception is thrown"
+        thrown(ResponseStatusException)
     }
 }

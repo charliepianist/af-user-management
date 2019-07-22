@@ -17,6 +17,9 @@ import { ProductFormComponent } from './routes/products/product-form/product-for
 import { LocationListComponent } from './routes/locations/location-list/location-list.component';
 import { LocationDetailsComponent } from './routes/locations/location-details/location-details.component';
 import { LocationFormComponent } from './routes/locations/location-form/location-form.component';
+import { MulticastGroupListComponent } from './routes/multicast-groups/multicast-group-list/multicast-group-list.component';
+import { MulticastGroupDetailsComponent } from './routes/multicast-groups/multicast-group-details/multicast-group-details.component';
+import { MulticastGroupFormComponent } from './routes/multicast-groups/multicast-group-form/multicast-group-form.component';
 
 
 const appRoutes: Routes = [
@@ -24,14 +27,21 @@ const appRoutes: Routes = [
   { path: 'customers/new', component: CustomerFormComponent },
   { path: 'customers/:id',      component: CustomerDetailsComponent },
   { path: 'customers/:id/update',      component: CustomerFormComponent },
+
   { path: 'products', component: ProductListComponent },
   { path: 'products/new', component: ProductFormComponent },
   { path: 'products/:id', component: ProductDetailsComponent },
   { path: 'products/:id/update', component: ProductFormComponent },
+  
   { path: 'locations', component: LocationListComponent },
   { path: 'locations/new', component: LocationFormComponent },
   { path: 'locations/:id', component: LocationDetailsComponent },
   { path: 'locations/:id/update', component: LocationFormComponent },
+  
+  { path: 'multicast-groups', component: MulticastGroupListComponent },
+  { path: 'multicast-groups/new', component: MulticastGroupFormComponent },
+  { path: 'multicast-groups/:id', component: MulticastGroupDetailsComponent },
+  { path: 'multicast-groups/:id/update', component: MulticastGroupFormComponent },
 
   //the default page
   { path: '**', redirectTo: 'customers' }
@@ -55,6 +65,9 @@ const appRoutes: Routes = [
     LocationListComponent,
     LocationDetailsComponent,
     LocationFormComponent,
+    MulticastGroupListComponent,
+    MulticastGroupDetailsComponent,
+    MulticastGroupFormComponent,
   ],
   imports: [
     BrowserModule,
