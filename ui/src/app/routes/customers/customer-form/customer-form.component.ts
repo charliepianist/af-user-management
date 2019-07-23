@@ -21,12 +21,16 @@ export class CustomerFormComponent implements OnInit {
   customer: Customer = new Customer();
   origName: string = null;
   name: string = null;
+  newName: string = null;
   origUserId: string = null;
   userId: string = null;
+  newUserId: string = null;
   origPassword: string = null;
   password: string = null;
+  newPassword: string = null;
   origDisabled: boolean = false;
   disabled: boolean = false;
+  newDisabled: boolean = null;
   passLength: number = 15;
   invalidSubmit: boolean = false; // when submit clicked with invalid input
   submissionErrorMsg: string = null;
@@ -97,47 +101,64 @@ export class CustomerFormComponent implements OnInit {
 
   toggleUpdateMode() {
     this.updateEntitlements = !this.updateEntitlements;
+    if(this.updateEntitlements) {
+      this.newName = this.name;
+      this.name = this.origName;
+      this.newUserId = this.userId;
+      this.userId = this.origUserId;
+      this.newPassword = this.password;
+      this.password = this.origPassword;
+      this.newDisabled = this.disabled;
+      this.disabled = this.origDisabled;
+    }else {
+      this.name = this.newName;
+      this.userId = this.newUserId;
+      this.password = this.newPassword;
+      this.disabled = this.newDisabled;
+    }
   }
   
   submitButton() {
-    if(this.validateName() || this.validateUserId() || this.validatePassword()) {
-      this.invalidSubmit = true;
-    }else {
-      let newCustomer = new Customer(
-        this.idNum, 
-        this.name, 
-        this.userId, 
-        this.password, 
-        this.customerEntitlementsComponent.getEntitlements(),
-        this.disabled);
-
-      let successFunc = (p: Customer) => {
-        this.router.navigate(['/customers', p.getId()]);
-      };
-      let errorFunc = (e: HttpErrorResponse) => {
-        this.submissionErrorMsg = e.error.status + ' ' + 
-                                  e.error.error + ': ' +
-                                  e.error.message;
-        console.log(e);
+    let errorFunc = (e: HttpErrorResponse) => {
+      this.submissionErrorMsg = e.error.status + ' ' + 
+                                e.error.error + ': ' +
+                                e.error.message;
+      console.log(e);
+    }
+    
+    if(this.updateEntitlements) {
+      // Updating a customer's entitlements
+      let goToDetails = () => {
+        this.router.navigate(['/customers', this.idNum]);
       }
-      if(this.customerEntitlementsComponent.haveEntitlementsChanged()) {
-        if(this.isUpdating()) {
-          // Updating an already existing user
-          this.customerService.updateCustomerWithEntitlements(newCustomer, successFunc, 
-            errorFunc);
-        }else {
-          // Creating a new user
-          this.customerService.createCustomerWithEntitlements(newCustomer, successFunc,
-            errorFunc);
-        }
+
+      this.customerService.updateCustomerEntitlements(
+        this.idNum,
+        this.customerEntitlementsComponent.getEntitlements(),
+        goToDetails, errorFunc
+      );
+    }else {
+      if(this.validateName() || this.validateUserId() || this.validatePassword()) {
+        this.invalidSubmit = true;
       }else {
+        let newCustomer = new Customer(
+          this.idNum, 
+          this.name, 
+          this.userId, 
+          this.password, 
+          null,
+          this.disabled);
+        let successFunc = (p: Customer) => {
+          this.router.navigate(['/customers', p.getId()]);
+        };
+
         if(this.isUpdating()) {
-          // Updating an already existing user without entitlements
-          this.customerService.updateCustomer(newCustomer, successFunc, 
-            errorFunc);
+          // Updating customer
+            this.customerService.updateCustomer(newCustomer, successFunc,
+              errorFunc);
         }else {
-          // Creating a new user without entitlements
-          this.customerService.createCustomer(newCustomer, successFunc,
+          // Creating a new customer (without entitlements)
+          this.customerService.createCustomer(newCustomer, successFunc, 
             errorFunc);
         }
       }
@@ -151,22 +172,24 @@ export class CustomerFormComponent implements OnInit {
   }
 
   generatePassword() {
-    this.passLength = Math.max(Math.min(Math.floor(this.passLength), 100), 15);
-    let categories = ['ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-                      'abcdefghijklmnopqrstuvwxyz',
-                      '0123456789',
-                      '[!@#$%^&*()_+-=[]{};\':"\\|,.<>/?]'];
-    let chars = categories[0] + categories[1] + categories[2] + categories[3];
+    if(!this.updateEntitlements) {
+      this.passLength = Math.max(Math.min(Math.floor(this.passLength), 100), 15);
+      let categories = ['ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                        'abcdefghijklmnopqrstuvwxyz',
+                        '0123456789',
+                        '[!@#$%^&*()_+-=[]{};\':"\\|,.<>/?]'];
+      let chars = categories[0] + categories[1] + categories[2] + categories[3];
 
-    let result = '';
-    for(let i = 0; i < this.passLength - categories.length; i++) {
-      result += chars.charAt(Math.floor(Math.random() * (chars.length)));
+      let result = '';
+      for(let i = 0; i < this.passLength - categories.length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * (chars.length)));
+      }
+      for(let i = 0; i < categories.length; i++) {
+        let pos = Math.floor(Math.random() * (result.length + 1));
+        let char = categories[i].charAt(Math.floor(Math.random() * categories[i].length));
+        result = result.substring(0, pos) + char + result.substring(pos);
+      }
+      this.password = result;
     }
-    for(let i = 0; i < categories.length; i++) {
-      let pos = Math.floor(Math.random() * (result.length + 1));
-      let char = categories[i].charAt(Math.floor(Math.random() * categories[i].length));
-      result = result.substring(0, pos) + char + result.substring(pos);
-    }
-    this.password = result;
   }
 }

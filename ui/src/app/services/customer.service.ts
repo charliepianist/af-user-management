@@ -114,27 +114,6 @@ export class CustomerService {
 
   }
 
-  createCustomerWithEntitlements(customer: Customer, 
-    successFunc: (c: Customer) => any,
-    customerErrorFunc: (e: HttpErrorResponse) => any = e => {
-      alert('Could not create customer, see console for details.');
-      console.log(e);
-    },
-    entitlementsErrorFunc: (e: HttpErrorResponse) => any = e => {
-      console.log("Customer was created, but could not save entitlements.");
-      customerErrorFunc(e);
-    }) {
-
-    this.createCustomer(customer, cust => {
-      this.updateCustomerEntitlements(cust.getId(), customer.getEntitlements(),
-      e => {
-        cust.setEntitlements(e);
-        successFunc(cust);
-      }, entitlementsErrorFunc);
-    }, customerErrorFunc);
-
-  }
-
   updateCustomer(customer: Customer, successFunc: (c: Customer) => any,
       errorFunc: (e: HttpErrorResponse) => any) {
 
@@ -158,27 +137,6 @@ export class CustomerService {
       .subscribe(e => {
         successFunc(this.objectArrToEntitlementArr(e));
       }, errorFunc);
-
-  }
-
-  updateCustomerWithEntitlements(customer: Customer, 
-    successFunc: (c: Customer) => any,
-    customerErrorFunc: (e: HttpErrorResponse) => any = e => {
-      alert('Could not update customer, see console for details.');
-      console.log(e);
-    },
-    entitlementsErrorFunc: (e: HttpErrorResponse) => any = e => {
-      console.log("Error occured updating customer entitlements.");
-      customerErrorFunc(e);
-    }) {
-    
-    this.updateCustomer(customer, cust => {
-      this.updateCustomerEntitlements(cust.getId(), customer.getEntitlements(),
-      e => {
-        cust.setEntitlements(e);
-        successFunc(cust);
-      }, entitlementsErrorFunc);
-    }, customerErrorFunc);
 
   }
 }

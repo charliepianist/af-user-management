@@ -9,7 +9,8 @@ import { MulticastGroup } from 'src/app/model/multicast-group';
 })
 export class ProductMulticastGroupsComponent implements OnInit {
 
-  @Input() update: boolean;
+  @Input() update: boolean = false;
+  @Input() enabled: boolean = false;
   initialGroups: MulticastGroup[];
   multicastGroups: MulticastGroup[];
   selected: boolean[] = [];

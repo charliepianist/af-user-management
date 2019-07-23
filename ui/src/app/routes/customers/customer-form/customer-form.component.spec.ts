@@ -82,14 +82,12 @@ describe('Creating new Customer', () => {
     spyOn(component, 'validateName').and.returnValue(null);
     spyOn(component, 'validateUserId').and.returnValue(null);
     spyOn(component, 'validatePassword').and.returnValue(null);
-    spyOn(component.customerEntitlementsComponent, 'getEntitlements').and.returnValue([]);
     spyOn(service, 'createCustomer');
     component.submitButton();
 
     expect(component.validateName).toHaveBeenCalled();
     expect(component.validateUserId).toHaveBeenCalled();
     expect(component.validatePassword).toHaveBeenCalled();
-    expect(component.customerEntitlementsComponent.getEntitlements).toHaveBeenCalled();
     expect(service.createCustomer).toHaveBeenCalled();
   })
 });
@@ -176,14 +174,22 @@ describe('Updating Customer', () => {
     spyOn(component, 'validateName').and.returnValue(null);
     spyOn(component, 'validateUserId').and.returnValue(null);
     spyOn(component, 'validatePassword').and.returnValue(null);
-    spyOn(component.customerEntitlementsComponent, 'getEntitlements').and.returnValue([]);
     spyOn(service, 'updateCustomer');
     component.submitButton();
 
     expect(component.validateName).toHaveBeenCalled();
     expect(component.validateUserId).toHaveBeenCalled();
     expect(component.validatePassword).toHaveBeenCalled();
-    expect(component.customerEntitlementsComponent.getEntitlements).toHaveBeenCalled();
     expect(service.updateCustomer).toHaveBeenCalled();
+  })
+
+  it('should call customerService.updateCustomerEntitlements() for valid inputs', () => {
+    component.updateEntitlements = true;
+    spyOn(component.customerEntitlementsComponent, 'getEntitlements').and.returnValue([]);
+    spyOn(service, 'updateCustomerEntitlements');
+    component.submitButton();
+
+    expect(component.customerEntitlementsComponent.getEntitlements).toHaveBeenCalled();
+    expect(service.updateCustomerEntitlements).toHaveBeenCalled();
   })
 });

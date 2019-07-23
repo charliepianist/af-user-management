@@ -75,40 +75,43 @@ export class ProductFormComponent implements OnInit {
   }
   
   submitButton() {
-    if(this.validateName()) {
-      this.invalidSubmit = true;
-    }else {
-      let newProduct = new Product(
-        this.idNum, 
-        this.name);
+    let errorFunc = (e: HttpErrorResponse) => {
+      this.submissionErrorMsg = e.error.status + ' ' + 
+                                e.error.error + ': ' +
+                                e.error.message;
+      console.log(e);
+    }
 
+    if(this.updateMulticast) {
+      // Updating a product's multicast groups
       let goToDetails = () => {
         this.router.navigate(['/products', this.idNum]);
       }
-      let successFunc = (p: Product) => {
-        this.router.navigate(['/products', p.getId()]);
-      }
-      let errorFunc = (e: HttpErrorResponse) => {
-        this.submissionErrorMsg = e.error.status + ' ' + 
-                                  e.error.error + ': ' +
-                                  e.error.message;
-        console.log(e);
-      }
-      if(this.isUpdating()) {
-        // Updating an already existing product without entitlements
-        if(this.updateMulticast) {
-          this.productService.updateProductMulticastGroups(
-            this.idNum,
-            this.multicastGroupsComponent.getSelectedGroups(),
-            goToDetails, errorFunc);
-        }else {
+
+      this.productService.updateProductMulticastGroups(
+        this.idNum,
+        this.multicastGroupsComponent.getSelectedGroups(),
+        goToDetails, errorFunc);
+    }else {
+      if(this.validateName()) {
+        this.invalidSubmit = true;
+      }else {
+        let newProduct = new Product(
+          this.idNum, 
+          this.name);
+        let successFunc = (p: Product) => {
+          this.router.navigate(['/products', p.getId()]);
+        }
+        
+        if(this.isUpdating()) {
+          // Updating an already existing product
           this.productService.updateProduct(newProduct, successFunc, 
             errorFunc);
+        }else {
+          // Creating a new product without multicast groups
+          this.productService.createProduct(newProduct, successFunc,
+            errorFunc);
         }
-      }else {
-        // Creating a new product without multicast groups
-        this.productService.createProduct(newProduct, successFunc,
-          errorFunc);
       }
     }
   }

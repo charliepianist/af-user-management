@@ -19,7 +19,7 @@
         </ng-template>
       </h2>
       <ng-template #newCustomer>
-        <h1>Create New Product</h1>
+        <h1>Create New Customer</h1>
       </ng-template>
       
       <br>
@@ -40,14 +40,16 @@
           <div class="long-field">
             <input type="text" [(ngModel)]="name" name="name" 
                     #nameInput="ngModel" class="form-control" 
-                    (ngModelChange)="submissionErrorMsg=null" required>
+                    (ngModelChange)="submissionErrorMsg=null" required
+                    [disabled]="updateEntitlements">
             <div [hidden]="!validateName() || nameInput.pristine" 
                   class="alert alert-danger">
               {{ validateName() }}
             </div>
             <div class="slight-margin-top" style="font-size: 1.2em;">
                 <input id="disabled" name="disabled" type="checkbox"
-                      [(ngModel)]="disabled">
+                      [(ngModel)]="disabled" 
+                      [disabled]="updateEntitlements">
                 <label for="disabled" class="text-danger">
                     &nbsp;Disabled
                 </label>
@@ -57,7 +59,8 @@
           <div class="short-field">
             <input type="text" [(ngModel)]="userId" name="userId" 
                     #userIdInput="ngModel" class="form-control" 
-                    (ngModelChange)="submissionErrorMsg=null" required>
+                    (ngModelChange)="submissionErrorMsg=null" required
+                    [disabled]="updateEntitlements">
             <div [hidden]="!validateUserId() || userIdInput.pristine" 
                   class="alert alert-danger">
               {{ validateUserId() }}
@@ -67,7 +70,8 @@
           <div class="long-field">
             <input type="text" [(ngModel)]="password" name="password" 
                     #passwordInput="ngModel" class="form-control" id="password"
-                    (ngModelChange)="submissionErrorMsg=null" required>
+                    (ngModelChange)="submissionErrorMsg=null" required
+                    [disabled]="updateEntitlements">
             <div [hidden]="!validatePassword() || passwordInput.pristine" 
                   class="alert alert-danger" style="margin-bottom: 0px;">
               {{ validatePassword() }}
@@ -76,7 +80,8 @@
               Generate Password
             </button>
             of length <input [(ngModel)]="passLength" name="passLength"
-                          type="number" style="width:2.25em;"> characters
+                          type="number" style="width:2.25em;"
+                          [disabled]="updateEntitlements"> characters
           </div>
         </div>
 
@@ -106,7 +111,7 @@
       </form>
   </div>
   <app-customer-entitlements
-          [update]="updateEntitlements"
-          [entitlements]="isUpdating() ? null : []">
+          [enabled]="isUpdating()"
+          [update]="updateEntitlements">
   </app-customer-entitlements>
 </div>

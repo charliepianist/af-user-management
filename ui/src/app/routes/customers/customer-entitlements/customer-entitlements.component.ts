@@ -19,6 +19,7 @@ import { TrialPrompt } from './trial-prompt';
 export class CustomerEntitlementsComponent implements OnInit {
 
   @Input() update: boolean = false;
+  @Input() enabled: boolean = true;
   @Input() entitlements: Entitlement[];
   // Null -> no entitlement, entitlement without date -> subscribed, with date -> trial
   entitlementGrid: EntitlementEntry[][]; // entitlementGrid[prodIndex][locIndex]
@@ -297,11 +298,7 @@ export class CustomerEntitlementsComponent implements OnInit {
       )
     );
   }
-
-  haveEntitlementsChanged(): boolean {
-    return this.changes && this.changes.length > 0;
-  }
-
+  
   getEntitlements(): Entitlement[] {
     let newEntitlements = [];
     let entitlementArray = this.entitlementGridToEntitlements();
