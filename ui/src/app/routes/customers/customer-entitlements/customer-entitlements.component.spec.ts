@@ -15,6 +15,35 @@ describe('CustomerEntitlementsComponent', () => {
   let locs: Location[];
   let date: Date
 
+  let expectState = (i: number, j: number, {
+    subscribed = false,
+    trial = false,
+    notSubscribed = false,
+    viewSubscribed = false,
+    viewTrial = false,
+    viewNotSubscribed = false
+  }: {
+    subscribed?: boolean,
+    trial?: boolean,
+    notSubscribed?: boolean,
+    viewSubscribed?: boolean,
+    viewTrial?: boolean,
+    viewNotSubscribed?: boolean
+  } = {}) => {
+    if(viewSubscribed) expect(component.viewSubscribed(i, j)).toBeTruthy();
+    else expect(component.viewSubscribed(i, j)).toBeFalsy();
+    if(viewTrial) expect(component.viewExpirationDate(i, j)).toBeTruthy();
+    else expect(component.viewExpirationDate(i, j)).toBeFalsy();
+    if(viewNotSubscribed) expect(component.viewNotSubscribed(i, j)).toBeTruthy();
+    else expect(component.viewNotSubscribed(i, j)).toBeFalsy();
+    if(subscribed) expect(component.isSubscribed(i, j)).toBeTruthy();
+    else expect(component.isSubscribed(i, j)).toBeFalsy();
+    if(trial) expect(component.expirationDate(i, j)).toBeTruthy();
+    else expect(component.expirationDate(i, j)).toBeFalsy();
+    if(notSubscribed) expect(component.notSubscribed(i, j)).toBeTruthy();
+    else expect(component.notSubscribed(i, j)).toBeFalsy();
+  }
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ CustomerEntitlementsComponent ],
@@ -91,11 +120,29 @@ describe('CustomerEntitlementsComponent', () => {
     }
   });
 
+  it('should return the correct values for isSubscribed, viewSubscribed, expirationDate, viewExpirationDate, notSubscribed, viewNotSubscribed', () => {
+    for(let i = 0; i < 3; i++) {
+      for(let j = 0; j < 3; j++) {
+        if(i === 1) {
+          if(j === 0 || j === 1)
+            expectState(i, j, { subscribed: true, viewSubscribed: true });
+          else
+            expectState(i, j, {notSubscribed: true, viewNotSubscribed: true});
+        }else if(i === 2) {
+          if(j === 2 || j === 3)
+            expectState(i, j, {trial: true, viewTrial: true});
+          else
+            expectState(i, j, {notSubscribed: true, viewNotSubscribed: true});
+        }else expectState(i, j, {notSubscribed: true, viewNotSubscribed: true});
+      }
+    }
+  })
+
   it('should properly process Unsubbed -> Subbed', () => {
     component.subscribe(0, 0);
-    expect(component.isSubscribed(0, 0)).toBeTruthy();
-    expect(component.expirationDate(0, 0)).toBeFalsy();
-    expect(component.notSubscribed(0, 0)).toBeFalsy();
+
+    expectState(0, 0, { subscribed: true, viewNotSubscribed: true });
+
     expect(component.hasChanged(0, 0)).toBeTruthy();
     expect(component.changes.length).toBe(1);
   });
@@ -103,18 +150,18 @@ describe('CustomerEntitlementsComponent', () => {
   it('should properly process Unsubbed -> Trial', () => {
     component.addTrialPrompt(0, 0);
     component.addTrials();
-    expect(component.isSubscribed(0, 0)).toBeFalsy();
-    expect(component.expirationDate(0, 0)).toBeTruthy();
-    expect(component.notSubscribed(0, 0)).toBeFalsy();
+
+    expectState(0, 0, { trial: true, viewNotSubscribed: true });
+
     expect(component.hasChanged(0, 0)).toBeTruthy();
     expect(component.changes.length).toBe(1);
   });
 
   it('should properly process Subbed -> Unsubbed', () => {
     component.unsubscribe(1, 0);
-    expect(component.isSubscribed(1, 0)).toBeFalsy();
-    expect(component.expirationDate(1, 0)).toBeFalsy();
-    expect(component.notSubscribed(1, 0)).toBeTruthy();
+
+    expectState(1, 0, { notSubscribed: true, viewSubscribed: true });
+
     expect(component.hasChanged(1, 0)).toBeTruthy();
     expect(component.changes.length).toBe(1);
   });
@@ -123,27 +170,27 @@ describe('CustomerEntitlementsComponent', () => {
     component.unsubscribe(1, 0);
     component.addTrialPrompt(1, 0);
     component.addTrials();
-    expect(component.isSubscribed(1, 0)).toBeFalsy();
-    expect(component.expirationDate(1, 0)).toBeTruthy();
-    expect(component.notSubscribed(1, 0)).toBeFalsy();
+
+    expectState(1, 0, { trial: true, viewSubscribed: true });
+
     expect(component.hasChanged(1, 0)).toBeTruthy();
     expect(component.changes.length).toBe(1);
   });
 
   it('should properly process Trial -> Subbed', () => {
     component.subscribe(2, 3);
-    expect(component.isSubscribed(2, 3)).toBeTruthy();
-    expect(component.expirationDate(2, 3)).toBeFalsy();
-    expect(component.notSubscribed(2, 3)).toBeFalsy();
+
+    expectState(2, 3, { subscribed: true, viewTrial: true});
+
     expect(component.hasChanged(2, 3)).toBeTruthy();
     expect(component.changes.length).toBe(1);
   });
 
   it('should properly process Trial -> Unsubbed', () => {
     component.unsubscribe(2, 3);
-    expect(component.isSubscribed(2, 3)).toBeFalsy();
-    expect(component.expirationDate(2, 3)).toBeFalsy();
-    expect(component.notSubscribed(2, 3)).toBeTruthy();
+    
+    expectState(2, 3, { notSubscribed: true, viewTrial: true});
+
     expect(component.hasChanged(2, 3)).toBeTruthy();
     expect(component.changes.length).toBe(1);
   });
@@ -153,18 +200,16 @@ describe('CustomerEntitlementsComponent', () => {
     let index = component.addTrialPrompt(0, 0);
     component.endTime = "34rfouh";
     component.addTrials();
-    expect(component.isSubscribed(0, 0)).toBeFalsy();
-    expect(component.expirationDate(0, 0)).toBeFalsy();
-    expect(component.notSubscribed(0, 0)).toBeTruthy();
+
+    expectState(0, 0, { notSubscribed: true, viewNotSubscribed: true});
 
     //Before current time
     component.removeTrialPrompt(index);
     component.addTrialPrompt(0, 0);
     component.endTime = "1961-08-08T00:00";
     component.addTrials();
-    expect(component.isSubscribed(0, 0)).toBeFalsy();
-    expect(component.expirationDate(0, 0)).toBeFalsy();
-    expect(component.notSubscribed(0, 0)).toBeTruthy();
+    
+    expectState(0, 0, { notSubscribed: true, viewNotSubscribed: true});
   })
 
   it('should not allow an invalid trial time (initially subbed)', () => {
@@ -172,18 +217,16 @@ describe('CustomerEntitlementsComponent', () => {
     let index = component.addTrialPrompt(1, 0);
     component.endTime = "34rfouh";
     component.addTrials();
-    expect(component.isSubscribed(1, 0)).toBeTruthy();
-    expect(component.expirationDate(1, 0)).toBeFalsy();
-    expect(component.notSubscribed(1, 0)).toBeFalsy();
+    
+    expectState(1, 0, { subscribed: true, viewSubscribed: true});
 
     //Before current time
     component.removeTrialPrompt(index);
     component.addTrialPrompt(1, 0);
     component.endTime = "1961-08-08T00:00";
     component.addTrials();
-    expect(component.isSubscribed(1, 0)).toBeTruthy();
-    expect(component.expirationDate(1, 0)).toBeFalsy();
-    expect(component.notSubscribed(1, 0)).toBeFalsy();
+    
+    expectState(1, 0, { subscribed: true, viewSubscribed: true});
   })
 
   it('should give correct entitlements with getEntitlements() and not include trial prompts', () => {

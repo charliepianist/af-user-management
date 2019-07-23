@@ -195,6 +195,21 @@ export class CustomerEntitlementsComponent implements OnInit {
     }else return null;
   }
 
+  // Customer's previous trial expiration date (may or may not have changed)
+  viewExpirationDate(pIndex: number, lIndex: number): string {
+    if(this.processed) {
+      let entitlement = this.getOriginalEntitlement(pIndex, lIndex);
+      if(entitlement && entitlement.getExpirationDate())
+        return entitlement.getExpirationDate().toLocaleString(
+          'en-US', {
+            day: 'numeric',
+            month: 'numeric',
+            year: '2-digit'
+          });
+      else return null;
+    }else return null;
+  }
+
   // Customer is currently subscribed
   isSubscribed(pIndex: number, lIndex: number): boolean {
     if(this.processed) {
@@ -202,6 +217,16 @@ export class CustomerEntitlementsComponent implements OnInit {
       if(entitlement)
         return entitlement.getExpirationDate() === null;
       else return false;
+    }else return false;
+  }
+
+  // Customer was subscribed (may or may not have changed)
+  viewSubscribed(pIndex: number, lIndex: number): boolean {
+    if(this.processed) {
+      let entitlement = this.getOriginalEntitlement(pIndex, lIndex);
+      if(entitlement) {
+        return entitlement.getExpirationDate() === null;
+      }else return false;
     }else return false;
   }
 
@@ -218,6 +243,12 @@ export class CustomerEntitlementsComponent implements OnInit {
           !this.hasTrialPrompt(pIndex, lIndex)
   }
 
+  // Customer was not subscribed (may or may not have changed)
+  viewNotSubscribed(pIndex: number, lIndex: number): boolean {
+    if(!this.processed) return true;
+    return this.getOriginalEntitlement(pIndex, lIndex) === null;
+  }
+
   getEntitlementCell(prodIndex: number, locIndex: number): EntitlementEntry {
     return this.entitlementGrid[prodIndex][locIndex];
   }
@@ -229,6 +260,11 @@ export class CustomerEntitlementsComponent implements OnInit {
   getEntitlement(prodIndex: number, locIndex: number): Entitlement {
     return this.getEntitlementCell(prodIndex, locIndex)
       .getCurrentEntitlement();
+  }
+
+  getOriginalEntitlement(prodIndex: number, locIndex: number): Entitlement {
+    return this.getEntitlementCell(prodIndex, locIndex)
+      .getOriginalEntitlement();
   }
 
   getPromptCell(promptIndex: number): EntitlementEntry {
@@ -313,9 +349,9 @@ export class CustomerEntitlementsComponent implements OnInit {
         'changed': this.hasChanged(i, j),
       };
     }else return {
-      'view-subscribed': this.isSubscribed(i, j),
-      'view-trial': this.expirationDate(i, j) ? true : false,
-      'view-not-subscribed': this.displayNotSubscribed(i, j)
+      'view-subscribed': this.viewSubscribed(i, j),
+      'view-trial': this.viewExpirationDate(i, j) ? true : false,
+      'view-not-subscribed': this.viewNotSubscribed(i, j)
     }
   }
 
@@ -407,9 +443,9 @@ export class CustomerEntitlementsComponent implements OnInit {
       ));
     }
     this.changes.sort((a: EntitlementChange, b: EntitlementChange) => {
-      if(a.getProduct().getName() === b.getProduct().getName()) {
-        return a.getLocation().getCode() > b.getLocation().getCode() ? 1 : -1;
-      }else return a.getProduct().getName() > b.getProduct().getName() ? 1 : -1;
+      if(a.getProduct().getName().toLowerCase() === b.getProduct().getName().toLowerCase()) {
+        return a.getLocation().getCode().toLowerCase() > b.getLocation().getCode().toLowerCase() ? 1 : -1;
+      }else return a.getProduct().getName().toLowerCase() > b.getProduct().getName().toLowerCase() ? 1 : -1;
     })
   }
 
@@ -439,8 +475,8 @@ export class CustomerEntitlementsComponent implements OnInit {
       (prompt, i) => {
         let e = prompt.getEntitlement(); 
         return { 
-          prod: e.getProduct().getName(),
-          loc: e.getLocation().getCode(),
+          prod: e.getProduct().getName().toLowerCase(),
+          loc: e.getLocation().getCode().toLowerCase(),
           index: i
         }
       }

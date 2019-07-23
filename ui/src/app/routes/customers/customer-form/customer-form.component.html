@@ -5,7 +5,24 @@
         An Error Occurred: {{ errorMsg }}<br>
         See Console for Details.
       </h4>
-      <h1>{{ origName ? 'Update ' + origName : 'Create New Customer' }}</h1>
+
+      <h2 *ngIf="isUpdating(); else newCustomer">
+        Updating {{ origName }}
+        <ng-container *ngIf="updateEntitlements; else updatingInformation">
+          <span (click)="toggleUpdateMode()" class="link">
+            Information</span> | <b>Entitlements</b>
+        </ng-container>
+        <ng-template #updatingInformation>
+          <b>Information</b> | 
+          <span (click)="toggleUpdateMode()" class="link">
+            Entitlements</span>
+        </ng-template>
+      </h2>
+      <ng-template #newCustomer>
+        <h1>Create New Product</h1>
+      </ng-template>
+      
+      <br>
       <form autocomplete="off">
         <div id="labels">
           <label for="name" class="long-field">
@@ -68,6 +85,7 @@
         <button (click)="submitButton()" 
         class="btn btn-success form-button">
           Submit
+          {{ updateEntitlements ? 'Entitlements' : 'Information' }}
         </button>
         <button (click)="cancelButton()" 
         class="btn form-button">
@@ -88,7 +106,7 @@
       </form>
   </div>
   <app-customer-entitlements
-          [update]="true"
+          [update]="updateEntitlements"
           [entitlements]="isUpdating() ? null : []">
   </app-customer-entitlements>
 </div>

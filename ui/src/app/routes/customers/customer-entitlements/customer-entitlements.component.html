@@ -49,7 +49,7 @@
           (click)="cellClick(p, l)">
     
             <div class="upper-half">
-              <span *ngIf="expirationDate(p, l)" 
+              <span *ngIf="expirationDate(p, l)"
                 class="full-text cell-text">
                 Trial
                 <br>{{ expirationDate(p, l) }}
@@ -104,10 +104,10 @@
         <td class="product-name"><b>{{ product.getName() }}</b></td>
         <td *ngFor="let location of locations; let l = index"
           [ngClass]="cellClasses(p, l)">
-          <span *ngIf="expirationDate(p, l); else filler" 
+          <span *ngIf="viewExpirationDate(p, l); else filler" 
             class="cell-text">
             Trial
-            <br>{{ expirationDate(p, l) }}
+            <br>{{ viewExpirationDate(p, l) }}
           </span>
           <ng-template #filler>
             <span style="visibility: hidden;" class="cell-text">
@@ -126,7 +126,7 @@
     <br>
   </ng-template>
   <div class="full-width">
-      <ng-container *ngIf="trialPrompts.length > 0">
+      <ng-container *ngIf="update && trialPrompts.length > 0">
         <table id="trial-prompts">
           <thead>
             <tr>
@@ -161,7 +161,7 @@
         </table>
         <br>
       </ng-container>
-      <table *ngIf="changes.length > 0" id="changes">
+      <table *ngIf="update && changes.length > 0" id="changes">
           <thead>
             <tr>
               <th colspan="1000">

@@ -14,6 +14,7 @@ export class CustomerFormComponent implements OnInit {
 
   @ViewChild(CustomerEntitlementsComponent) 
   customerEntitlementsComponent: CustomerEntitlementsComponent;
+  updateEntitlements: boolean = false;
   id: string; // null if invalid ID or no ID passed in
   idNum: number = null; 
   errorMsg: string = null;
@@ -92,6 +93,10 @@ export class CustomerFormComponent implements OnInit {
   isUpdating(): boolean {
     if(this.id) return true;
     return false;
+  }
+
+  toggleUpdateMode() {
+    this.updateEntitlements = !this.updateEntitlements;
   }
   
   submitButton() {
