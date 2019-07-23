@@ -26,9 +26,21 @@
               <td>{{ product.getName() }}</td>
           </tr>
           <tr>
-            <td>ID</td>
-            <td>{{ product.getId() }}</td>
+            <td rowspan="1000">Multicast Groups</td>
+            <td *ngIf="multicastGroups.length > 0; else noGroups">
+                {{ multicastGroups[0].toString() }}
+            </td>
+            <ng-template #noGroups>
+                <td>N/A</td>
+            </ng-template>
           </tr>
+          <ng-container *ngIf="multicastGroups.length > 1">
+              <tr *ngFor="let group of multicastGroups | slice: 1">
+                  <td>
+                      {{ group.toString() }}
+                  </td>
+              </tr>
+          </ng-container>
       </table>
       <br>
       <div align="center">

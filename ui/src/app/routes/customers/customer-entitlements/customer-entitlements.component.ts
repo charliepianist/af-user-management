@@ -83,7 +83,7 @@ export class CustomerEntitlementsComponent implements OnInit {
           rgba(255, 0, 0, 0.226),
           rgba(255, 0, 0, 0.226) 5px,
           rgba(194, 0, 0, 0.322) 5px,
-          rgba(194, 0, 0, 0.322)  10px
+          rgba(194, 0, 0, 0.322) 10px
       )`
       },
       'updateOnly': true

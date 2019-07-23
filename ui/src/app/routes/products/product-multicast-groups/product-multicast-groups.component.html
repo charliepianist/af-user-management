@@ -1,0 +1,38 @@
+<div class="full-width">
+  <table class="centered"
+          [class.checklist]="update"
+          [class.no-hover-highlight]="!update">
+    <thead>
+      <tr>
+        <th colspan="1000">
+          Multicast Groups
+        </th>
+      </tr>
+    </thead>
+    <tr *ngIf="update">
+      <td (click)="toggleAllGroups()" class="trial-prompt">
+        <input type="checkbox" [(ngModel)]="allChecked">
+        <b> Check/Uncheck All</b>
+      </td>
+    </tr>    
+        
+    <ng-container *ngIf="update; else display">
+      <tr *ngFor="let group of multicastGroups; let i = index">
+        <td (click)="toggleGroup(i)" class="trial-prompt">
+          <input type="checkbox" [checked]="groupIsSelected(i)">
+          {{ group.toString() }}
+        </td>
+      </tr>
+    </ng-container>
+    <ng-template #display>
+      <tr *ngFor="let group of initialGroups;">
+        <td>
+          {{ group.toString() }}
+        </td>
+      </tr>
+      <tr *ngIf="!initialGroups || initialGroups.length === 0">
+        <td>N/A</td>
+      </tr>
+    </ng-template>
+  </table>
+</div>

@@ -30,6 +30,14 @@ thead th { background-color: lightsteelblue;}
 .row-options {
     cursor:default;
 }
+table.checklist:not(.no-hover-highlight) :not(thead) > tr:hover {
+    background-color: lightskyblue;
+    cursor: pointer;
+}
+table.checklist td {
+    text-align: left;
+    padding-right: 1.2em;
+}
 
 /* ============= List Component Styling ============= */
 .list-component td, .list-component th {
@@ -87,6 +95,9 @@ input[type=datetime-local]::-webkit-inner-spin-button {
 }
 
 /* ================ General Styling ================ */
+.centered {
+    margin: auto;
+}
 button.new-entry {
     font-size: 115%;
 }
@@ -94,6 +105,9 @@ button.new-entry {
     color: blue;
     text-decoration: underline;
     cursor: pointer;
+}
+.full-width {
+    width: 100%;
 }
 .full-width-centered {
     width: 100%;
