@@ -26,4 +26,7 @@ export class MulticastGroup {
     getPort(): number {
         return this.port;
     }
+    toString(): string {
+        return this.name + " (" + this.ip + ":" + this.port + ")"
+    }
 }

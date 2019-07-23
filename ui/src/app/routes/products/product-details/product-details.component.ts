@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Product } from 'src/app/model/product';
 import { ProductService } from 'src/app/services/product.service';
+import { MulticastGroup } from 'src/app/model/multicast-group';
 
 @Component({
   selector: 'app-product-details',
@@ -11,6 +12,7 @@ import { ProductService } from 'src/app/services/product.service';
 })
 export class ProductDetailsComponent implements OnInit {
 
+  multicastGroups: MulticastGroup[] = [];
   product: Product;
   toDelete: boolean = false;
   error: HttpErrorResponse;
@@ -20,8 +22,11 @@ export class ProductDetailsComponent implements OnInit {
   ngOnInit() {
     this.route.paramMap.subscribe(
       params => {
-        this.productService.getProduct(params.get('id'),
-          (p: Product) => this.product = p,
+        this.productService.getProductWithMulticastGroups(params.get('id'),
+          (p: Product) => {
+            this.product = p;
+            this.multicastGroups = this.product.getMulticastGroups();
+          },
           (e: HttpErrorResponse) => { 
             this.error = e;
             console.log(e);

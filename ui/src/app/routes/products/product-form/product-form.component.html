@@ -5,7 +5,23 @@
       An Error Occurred: {{ errorMsg }}<br>
       See Console for Details.
     </h4>
-    <h1>{{ origName ? 'Update ' + origName : 'Create New Product' }}</h1>
+
+    <h2 *ngIf="isUpdating(); else newProduct">
+      Updating {{ origName }}
+      <ng-container *ngIf="updateMulticast; else updatingInformation">
+        <span (click)="toggleUpdateMode()" class="link">
+          Information</span> | <b>Multicast Groups</b>
+      </ng-container>
+      <ng-template #updatingInformation>
+        <b>Information</b> | 
+        <span (click)="toggleUpdateMode()" class="link">
+          Multicast Groups</span>
+      </ng-template>
+    </h2>
+    <ng-template #newProduct>
+      <h1>Create New Product</h1>
+    </ng-template>
+
     <form autocomplete="off">
       <div id="labels">
         <label for="name">
@@ -16,7 +32,8 @@
         <div>
           <input type="text" [(ngModel)]="name" name="name" 
                   #nameInput="ngModel" class="form-control" 
-                  (ngModelChange)="submissionErrorMsg=null" required>
+                  (ngModelChange)="submissionErrorMsg=null" required
+                  [disabled]="updateMulticast">
           <div [hidden]="!validateName() || nameInput.pristine" 
                 class="alert alert-danger">
             {{ validateName() }}
@@ -29,6 +46,7 @@
       <button (click)="submitButton()" 
       class="btn btn-success form-button">
         Submit
+        {{ updateMulticast ? 'Multicast Groups' : 'Information' }}
       </button>
       <button (click)="cancelButton()" 
       class="btn form-button">
@@ -45,5 +63,9 @@
       </div>
       <br>
     </form>
+    <app-product-multicast-groups
+      *ngIf="isUpdating()"
+      [update]="updateMulticast">
+    </app-product-multicast-groups>
   </div>
 </div>

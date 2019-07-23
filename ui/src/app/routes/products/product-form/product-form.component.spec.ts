@@ -7,6 +7,7 @@ import { HttpTestingController } from '@angular/common/http/testing';
 import { ProductService } from 'src/app/services/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { ProductMulticastGroupsComponent } from '../product-multicast-groups/product-multicast-groups.component';
 
 
 describe('Creating new Product', () => {
@@ -17,7 +18,10 @@ describe('Creating new Product', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProductFormComponent ],
+      declarations: [ 
+        ProductFormComponent,
+        ProductMulticastGroupsComponent 
+      ],
       imports: [
         TestingModule,
         FormsModule
@@ -70,7 +74,10 @@ describe('Updating Product', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProductFormComponent ],
+      declarations: [ 
+        ProductFormComponent,
+        ProductMulticastGroupsComponent 
+      ],
       imports: [
         TestingModule
       ],

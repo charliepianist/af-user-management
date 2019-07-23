@@ -241,14 +241,10 @@ td:hover .full-text {
 /* ===== Horizontal formatting across screen ===== */
 .element-container {
     display: flex;
-    width: 100%;
 }
 .entitlements-table {
     min-width: 48%;
     margin: 0px 1em;
-} 
-.inner-element {
-    width: 100%;
 }
 .float-right {
     float: right;

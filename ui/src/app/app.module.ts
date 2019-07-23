@@ -20,6 +20,7 @@ import { LocationFormComponent } from './routes/locations/location-form/location
 import { MulticastGroupListComponent } from './routes/multicast-groups/multicast-group-list/multicast-group-list.component';
 import { MulticastGroupDetailsComponent } from './routes/multicast-groups/multicast-group-details/multicast-group-details.component';
 import { MulticastGroupFormComponent } from './routes/multicast-groups/multicast-group-form/multicast-group-form.component';
+import { ProductMulticastGroupsComponent } from './routes/products/product-multicast-groups/product-multicast-groups.component';
 
 
 const appRoutes: Routes = [
@@ -68,6 +69,7 @@ const appRoutes: Routes = [
     MulticastGroupListComponent,
     MulticastGroupDetailsComponent,
     MulticastGroupFormComponent,
+    ProductMulticastGroupsComponent,
   ],
   imports: [
     BrowserModule,
