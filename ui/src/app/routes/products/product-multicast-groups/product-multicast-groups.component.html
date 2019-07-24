@@ -23,6 +23,11 @@
           {{ group.toString() }}
         </td>
       </tr>
+      <tr>
+        <td [routerLink]="['/multicast-groups/new']" class="centered-content">
+          <button>Add New Multicast Group</button>
+        </td>
+      </tr>
     </ng-container>
     <ng-template #display>
       <tr *ngFor="let group of initialGroups;">

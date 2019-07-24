@@ -240,11 +240,20 @@ td:hover .full-text {
 
 /* ===== Horizontal formatting across screen ===== */
 .element-container {
-    display: flex;
+    white-space: nowrap;
 }
 .entitlements-table {
     min-width: 48%;
-    margin: 0px 1em;
+    display: inline-block;
+}
+.entitlements-table table {
+    width: 100%;
+}
+.side-div {
+    min-width: 26%;
+    display: inline-block;
+    vertical-align: top;
+    padding: 0px 1em;
 }
 .float-right {
     float: right;
