@@ -98,14 +98,28 @@ input[type=datetime-local]::-webkit-inner-spin-button {
 .centered {
     margin: auto;
 }
+.centered-content, td.centered-content:not(th) {
+    text-align: center;
+}
 button.new-entry {
     font-size: 115%;
 }
+
 .link {
     color: blue;
     text-decoration: underline;
     cursor: pointer;
 }
+.nice-link {
+    color: #337ab7;
+    text-decoration: none;
+    cursor: pointer;
+}
+.nice-link:hover {
+    color: #23527c;
+    text-decoration: underline;
+}
+
 .full-width {
     width: 100%;
 }

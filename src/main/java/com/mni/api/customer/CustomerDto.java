@@ -2,12 +2,9 @@ package com.mni.api.customer;
 
 import com.mni.api.Password;
 import com.mni.model.customer.Customer;
-import com.mni.model.entitlement.Entitlement;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Collection;
 
 /**
  * Created by will.schick on 6/17/19.

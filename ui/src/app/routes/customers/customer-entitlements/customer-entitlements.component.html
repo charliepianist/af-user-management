@@ -1,5 +1,5 @@
 <div *ngIf="enabled" class="element-container full-width">
-  <div class="full-width">
+  <div id="legend" class="side-div">
       <table #legend class="float-right">
           <thead>
             <tr>
@@ -29,8 +29,9 @@
           </ng-container>
         </table>
   </div>
-  <ng-container *ngIf="update; else viewEntitlements">
-    <table class="entitlements-table">
+
+  <div *ngIf="update; else viewEntitlements" class="entitlements-table">
+    <table>
       <thead>
         <tr>
           <th colspan="1000">Entitlements</th>
@@ -85,47 +86,50 @@
         </tr>
     </table>
     <br>
-  </ng-container>
+  </div>
 
   <ng-template #viewEntitlements>
-    <table class="container entitlements-table">
-      <thead>
-        <tr>
-          <th colspan="1000">Entitlements</th>
-        </tr>
-        <tr>
-          <td><b>Product</b></td>
-          <td *ngFor="let location of locations" style="font-size:0.95em;">
-            <b>{{ location.getCode() }}</b>
-          </td>
-        </tr>
-      </thead>
-      <tr *ngFor="let product of products; let p = index">
-        <td class="product-name"><b>{{ product.getName() }}</b></td>
-        <td *ngFor="let location of locations; let l = index"
-          [ngClass]="cellClasses(p, l)">
-          <span *ngIf="viewExpirationDate(p, l); else filler" 
-            class="cell-text">
-            Trial
-            <br>{{ viewExpirationDate(p, l) }}
-          </span>
-          <ng-template #filler>
-            <span style="visibility: hidden;" class="cell-text">
-              Unsub<br>&nbsp; <!-- For spacing -->
-            </span>
-          </ng-template>
-        </td>
-      </tr>
-      <tr class="title-row">
-          <td><b>Locations</b></td>
-          <td *ngFor="let location of locations" style="font-size:0.95em;">
-            <b>{{ location.getCode() }}</b>
-          </td>
-        </tr>
-    </table>
+    <div class="entitlements-table">
+        <table>
+            <thead>
+              <tr>
+                <th colspan="1000">Entitlements</th>
+              </tr>
+              <tr>
+                <td><b>Product</b></td>
+                <td *ngFor="let location of locations" style="font-size:0.95em;">
+                  <b>{{ location.getCode() }}</b>
+                </td>
+              </tr>
+            </thead>
+            <tr *ngFor="let product of products; let p = index">
+              <td class="product-name"><b>{{ product.getName() }}</b></td>
+              <td *ngFor="let location of locations; let l = index"
+                [ngClass]="cellClasses(p, l)">
+                <span *ngIf="viewExpirationDate(p, l); else filler" 
+                  class="cell-text">
+                  Trial
+                  <br>{{ viewExpirationDate(p, l) }}
+                </span>
+                <ng-template #filler>
+                  <span style="visibility: hidden;" class="cell-text">
+                    Unsub<br>&nbsp; <!-- For spacing -->
+                  </span>
+                </ng-template>
+              </td>
+            </tr>
+            <tr class="title-row">
+                <td><b>Locations</b></td>
+                <td *ngFor="let location of locations" style="font-size:0.95em;">
+                  <b>{{ location.getCode() }}</b>
+                </td>
+              </tr>
+          </table>
+    </div>
     <br>
   </ng-template>
-  <div class="full-width">
+
+  <div id="prompts-changes" class="side-div">
       <ng-container *ngIf="update && trialPrompts.length > 0">
         <table id="trial-prompts">
           <thead>
