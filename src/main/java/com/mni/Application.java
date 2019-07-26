@@ -10,6 +10,8 @@ import com.mni.model.multicastgroup.MulticastGroup;
 import com.mni.model.multicastgroup.MulticastGroupRepository;
 import com.mni.model.product.Product;
 import com.mni.model.product.ProductRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -26,6 +28,10 @@ import java.util.Date;
 @SpringBootApplication
 public class Application {
 
+
+    private static final Logger logger = LoggerFactory.getLogger(Application.class);
+
+
     @Autowired CustomerRepository customerRepository;
     @Autowired ProductRepository productRepository;
     @Autowired LocationRepository locationRepository;
@@ -39,6 +45,8 @@ public class Application {
     @Bean
     CommandLineRunner startup(){
         return strings -> {
+
+            logger.info("Initializing test data");
             initTestData();
 
             new ProcessBuilder()
