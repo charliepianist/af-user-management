@@ -146,6 +146,8 @@ export class CustomerListComponent implements OnInit {
     if(str === 'name') return true;
     if(str === 'userId') return true;
     if(str === 'password') return true;
+    if(str === 'clientType') return true;
+    if(str === 'priority') return true;
     return false;
   }
   

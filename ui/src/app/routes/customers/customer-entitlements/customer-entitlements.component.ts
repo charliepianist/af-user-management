@@ -4,7 +4,7 @@ import { Location } from 'src/app/model/location';
 import { Product } from 'src/app/model/product';
 import { ProductService } from 'src/app/services/product.service';
 import { LocationService } from 'src/app/services/location.service';
-import { EntitlementChange } from 'src/app/helper/entitlement-change';
+import { EntitlementChange } from 'src/app/routes/customers/customer-entitlements/entitlement-change';
 import { isNullOrUndefined } from 'util';
 import { DateUtil } from 'src/app/helper/date-util';
 import { EntitlementEntry } from './entitlement-entry';
@@ -35,6 +35,8 @@ export class CustomerEntitlementsComponent implements OnInit {
   invalidTrialTimeError: string;
   hoverP: number; // when user hovers over a trial prompt,
   hoverL: number; // these highlight the corresponding table cell
+
+  showNumLogins: boolean = false;
 
   readonly legendStyles = [
     {
@@ -211,6 +213,13 @@ export class CustomerEntitlementsComponent implements OnInit {
     }else return null;
   }
 
+  viewNumLogins(pIndex: number, lIndex: number): number {
+    let entitlement = this.getOriginalEntitlement(pIndex, lIndex);
+    if(entitlement)
+      return entitlement.getNumLogins();
+    return null;
+  }
+
   // Customer is currently subscribed
   isSubscribed(pIndex: number, lIndex: number): boolean {
     if(this.processed) {
@@ -304,7 +313,10 @@ export class CustomerEntitlementsComponent implements OnInit {
     let entitlementArray = this.entitlementGridToEntitlements();
     for(let arr of entitlementArray) {
       for(let entitlement of arr) {
-        if(entitlement) newEntitlements.push(entitlement);
+        if(entitlement) {
+          entitlement.validateNumLogins();
+          newEntitlements.push(entitlement);
+        }
       }
     }
     return newEntitlements;
@@ -325,7 +337,7 @@ export class CustomerEntitlementsComponent implements OnInit {
         let lIndex = 
           this.getLocationIndexByCode(entitlement.getLocation().getCode());
         this.setEntitlementCell(pIndex, lIndex, 
-          new EntitlementEntry(entitlement, entitlement));
+          new EntitlementEntry(entitlement, Entitlement.copy(entitlement)));
       }
       this.processed = true;
       return true;
@@ -344,6 +356,7 @@ export class CustomerEntitlementsComponent implements OnInit {
         'selected-trial-prompt': this.hasSelectedTrialPrompt(i, j),
         'hover-highlight': i === this.hoverP && j === this.hoverL,
         'changed': this.hasChanged(i, j),
+        'update-num-logins': this.showNumLogins,
       };
     }else return {
       'view-subscribed': this.viewSubscribed(i, j),
@@ -404,6 +417,11 @@ export class CustomerEntitlementsComponent implements OnInit {
     }
   }
 
+  setNumLogins(pIndex: number, lIndex: number, numLogins: number) {
+    this.getEntitlement(pIndex, lIndex).setNumLogins(numLogins);
+    this.detectChanges(pIndex, lIndex);
+  }
+
   setEntitlement(pIndex: number, lIndex: number, entitlement: Entitlement) {
     let prevEntry = this.getEntitlementCell(pIndex, lIndex);
     this.setEntitlementCell(pIndex, lIndex, 
@@ -413,23 +431,25 @@ export class CustomerEntitlementsComponent implements OnInit {
           currentEntitlement: entitlement
         }
     ));
-    let origEntitlement = prevEntry.getOriginalEntitlement();
-    let updateChange: Boolean; // need to update changes array
+    
+    this.detectChanges(pIndex, lIndex);
+  }
 
-    if(isNullOrUndefined(entitlement)) updateChange = !isNullOrUndefined(origEntitlement);
-    else { 
-      updateChange = !entitlement.equals(origEntitlement);
-    }
+  detectChanges(pIndex: number, lIndex: number) {
+    let entitlement = this.getEntitlement(pIndex, lIndex);
+    let origEntitlement = this.getOriginalEntitlement(pIndex, lIndex);
+    // need to update changes array
+    let updateChange = !Entitlement.areEqual(entitlement, origEntitlement);
     for(let i = 0; i < this.changes.length; i++) {
       if(this.changes[i].getProductIndex() === pIndex && 
         this.changes[i].getLocationIndex() === lIndex) {
         if(updateChange) {
-          // push updated change to most recent
+          // push updated change
           this.changes.push(EntitlementChange.copy(
             this.changes[i], {newEntitlement: entitlement}
           ));
         }
-        this.changes.splice(i, 1);
+        this.changes.splice(i, 1); // remove old change
         updateChange = false;
         break;
       }

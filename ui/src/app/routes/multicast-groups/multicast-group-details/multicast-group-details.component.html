@@ -20,19 +20,48 @@
                   <th style="width:35%">Field</th>
                   <th style="width:65%">Value</th>
               </tr>
-          </thead>
-          <tr>
-              <td>Name</td>
-              <td>{{ multicastGroup.getName() }}</td>
-          </tr>
-          <tr>
-            <td>IP</td>
-            <td>{{ multicastGroup.getIp() }}</td>
-          </tr>
-          <tr>
-            <td>Port</td>
-            <td>{{ multicastGroup.getPort() }}</td>
-          </tr>
+            </thead>
+            <tr>
+                <td>Name</td>
+                <td>{{ multicastGroup.getName() }}</td>
+            </tr>
+            <tr>
+              <td>Code</td>
+              <td>{{ multicastGroup.getCode() }}</td>
+            </tr>
+            <tr>
+              <td>Address</td>
+              <td>{{ multicastGroup.getAddress() }}</td>
+            </tr>
+            <tr>
+              <td>Give All?</td>
+              <td [class.text-success]="multicastGroup.isAutoAssign()"
+                  [class.text-danger]="!multicastGroup.isAutoAssign()">
+                  {{ multicastGroup.isAutoAssign() ? 'Yes' : 'No'}}
+              </td>
+            </tr>
+            <ng-container *ngIf="!multicastGroup.isAutoAssign()">
+                <tr style="border-top: 3px solid black;">
+                    <td rowspan="10000">Products</td>
+                    <td *ngIf="products.length > 0; else noProducts">
+                        <span class="nice-link"
+                            [routerLink]="['/products', products[0].getId()]">
+                            {{ products[0].getName() }}
+                        </span>
+                    </td>
+                    <ng-template #noProducts>
+                        <td>N/A</td>
+                    </ng-template>
+                </tr>
+                <ng-container *ngIf="products.length > 1">
+                    <tr *ngFor="let product of products | slice: 1">
+                        <td><span class="nice-link"
+                            [routerLink]="['/products', product.getId()]">
+                            {{ product.getName()}}
+                        </span></td>
+                    </tr>
+                </ng-container>
+            </ng-container>
       </table>
       <br>
       <div align="center">

@@ -133,8 +133,10 @@ export class MulticastGroupListComponent implements OnInit {
   isMulticastGroupField(str: string): boolean {
     if(str === 'id') return true;
     if(str === 'name') return true;
+    if(str === 'code') return true;
     if(str === 'ip') return true;
     if(str === 'port') return true;
+    if(str === 'autoAssign') return true;
     return false;
   }
 }

@@ -10,18 +10,25 @@
       </tr>
     </thead>
     <tr *ngIf="update">
-      <td (click)="toggleAllGroups()" class="trial-prompt">
+      <td (click)="toggleAllGroups()">
         <input type="checkbox" [(ngModel)]="allChecked">
         <b> Check/Uncheck All</b>
       </td>
     </tr>    
         
-    <ng-container *ngIf="update; else display">
-      <tr *ngFor="let group of multicastGroups; let i = index">
-        <td (click)="toggleGroup(i)" class="trial-prompt">
-          <input type="checkbox" [checked]="groupIsSelected(i)">
+    <ng-container *ngIf="update; else display"> <!-- Updating Multicast Groups-->
+      <tr *ngFor="let group of multicastGroups; let i = index"
+        [class.disabled]="group.isAutoAssign()">
+        <td *ngIf="group.isAutoAssign(); else clickable" class="gray-text">
+          <input type="checkbox" checked disabled>
           {{ group.toString() }}
         </td>
+        <ng-template #clickable>
+          <td (click)="toggleGroup(i)">
+            <input type="checkbox" [checked]="groupIsSelected(i)">
+            {{ group.toString() }}
+          </td>
+        </ng-template>
       </tr>
       <tr>
         <td [routerLink]="['/multicast-groups/new']" class="centered-content">
@@ -29,8 +36,8 @@
         </td>
       </tr>
     </ng-container>
-    <ng-template #display>
-      <tr *ngFor="let group of initialGroups;">
+    <ng-template #display> <!-- Displaying Multicast Groups -->
+      <tr *ngFor="let group of initialGroups" [class.gray-text]="group.isAutoAssign()">
         <td>
           {{ group.toString() }}
         </td>

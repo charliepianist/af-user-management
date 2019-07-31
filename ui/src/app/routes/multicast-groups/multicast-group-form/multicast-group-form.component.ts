@@ -17,10 +17,10 @@ export class MulticastGroupFormComponent implements OnInit {
   multicastGroup: MulticastGroup = new MulticastGroup();
   origName: string = null;
   name: string = null;
-  origIp: string = null;
+  code: string = null;
   ip: string = null;
-  origPort: number = null;
   port: number = null;
+  autoAssign: boolean = false;
   invalidSubmit: boolean = false; // when submit clicked with invalid input
   submissionErrorMsg: string = null;
 
@@ -38,15 +38,12 @@ export class MulticastGroupFormComponent implements OnInit {
           p => {
             this.multicastGroup = p
             this.idNum = this.multicastGroup.getId();
-
             this.origName = this.multicastGroup.getName();
             this.name = this.origName;
-
-            this.origIp = this.multicastGroup.getIp();
-            this.ip = this.origIp;
-
-            this.origPort = this.multicastGroup.getPort();
-            this.port = this.origPort;
+            this.code = this.multicastGroup.getCode();
+            this.ip = this.multicastGroup.getIp();
+            this.port = this.multicastGroup.getPort();
+            this.autoAssign = this.multicastGroup.isAutoAssign();
           },
           e => { 
             this.id = null; 
@@ -60,15 +57,21 @@ export class MulticastGroupFormComponent implements OnInit {
     if(!this.name) return 'Please enter a name.';
     return null;
   }
+  validateCode(): string {
+    if(!this.code) return 'Please enter a code.';
+    if(this.code.match('\\s')) return 'Code cannot have whitespace.'
+    return null;
+  }
   validateIp(): string {
     if(!this.ip) return 'Please enter an IP.';
     if(!this.ip.match('^([0-9]{1,3}\\.){3}[0-9]{1,3}$'))
-      return 'Invalid IP format. Example IP: 192.168.1.1';
+      return 'Invalid IP format. (e.g. 192.168.1.1)';
     return null;
   }
   validatePort(): string {
     if(!this.port) return 'Please enter a port.';
     if(isNaN(this.port)) return 'Port must be a number.';
+    if(this.port % 1 !== 0) return 'Port must be an integer.'
     if(this.port < 0 || this.port > 65535) 
       return 'Port must be between 0 and 65535.';
     return null;
@@ -80,14 +83,16 @@ export class MulticastGroupFormComponent implements OnInit {
   }
   
   submitButton() {
-    if(this.validateName() || this.validateIp() || this.validatePort()) {
+    if(this.validateName() || this.validateCode() || this.validateIp() || this.validatePort()) {
       this.invalidSubmit = true;
     }else {
       let newMulticastGroup = new MulticastGroup(
         this.idNum, 
-        this.name, 
+        this.name,
+        this.code,
         this.ip,
-        this.port);
+        this.port,
+        this.autoAssign);
 
       let successFunc = (group: MulticastGroup) => {
         this.router.navigate(['/multicast-groups', group.getId()]);

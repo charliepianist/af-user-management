@@ -94,6 +94,6 @@ export class EntitlementEntry {
     }
 
     undoChange() {
-        this.currentEntitlement = this.originalEntitlement;
+        this.currentEntitlement = Entitlement.copy(this.originalEntitlement);
     }
 }

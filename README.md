@@ -2,17 +2,26 @@
 
 ## Postman Links
 
-#### People REST API Tests
+#### Customers REST API Tests
 
 https://www.getpostman.com/collections/88805f116b753327ebbf
 
 #### Products REST API Tests
 
-https://www.getpostman.com/collections/fb3ff7855b4025e54de4
+https://www.getpostman.com/collections/421b1a07827b20300f6e
 
 #### Locations REST API Tests
 
 https://www.getpostman.com/collections/393c1de80460dbf74fed
+
+#### Multicast Groups REST API Tests
+
+https://www.getpostman.com/collections/7c9a797413c0caee9f91
+
+#### Integration Tests + Multicast Config (TODO)
+Note: The other Postman collections combined with Spock tests should suffice for this purpose,
+        may flesh this out in the future just to be safe.
+https://www.getpostman.com/collections/325e08f32a9841d0f568
 
 ## Guide to code
 

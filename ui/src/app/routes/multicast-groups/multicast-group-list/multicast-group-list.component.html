@@ -7,34 +7,43 @@
         </th>
       </tr>
       <tr>
-          <th style="width:30%" (click)="sort('name')">
-              Name
-              <span class="up-arrow" *ngIf="isSortAsc('name')">
-                &#10148;
-              </span>
-              <span class="down-arrow" *ngIf="isSortDesc('name')">
-                &#10148;
-              </span>
-          </th>
-          <th style="width:20%" (click)="sort('ip')">
-              IP
-              <span class="up-arrow" *ngIf="isSortAsc('ip')">
-                &#10148;
-              </span>
-              <span class="down-arrow" *ngIf="isSortDesc('ip')">
-                &#10148;
-              </span>
-          </th>
-          <th style="width:20%" (click)="sort('port')">
-              Port
-              <span class="up-arrow" *ngIf="isSortAsc('port')">
-                &#10148;
-              </span>
-              <span class="down-arrow" *ngIf="isSortDesc('port')">
-                &#10148;
-              </span>
-          </th>
-          <th style="width:30%;" class="default-cursor">Actions</th>
+        <th style="width:23%" (click)="sort('name')">
+            Name
+            <span class="up-arrow" *ngIf="isSortAsc('name')">
+              &#10148;
+            </span>
+            <span class="down-arrow" *ngIf="isSortDesc('name')">
+              &#10148;
+            </span>
+        </th>
+        <th style="width:25%" (click)="sort('code')">
+            Code
+            <span class="up-arrow" *ngIf="isSortAsc('code')">
+              &#10148;
+            </span>
+            <span class="down-arrow" *ngIf="isSortDesc('code')">
+              &#10148;
+            </span>
+        </th>
+        <th style="width:19%" (click)="sort('ip')">
+            Address
+            <span class="up-arrow" *ngIf="isSortAsc('ip')">
+              &#10148;
+            </span>
+            <span class="down-arrow" *ngIf="isSortDesc('ip')">
+              &#10148;
+            </span>
+        </th>
+        <th style="width:12%" (click)="sort('autoAssign')">
+            Give All?
+            <span class="up-arrow" *ngIf="isSortAsc('autoAssign')">
+              &#10148;
+            </span>
+            <span class="down-arrow" *ngIf="isSortDesc('autoAssign')">
+              &#10148;
+            </span>
+        </th>
+        <th style="width:21%;" class="default-cursor">Actions</th>
       </tr>
     </thead>
     <ng-container *ngIf="multicastGroupPage; else loading">
@@ -44,10 +53,14 @@
             {{ multicastGroup.getName() }}
           </td>
           <td>
-            {{ multicastGroup.getIp() }}
+            {{ multicastGroup.getCode() }}
           </td>
           <td>
-            {{ multicastGroup.getPort() }}
+            {{ multicastGroup.getAddress() }}
+          </td>
+          <td [class.text-success]="multicastGroup.isAutoAssign()"
+              [class.text-danger]="!multicastGroup.isAutoAssign()">
+            {{ multicastGroup.isAutoAssign() ? 'Yes' : 'No'}}
           </td>
           <!-- Details, Update, Delete-->
           <td (click)="$event.stopPropagation()" class="row-options"> 

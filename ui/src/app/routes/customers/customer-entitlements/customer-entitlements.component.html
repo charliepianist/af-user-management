@@ -30,11 +30,15 @@
         </table>
   </div>
 
+  <!-- Update Entitlements Table and Num Logins -->
   <div *ngIf="update; else viewEntitlements" class="entitlements-table">
-    <table>
+    <table *ngIf="!showNumLogins; else updateNumLoginsTable">
       <thead>
         <tr>
-          <th colspan="1000">Entitlements</th>
+          <th colspan="1000">
+            Entitlements 
+            (<span (click)="showNumLogins=true" class="link">Show number of logins allowed</span>)
+          </th>
         </tr>
         <tr>
           <td><b>Product</b></td>
@@ -43,6 +47,7 @@
           </td>
         </tr>
       </thead>
+
       <tr *ngFor="let product of products; let p = index">
         <td class="product-name"><b>{{ product.getName() }}</b></td>
         <td *ngFor="let location of locations; let l = index"
@@ -85,15 +90,60 @@
           </td>
         </tr>
     </table>
+    <ng-template #updateNumLoginsTable>
+      <table>
+          <thead>
+            <tr>
+              <th colspan="1000">
+                Entitlements 
+                (<span (click)="showNumLogins=false" class="link">Hide number of logins allowed</span>)
+              </th>
+            </tr>
+            <tr>
+              <td><b>Product</b></td>
+              <td *ngFor="let location of locations" style="font-size:0.95em;">
+                <b>{{ location.getCode() }}</b>
+              </td>
+            </tr>
+          </thead>
+          <tr *ngFor="let product of products; let p = index">
+              <td class="product-name"><b>{{ product.getName() }}</b></td>
+              <td *ngFor="let location of locations; let l = index"
+                [ngClass]="cellClasses(p, l)">
+                <span *ngIf="getEntitlement(p, l); else filler" 
+                  class="cell-text">
+                  <!-- NumLogins input -->
+                  Logins:<br><input type="number" style="width:3em; text-align:center;"
+                  [ngModel]="getEntitlement(p, l).getNumLogins()"
+                  (ngModelChange)="setNumLogins(p, l, $event)">
+                </span>
+                <ng-template #filler>
+                  <span style="visibility: hidden;" class="cell-text">
+                    Unsub<br>&nbsp; <!-- For spacing -->
+                  </span>
+                </ng-template>
+              </td>
+            </tr>
+            <tr class="title-row">
+                <td><b>Locations</b></td>
+                <td *ngFor="let location of locations" style="font-size:0.95em;">
+                  <b>{{ location.getCode() }}</b>
+                </td>
+              </tr>
+      </table>
+    </ng-template>
     <br>
   </div>
 
   <ng-template #viewEntitlements>
     <div class="entitlements-table">
-        <table>
+        <table *ngIf="!showNumLogins; else displayNumLoginsTable">
             <thead>
               <tr>
-                <th colspan="1000">Entitlements</th>
+                <th colspan="1000">
+                  Entitlements
+                  (<span (click)="showNumLogins=true" class="link">Show number of logins allowed</span>)
+                </th>
               </tr>
               <tr>
                 <td><b>Product</b></td>
@@ -124,7 +174,46 @@
                   <b>{{ location.getCode() }}</b>
                 </td>
               </tr>
+        </table>
+        <ng-template #displayNumLoginsTable>
+          <table>
+            <thead>
+              <tr>
+                <th colspan="1000">
+                  Entitlements
+                  (<span (click)="showNumLogins=false" class="link">Hide number of logins allowed</span>)
+                </th>
+              </tr>
+              <tr>
+                <td><b>Product</b></td>
+                <td *ngFor="let location of locations" style="font-size:0.95em;">
+                  <b>{{ location.getCode() }}</b>
+                </td>
+              </tr>
+            </thead>
+            <tr *ngFor="let product of products; let p = index">
+                <td class="product-name"><b>{{ product.getName() }}</b></td>
+                <td *ngFor="let location of locations; let l = index"
+                  [ngClass]="cellClasses(p, l)">
+                  <span *ngIf="viewNumLogins(p, l); else filler" 
+                    class="cell-text">
+                    Logins:<br>{{ viewNumLogins(p, l) }}
+                  </span>
+                  <ng-template #filler>
+                    <span style="visibility: hidden;" class="cell-text">
+                      Unsub<br>&nbsp; <!-- For spacing -->
+                    </span>
+                  </ng-template>
+                </td>
+              </tr>
+              <tr class="title-row">
+                  <td><b>Locations</b></td>
+                  <td *ngFor="let location of locations" style="font-size:0.95em;">
+                    <b>{{ location.getCode() }}</b>
+                  </td>
+                </tr>
           </table>
+        </ng-template>
     </div>
     <br>
   </ng-template>
@@ -178,6 +267,7 @@
               <td>Location</td>
               <td>Old</td>
               <td>New</td>
+              <td>Logins</td>
             </tr>
           </thead>
           <tr *ngFor="let change of changes; let i = index" 
@@ -201,6 +291,9 @@
             </td>
             <td [ngClass]="change.newClasses()">
               {{ change.newString() }}
+            </td>
+            <td>
+              {{ change.oldNumLogins() }} &rarr; {{ change.newNumLogins() }}
             </td>
           </tr>
         </table>

@@ -26,6 +26,7 @@ export class ProductDetailsComponent implements OnInit {
           (p: Product) => {
             this.product = p;
             this.multicastGroups = this.product.getMulticastGroups();
+            this.multicastGroups.sort(MulticastGroup.DEFAULT_SORT);
           },
           (e: HttpErrorResponse) => { 
             this.error = e;

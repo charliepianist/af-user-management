@@ -1,5 +1,6 @@
 package com.mni.api.multicastgroup;
 
+import com.mni.api.NoSpaces;
 import com.mni.model.multicastgroup.MulticastGroup;
 
 import javax.validation.constraints.NotBlank;
@@ -14,6 +15,12 @@ public class MulticastGroupDto {
     private String name;
 
     @NotBlank
+    @NoSpaces
+    private String code;
+
+    private boolean autoAssign;
+
+    @NotBlank
     private String ip;
 
     @NotNull
@@ -24,6 +31,8 @@ public class MulticastGroupDto {
         multicastGroupDto.setId(multicastGroup.getId());
         multicastGroupDto.setIp(multicastGroup.getIp());
         multicastGroupDto.setName(multicastGroup.getName());
+        multicastGroupDto.setCode(multicastGroup.getCode());
+        multicastGroupDto.setAutoAssign(multicastGroup.isAutoAssign());
         multicastGroupDto.setPort(multicastGroup.getPort());
         return multicastGroupDto;
     }
@@ -33,6 +42,8 @@ public class MulticastGroupDto {
         multicastGroup.setId(multicastGroupDto.getId());
         multicastGroup.setIp(multicastGroupDto.getIp());
         multicastGroup.setName(multicastGroupDto.getName());
+        multicastGroup.setCode(multicastGroupDto.getCode());
+        multicastGroup.setAutoAssign(multicastGroupDto.isAutoAssign());
         multicastGroup.setPort(multicastGroupDto.getPort());
         return multicastGroup;
     }
@@ -51,9 +62,11 @@ public class MulticastGroupDto {
 
     public MulticastGroupDto() {}
 
-    public MulticastGroupDto(Long id, String name, String ip, Integer port) {
+    public MulticastGroupDto(Long id, String name, String code, boolean autoAssign, String ip, Integer port) {
         this.id = id;
         this.name = name;
+        this.code = code;
+        this.autoAssign = autoAssign;
         this.ip = ip;
         this.port = port;
     }
@@ -88,5 +101,33 @@ public class MulticastGroupDto {
 
     public void setPort(Integer port) {
         this.port = port;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public boolean isAutoAssign() {
+        return autoAssign;
+    }
+
+    public void setAutoAssign(boolean autoAssign) {
+        this.autoAssign = autoAssign;
+    }
+
+    @Override
+    public String toString() {
+        return "MulticastGroupDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", code='" + code + '\'' +
+                ", autoAssign=" + autoAssign +
+                ", ip='" + ip + '\'' +
+                ", port=" + port +
+                '}';
     }
 }

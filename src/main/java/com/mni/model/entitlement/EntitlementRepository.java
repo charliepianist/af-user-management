@@ -2,4 +2,8 @@ package com.mni.model.entitlement;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface EntitlementRepository extends PagingAndSortingRepository<Entitlement, Long> {}
+import java.util.List;
+
+public interface EntitlementRepository extends PagingAndSortingRepository<Entitlement, Long> {
+    List<Entitlement> findByLocation_Code(String code);
+}

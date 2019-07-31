@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MulticastGroup } from 'src/app/model/multicast-group';
 import { MulticastGroupService } from 'src/app/services/multicast-group.service';
+import { Product } from 'src/app/model/product';
 
 @Component({
   selector: 'app-multicast-group-details',
@@ -12,6 +13,7 @@ import { MulticastGroupService } from 'src/app/services/multicast-group.service'
 export class MulticastGroupDetailsComponent implements OnInit {
 
   multicastGroup: MulticastGroup;
+  products: Product[];
   toDelete: boolean = false;
   error: HttpErrorResponse;
 
@@ -20,8 +22,16 @@ export class MulticastGroupDetailsComponent implements OnInit {
   ngOnInit() {
     this.route.paramMap.subscribe(
       params => {
-        this.multicastGroupService.getMulticastGroup(params.get('id'),
-          (group: MulticastGroup) => this.multicastGroup = group,
+        this.multicastGroupService.getMulticastGroupWithProducts(params.get('id'),
+          (group: MulticastGroup) => {
+            this.multicastGroup = group;
+            this.products = group.getProducts();
+            this.products.sort((a, b) => {
+              if(a.getName() > b.getName()) return 1;
+              if(a.getName() < b.getName()) return -1;
+              return 0;
+            })
+          },
           (e: HttpErrorResponse) => { 
             this.error = e;
             console.log(e);

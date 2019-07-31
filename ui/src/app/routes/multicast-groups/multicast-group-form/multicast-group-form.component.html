@@ -5,22 +5,25 @@
         An Error Occurred: {{ errorMsg }}<br>
         See Console for Details.
       </h4>
-      <h1>{{ origName ? 'Update ' + origName : 'Create New Multicast Group' }}</h1>
+      <h1>{{ isUpdating() ? 'Update ' + origName : 'Create New Multicast Group' }}</h1>
       <form autocomplete="off">
         <div id="labels">
-          <label for="name" class="field long-field">
+          <label for="name" class="long-field">
             Name
           </label>
-          <label for="ip" class="field long-field">
+          <label for="code" class="long-field">
+            Code
+          </label>
+          <label for="ip" class="long-field">
             IP
           </label>
-          <label for="port" class="field short-field">
+          <label for="port" class="short-field">
             Port
           </label>
         </div>
 
         <div id="inputs">
-          <div class="field long-field">
+          <div class="long-field">
             <input type="text" [(ngModel)]="name" name="name" 
                     #nameInput="ngModel" class="form-control" 
                     (ngModelChange)="submissionErrorMsg=null" required>
@@ -28,9 +31,26 @@
                   class="alert alert-danger">
               {{ validateName() }}
             </div>
+            <div class="slight-margin-top" style="font-size: 1.2em;">
+                <input id="autoAssign" name="autoAssign" type="checkbox"
+                      [(ngModel)]="autoAssign">
+                <label for="autoAssign" class="text-danger">
+                    &nbsp;Give All
+                </label>
+            </div>
           </div>
         
-          <div class="field long-field">
+          <div class="long-field">
+            <input type="text" [(ngModel)]="code" name="code" 
+                    #codeInput="ngModel" class="form-control" 
+                    (ngModelChange)="submissionErrorMsg=null" required>
+            <div [hidden]="!validateCode() || codeInput.pristine" 
+                  class="alert alert-danger">
+              {{ validateCode() }}
+            </div>
+          </div>
+        
+          <div class="long-field">
             <input type="text" [(ngModel)]="ip" name="ip" 
                     #ipInput="ngModel" class="form-control" 
                     (ngModelChange)="submissionErrorMsg=null" required>
@@ -40,7 +60,7 @@
             </div>
           </div>
         
-          <div class="field short-field">
+          <div class="short-field">
             <input type="text" [(ngModel)]="port" name="port" 
                     #portInput="ngModel" class="form-control" 
                     (ngModelChange)="submissionErrorMsg=null" required>
@@ -69,6 +89,7 @@
         </div>
         <div [hidden]="!invalidSubmit" class="text-danger">
           <span *ngIf="validateName()">Please enter a valid name.<br></span>
+          <span *ngIf="validateCode()">Please enter a valid code.<br></span>
           <span *ngIf="validateIp()">Please enter a valid ip.<br></span>
           <span *ngIf="validatePort()">Please enter a valid port.<br></span>
         </div>

@@ -8,6 +8,7 @@ import { MulticastGroup } from 'src/app/model/multicast-group';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { Observable } from 'rxjs';
 import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
+import { Product } from 'src/app/model/product';
 
 describe('MulticastGroupDetailsComponent', () => {
   let component: MulticastGroupDetailsComponent;
@@ -55,6 +56,19 @@ describe('MulticastGroupDetailsComponent', () => {
     
     expect(component.multicastGroup).toBeFalsy();
   });
+
+  it('should sort products', () => {
+    const req = httpMock.expectOne(`${MulticastGroupService.BASE_URL}/3`);
+    req.flush(new MulticastGroup(1, "Test", "Group_TEST", "192.168.15.234", 40, false));
+    const req2 = httpMock.expectOne(`${MulticastGroupService.BASE_URL}/3/products`);
+    req2.flush([
+      new Product(10, "B Product"),
+      new Product(20, "A Product")
+    ]);
+
+    expect(component.products[0].getName()).toBe("A Product");
+    expect(component.products[1].getName()).toBe("B Product");
+  })
 
   it('should call multicastGroupService.deleteMulticastGroup() on delete', () => {
     let multicastGroup = new MulticastGroup(3, 'name');

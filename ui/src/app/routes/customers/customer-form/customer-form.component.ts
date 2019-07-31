@@ -10,6 +10,7 @@ import { CustomerEntitlementsComponent } from '../customer-entitlements/customer
   templateUrl: './customer-form.component.html',
   styleUrls: ['./customer-form.component.css']
 })
+
 export class CustomerFormComponent implements OnInit {
 
   @ViewChild(CustomerEntitlementsComponent) 
@@ -19,21 +20,49 @@ export class CustomerFormComponent implements OnInit {
   idNum: number = null; 
   errorMsg: string = null;
   customer: Customer = new Customer();
+
   origName: string = null;
   name: string = null;
   newName: string = null;
+
   origUserId: string = null;
   userId: string = null;
   newUserId: string = null;
+
   origPassword: string = null;
   password: string = null;
   newPassword: string = null;
+
   origDisabled: boolean = false;
   disabled: boolean = false;
   newDisabled: boolean = null;
+
+  origPriority: number = null;
+  priority: number = 1;
+  newPriority: number = null;
+
+  origClientType: string = null;
+  clientType: string = 'c';
+  newClientType: string = null;
+
   passLength: number = 15;
   invalidSubmit: boolean = false; // when submit clicked with invalid input
   submissionErrorMsg: string = null;
+
+  clientTypes = [
+    {
+      value: 'c',
+      string: 'Client'
+    },
+    {
+      value: 'r',
+      string: 'Reporter'
+    },
+    {
+      value: 'a',
+      string: 'Administrator'
+    }
+  ]
 
   constructor(private router: Router, private route: ActivatedRoute, private customerService: CustomerService) {}
 
@@ -61,6 +90,12 @@ export class CustomerFormComponent implements OnInit {
 
             this.origDisabled = this.customer.isDisabled();
             this.disabled = this.origDisabled;
+
+            this.origPriority =  this.customer.getPriority();
+            this.priority = this.origPriority;
+
+            this.origClientType = this.customer.getClientType();
+            this.clientType = this.origClientType;
 
             this.customerEntitlementsComponent.useEntitlements(
               this.customer.getEntitlements());
@@ -93,6 +128,13 @@ export class CustomerFormComponent implements OnInit {
     if(this.password.length > 100) return 'Password must have at most 100 characters.'
     return null;
   }
+  validatePriority(): string {
+    if(!this.priority) return 'Please enter a priority.';
+    if(isNaN(this.priority)) return 'Priority must be a positive integer.';
+    if(this.priority % 1 !== 0) return 'Priority must be a positive integer.';
+    if(this.priority <= 0) return 'Priority must be a positive integer.';
+    return null;
+  }
 
   isUpdating(): boolean {
     if(this.id) return true;
@@ -110,11 +152,17 @@ export class CustomerFormComponent implements OnInit {
       this.password = this.origPassword;
       this.newDisabled = this.disabled;
       this.disabled = this.origDisabled;
+      this.newPriority = this.priority;
+      this.priority = this.origPriority;
+      this.newClientType = this.clientType;
+      this.clientType = this.origClientType;
     }else {
       this.name = this.newName;
       this.userId = this.newUserId;
       this.password = this.newPassword;
       this.disabled = this.newDisabled;
+      this.priority = this.newPriority;
+      this.clientType = this.newClientType;
     }
   }
   
@@ -138,14 +186,17 @@ export class CustomerFormComponent implements OnInit {
         goToDetails, errorFunc
       );
     }else {
-      if(this.validateName() || this.validateUserId() || this.validatePassword()) {
+      if(this.validateName() || this.validateUserId() || this.validatePassword() ||
+          this.validatePriority()) {
         this.invalidSubmit = true;
       }else {
         let newCustomer = new Customer(
           this.idNum, 
           this.name, 
           this.userId, 
-          this.password, 
+          this.password,
+          this.clientType,
+          this.priority,
           null,
           this.disabled);
         let successFunc = (p: Customer) => {

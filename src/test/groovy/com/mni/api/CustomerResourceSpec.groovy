@@ -21,10 +21,13 @@ class CustomerResourceSpec extends Specification {
     CustomerResource customerResource
     @Shared ArrayList<Entitlement> entitlements
     @Shared ArrayList<EntitlementDto> entitlementDtos
+    Character a = 'a'
+    Character c = 'c'
+    Character r = 'r'
 
     void setupSpec() {
         entitlements = new ArrayList<>()
-        entitlements.add(new Entitlement(1, null, null, null))
+        entitlements.add(new Entitlement(1, null, null, null, 2))
         entitlementDtos = EntitlementDto.entitlementsToEntitlementDtos(entitlements)
     }
 
@@ -41,7 +44,7 @@ class CustomerResourceSpec extends Specification {
         then:
         "customerRepository should call findById(1), which will return a Customer object"
         1 * customerResource.customerRepository.findById(1) >> Optional.of(
-                new Customer(1, "ACME", "acme", "a3lK9n12!_", entitlements)
+                new Customer(1, "ACME", "acme", "a3lK9n12!_", c, 1, entitlements)
         )
 
         and:
@@ -51,6 +54,8 @@ class CustomerResourceSpec extends Specification {
         result.getName() == "ACME"
         result.getUserId() == "acme"
         result.getPassword() == "a3lK9n12!_"
+        result.getClientType() == c
+        result.getPriority() == 1
     }
 
     void "getCustomer() should return null and throw an exception when called with an invalid ID" () {
@@ -75,7 +80,7 @@ class CustomerResourceSpec extends Specification {
         then:
         "customerRepository should call findById(1), which will return a Customer object"
         1 * customerResource.customerRepository.findById(1) >> Optional.of(
-                new Customer(1, "ACME", "acme", "a3lK9n12!_", entitlements)
+                new Customer(1, "ACME", "acme", "a3lK9n12!_", c, 1, entitlements)
         )
 
         and:
@@ -106,16 +111,18 @@ class CustomerResourceSpec extends Specification {
         when:
         "saveCustomer() is called with a valid new ID"
         def result = customerResource.saveCustomer(new CustomerDto(null, "Bank",
-                "bankUserID", "abcdefghijklmno"))
+                "bankUserID", "Abcdefghijklmno123!!", c, 1))
 
         then:
         "customerRepository should call save, returning the saved Customer object"
         1 * customerResource.customerRepository.save({ Customer customer ->
                                                                     customer.getName() == "Bank" &&
                                                                     customer.getUserId() == "bankUserID" &&
-                                                                    customer.getPassword() == "abcdefghijklmno"
+                                                                    customer.getPassword() == "Abcdefghijklmno123!!" &&
+                                                                    customer.getClientType() == c &&
+                                                                    customer.getPriority() == 1
                                                         }) >>
-                new Customer(120, "Bank", "bankUserID", "abcdefghijklmno", entitlements)
+                new Customer(120, "Bank", "bankUserID", "Abcdefghijklmno123!!", c, 1, entitlements)
 
         and:
         "Returned customer should be the persisted CustomerDto object"
@@ -123,14 +130,16 @@ class CustomerResourceSpec extends Specification {
         result.getId() == 120L
         result.getName() == "Bank"
         result.getUserId() == "bankUserID"
-        result.getPassword() == "abcdefghijklmno"
+        result.getPassword() == "Abcdefghijklmno123!!"
+        result.getClientType() == c
+        result.getPriority() == 1
     }
 
     void "listCustomers() should return the current customers" () {
         given:
         def customers = new PageImpl([
-                new Customer(1, "Customer 1", "customer1", "password1", entitlements),
-                new Customer(2, "Customer 2", "customer2", "password2", entitlements)
+                new Customer(1, "Customer 1", "customer1", "password1", c, 1, entitlements),
+                new Customer(2, "Customer 2", "customer2", "password2", c, 1, entitlements)
         ])
 
         when:
@@ -149,18 +158,22 @@ class CustomerResourceSpec extends Specification {
         result[0].getName() == "Customer 1"
         result[0].getUserId() == "customer1"
         result[0].getPassword() == "password1"
+        result[0].getClientType() == c
+        result[0].getPriority() == 1
 
         result[1].getId() == 2L
         result[1].getName() == "Customer 2"
         result[1].getUserId() == "customer2"
         result[1].getPassword() == "password2"
+        result[1].getClientType() == c
+        result[1].getPriority() == 1
     }
 
     void "listCustomers() should use default parameters given invalid parameters" () {
         given:
         def customers = new PageImpl([
-                new Customer(1, "Customer 1", "customer1", "password1", entitlements),
-                new Customer(2, "Customer 2", "customer2", "password2", entitlements)
+                new Customer(1, "Customer 1", "customer1", "password1", c, 1, entitlements),
+                new Customer(2, "Customer 2", "customer2", "password2", c, 1, entitlements)
         ])
 
         when:
@@ -184,14 +197,19 @@ class CustomerResourceSpec extends Specification {
         customerResource.deleteCustomer(1)
 
         then:
+        "findById(1) can be called"
+        (0..1) * customerResource.customerRepository.findById(1) >>
+                Optional.of(new Customer(1, "name", "userId", "aA!112312312312313", c, 1, entitlements))
+
+        and:
         "deleteById(1) should be called"
         1 * customerResource.customerRepository.deleteById(1)
     }
 
     void "updateCustomer() should call save() to save customer and return new customer" () {
         given:
-        Customer c = new Customer(1, "Name", "UserID", "password", entitlements)
-        CustomerDto customerDto = new CustomerDto(1, "New Name", "New UserID", "abcdefghijklmno")
+        Customer c = new Customer(1, "Name", "UserID", "password", c, 1, entitlements)
+        CustomerDto customerDto = new CustomerDto(1, "New Name", "New UserID", "abcdefghijklmno", a, 2)
 
         when:
         "updateCustomer() is called"
@@ -206,8 +224,10 @@ class CustomerResourceSpec extends Specification {
                                                                     customer.getName() == "New Name" &&
                                                                     customer.getUserId() == "New UserID" &&
                                                                     customer.getPassword() == "abcdefghijklmno"
+                                                                    customer.getClientType() == a &&
+                                                                    customer.getPriority() == 2
                                                                     customer.isDisabled() == true
-        }) >> new Customer(1L, "New Name", "New UserID", "abcdefghijklmno", entitlements, true)
+        }) >> new Customer(1L, "New Name", "New UserID", "abcdefghijklmno", a, 2, entitlements, true)
 
         and:
         "Correct result should be returned"
@@ -216,12 +236,14 @@ class CustomerResourceSpec extends Specification {
         result.getPassword() == customerDto.getPassword()
         result.getName() == customerDto.getName()
         result.getUserId() == customerDto.getUserId()
+        result.getClientType() == a
+        result.getPriority() == 2
         result.isDisabled() == customerDto.isDisabled()
     }
 
     void "updateCustomerEntitlements() should call save() and return updated customer" () {
         given:
-        Customer c = new Customer(1L, "New Name", "New UserID", "abcdefghijklmno", new ArrayList())
+        Customer c = new Customer(1L, "New Name", "New UserID", "abcdefghijklmno", r, 5, new ArrayList())
 
         when:
         "updateCustomerEntitlements() is called"
@@ -235,9 +257,11 @@ class CustomerResourceSpec extends Specification {
                     customer.getName() == "New Name" &&
                     customer.getUserId() == "New UserID" &&
                     customer.getPassword() == "abcdefghijklmno" &&
+                    customer.getClientType() == r &&
+                    customer.getPriority() == 5
                     customer.getEntitlements().size() != 0 &&
                     customer.getEntitlements()[0].getClient() == c
-        }) >> new Customer(1L, "New Name", "New UserID", "abcdefghijklmno", entitlements)
+        }) >> new Customer(1L, "New Name", "New UserID", "abcdefghijklmno", r, 5, entitlements)
 
         and:
         "Correct result should be returned"

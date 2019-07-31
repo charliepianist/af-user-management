@@ -1,6 +1,6 @@
-import { Entitlement } from "../model/entitlement";
-import { Location } from "../model/location";
-import { Product } from "../model/product";
+import { Entitlement } from "../../../model/entitlement";
+import { Location } from "../../../model/location";
+import { Product } from "../../../model/product";
 
 export class EntitlementChange {
     newEntitlement: Entitlement;
@@ -53,6 +53,17 @@ export class EntitlementChange {
     }
     getLocationCode(): string {
         return this.getLocation().getCode();
+    }
+    
+    oldNumLogins(): number {
+        if(this.getOldEntitlement())
+            return this.getOldEntitlement().getNumLogins();
+        return 0;
+    }
+    newNumLogins(): number {
+        if(this.getNewEntitlement())
+            return this.getNewEntitlement().getNumLogins();
+        return 0;
     }
 
     oldString(): string {
