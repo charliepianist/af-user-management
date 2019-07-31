@@ -37,8 +37,8 @@
           </label>
         </div>
         <div id="inputs">
-          <div class="long-field">
-            <input type="text" [(ngModel)]="name" name="name" 
+          <div class="long-field"> <!-- Name -->
+            <input type="text" [(ngModel)]="name" name="name" id="name"
                     #nameInput="ngModel" class="form-control" 
                     (ngModelChange)="submissionErrorMsg=null" required
                     [disabled]="updateEntitlements">
@@ -46,18 +46,10 @@
                   class="alert alert-danger">
               {{ validateName() }}
             </div>
-            <div class="slight-margin-top" style="font-size: 1.2em;">
-                <input id="disabled" name="disabled" type="checkbox"
-                      [(ngModel)]="disabled" 
-                      [disabled]="updateEntitlements">
-                <label for="disabled" class="text-danger">
-                    &nbsp;Disabled
-                </label>
-            </div>
           </div>
         
-          <div class="short-field">
-            <input type="text" [(ngModel)]="userId" name="userId" 
+          <div class="short-field"> <!-- UserID -->
+            <input type="text" [(ngModel)]="userId" name="userId" id="userId"
                     #userIdInput="ngModel" class="form-control" 
                     (ngModelChange)="submissionErrorMsg=null" required
                     [disabled]="updateEntitlements">
@@ -67,7 +59,7 @@
             </div>
           </div>
     
-          <div class="long-field">
+          <div class="long-field"> <!-- Password -->
             <input type="text" [(ngModel)]="password" name="password" 
                     #passwordInput="ngModel" class="form-control" id="password"
                     (ngModelChange)="submissionErrorMsg=null" required
@@ -82,6 +74,42 @@
             of length <input [(ngModel)]="passLength" name="passLength"
                           type="number" style="width:2.25em;"
                           [disabled]="updateEntitlements"> characters
+          </div>
+        </div>
+        <div id="additional-inputs">
+          <div class="long-field"> <!-- Client Type and Disabled -->
+            <label for="clientType">
+              Client Type
+            </label>
+            <select class="slight-margin-top form-control" 
+            [(ngModel)]="clientType" name="clientType" id="clientType"
+            [disabled]="updateEntitlements">
+              <option *ngFor="let type of clientTypes" [value]="type.value">
+                {{ type.string }}
+              </option>
+            </select>
+            <div class="slight-margin-top" style="font-size: 1.2em;">
+              <input id="disabled" name="disabled" type="checkbox"
+                    [(ngModel)]="disabled" 
+                    [disabled]="updateEntitlements">
+              <label for="disabled" class="text-danger">
+                  &nbsp;Disabled
+              </label>
+            </div>
+          </div>
+        
+          <div class="short-field"> <!-- Priority -->
+            <label for="priority">
+              Priority (Highest: 1)
+            </label>
+            <input type="text" [(ngModel)]="priority" name="priority" id="priority"
+                    #priorityInput="ngModel" class="form-control" 
+                    (ngModelChange)="submissionErrorMsg=null" required
+                    [disabled]="updateEntitlements">
+            <div [hidden]="!validatePriority() || priorityInput.pristine" 
+                  class="alert alert-danger">
+              {{ validatePriority() }}
+            </div>
           </div>
         </div>
 
@@ -106,6 +134,7 @@
           <span *ngIf="validateName()">Please enter a valid name.<br></span>
           <span *ngIf="validateUserId()">Please enter a valid user ID.<br></span>
           <span *ngIf="validatePassword()">Please enter a valid password.<br></span>
+          <span *ngIf="validatePriority()">Please enter a valid priority.<br></span>
         </div>
         <br>
       </form>

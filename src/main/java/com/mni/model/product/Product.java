@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Entity
 public class Product {
@@ -20,7 +21,7 @@ public class Product {
 
     @NotNull
     @ManyToMany
-    Collection<MulticastGroup> multicastGroups;
+    Collection<MulticastGroup> multicastGroups = new ArrayList();
 
     public Product(){}
 
@@ -60,6 +61,16 @@ public class Product {
     }
 
     public boolean removeMulticastGroup(MulticastGroup multicastGroup) {
+        if(this.multicastGroups == null) this.multicastGroups = new ArrayList();
         return this.multicastGroups.removeIf(group -> group.getId() == multicastGroup.getId());
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", multicastGroups ids=" + multicastGroups.stream().map(g -> g.getId()).collect(Collectors.toList()) +
+                '}';
     }
 }

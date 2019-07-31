@@ -18,7 +18,7 @@
         </th>
       </tr>
       <tr>
-        <th style="width:28%" (click)="sort('name')">
+        <th style="width:26%" (click)="sort('name')">
           Name
           <span class="up-arrow" *ngIf="isSortAsc('name')">
             &#10148;
@@ -36,12 +36,21 @@
             &#10148;
           </span>
         </th>
-        <th style="width:25%" (click)="sort('password')">
-          Password
-          <span class="up-arrow" *ngIf="isSortAsc('password')">
+        <th style="width:18%" (click)="sort('clientType')">
+          Client Type
+          <span class="up-arrow" *ngIf="isSortAsc('clientType')">
             &#10148;
           </span>
-          <span class="down-arrow" *ngIf="isSortDesc('password')">
+          <span class="down-arrow" *ngIf="isSortDesc('clientType')">
+            &#10148;
+          </span>
+        </th>
+        <th style="width:9%" (click)="sort('priority')">
+          Priority
+          <span class="up-arrow" *ngIf="isSortAsc('priority')">
+            &#10148;
+          </span>
+          <span class="down-arrow" *ngIf="isSortDesc('priority')">
             &#10148;
           </span>
         </th>
@@ -58,7 +67,10 @@
             {{ customer.getUserId() }}
           </td>
           <td>
-            {{ customer.getPassword() }}
+            {{ customer.clientTypeString() }}
+          </td>
+          <td>
+            {{ customer.getPriority() }}
           </td>
           <!-- Details, Update, Delete-->
           <td (click)="$event.stopPropagation()" class="row-options"> 

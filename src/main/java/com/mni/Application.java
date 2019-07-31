@@ -46,7 +46,7 @@ public class Application {
     CommandLineRunner startup(){
         return strings -> {
 
-            logger.info("Initializing test data");
+            logger.info("Initializing Test Data.");
             initTestData();
 
             new ProcessBuilder()
@@ -74,18 +74,17 @@ public class Application {
         ArrayList<MulticastGroup> multicastGroupsA = new ArrayList<>();
         ArrayList<MulticastGroup> multicastGroupsB = new ArrayList<>();
         MulticastGroup multicastGroup1 = multicastGroupRepository.save(
-                new MulticastGroup(11L, "Test Multicast 1", "192.168.1.1", 1001));
+                new MulticastGroup(11L, "Test Multicast 1", "Group_TEST_ONE", false, "192.168.1.1", 1001));
         MulticastGroup multicastGroup2 = multicastGroupRepository.save(
-                new MulticastGroup(12L, "Test Multicast 2", "192.168.1.2", 1002));
+                new MulticastGroup(12L, "Test Multicast 2", "Group_TEST_TWO", false, "192.168.1.2", 1002));
         MulticastGroup multicastGroup3 = multicastGroupRepository.save(
-                new MulticastGroup(13L, "Test Multicast 3", "192.168.1.3", 1003));
+                new MulticastGroup(13L, "Test Multicast 3", "Group_TEST_THREE", false, "192.168.1.3", 1003));
         MulticastGroup multicastGroup4 = multicastGroupRepository.save(
-                new MulticastGroup(14L, "Test Multicast 4", "192.168.1.4", 1004));
+                new MulticastGroup(14L, "Heartbeat", "Group_HEARTBEAT", true, "192.168.1.4", 1004));
         multicastGroupsA.add(multicastGroup1);
-        multicastGroupsA.add(multicastGroup2);
         multicastGroupsA.add(multicastGroup3);
         multicastGroupsB.add(multicastGroup2);
-        multicastGroupsB.add(multicastGroup4);
+        multicastGroupsB.add(multicastGroup3);
 
         // ======================= Product Setup ===========================
         Product usData = productRepository.save(
@@ -123,16 +122,16 @@ public class Application {
         // ================= Customer & Entitlement Setup =====================
         Customer acme = customerRepository.save(
                 new Customer(10001L, "ACME", "acme",
-                "a@e!E2r39#rErB$", new ArrayList()));
+                "a@e!E2r39#rErB$", 'c', 1, new ArrayList()));
         Customer bofa = customerRepository.save(
                 new Customer(10002L, "Bank of America", "bofa",
-                "b@e!E2r39#rErB$", new ArrayList()));
+                "b@e!E2r39#rErB$", 'c', 1, new ArrayList()));
         Customer comcast = customerRepository.save(
                 new Customer(10003L, "Comcast", "comcast",
-                "c@e!E2r39#rErB$", new ArrayList()));
+                "c@e!E2r39#rErB$", 'c', 1, new ArrayList()));
         Customer dell = customerRepository.save(
                 new Customer(10004L, "Dell", "dell",
-                "d@e!E2r39#rErB$", new ArrayList()));
+                "d@e!E2r39#rErB$", 'c', 1, new ArrayList()));
         
         // ====================== Entitlement Setup =========================
         Date now = new Date();
@@ -146,15 +145,15 @@ public class Application {
         ArrayList<Entitlement> comcastEntitlements = new ArrayList<>();
         ArrayList<Entitlement> dellEntitlements = new ArrayList<>();
         Entitlement acmeUs = entitlementRepository.save(
-                new Entitlement(100001L, usData, nyc2, acme, inADay));
+                new Entitlement(100001L, usData, nyc1, acme, 2, inADay));
         Entitlement acmeDoe = entitlementRepository.save(
-                new Entitlement(100002L, doeData, nyc2, acme, inAWeek));
+                new Entitlement(100002L, doeData, nyc1, acme, 2, inAWeek));
         Entitlement acmeDol = entitlementRepository.save(
-                new Entitlement(100003L, dolData, frk1, acme, inAWeek));
+                new Entitlement(100003L, forexData, nyc2, acme, 2, inAWeek));
         Entitlement acmeEu = entitlementRepository.save(
-                new Entitlement(100004L, euData, lon1, acme));
+                new Entitlement(100004L, euData, lon1, acme, 2));
         Entitlement acmeForex = entitlementRepository.save(
-                new Entitlement(100005L, forexData, lon2, acme));
+                new Entitlement(100005L, forexData, lon2, acme, 3));
         acmeEntitlements.add(acmeUs);
         acmeEntitlements.add(acmeDoe);
         acmeEntitlements.add(acmeDol);
@@ -164,23 +163,26 @@ public class Application {
         acme = customerRepository.save(acme);
 
         Entitlement bofaUs = entitlementRepository.save(
-                new Entitlement(100006L, usData, nyc1, bofa, inAMonth));
+                new Entitlement(100006L, usData, nyc1, bofa, 2, inAMonth));
         Entitlement bofaDol = entitlementRepository.save(
-                new Entitlement(100007L, dolData, nyc2, bofa, inFourMonths));
+                new Entitlement(100007L, dolData, nyc2, bofa, 2, inFourMonths));
         Entitlement bofaForex = entitlementRepository.save(
-                new Entitlement(100008L, forexData, lon1, bofa));
+                new Entitlement(100008L, forexData, lon1, bofa, 3));
+        Entitlement bofaForex2 = entitlementRepository.save(
+                new Entitlement(100009L, forexData, nyc2, bofa, 2, inFourMonths));
         bofaEntitlements.add(bofaUs);
         bofaEntitlements.add(bofaDol);
         bofaEntitlements.add(bofaForex);
+        bofaEntitlements.add(bofaForex2);
         bofa.setEntitlements(bofaEntitlements);
         bofa = customerRepository.save(bofa);
 
         Entitlement comcastUs = entitlementRepository.save(
-                new Entitlement(100009L, usData, frk1, comcast));
+                new Entitlement(100009L, usData, frk1, comcast, 2));
         Entitlement comcastDol = entitlementRepository.save(
-                new Entitlement(100010L, dolData, frk1, comcast));
+                new Entitlement(100010L, dolData, frk1, comcast, 2));
         Entitlement comcastDoe = entitlementRepository.save(
-                new Entitlement(100011L, doeData, nyc1, comcast));
+                new Entitlement(100011L, doeData, nyc1, comcast, 3));
         comcastEntitlements.add(comcastUs);
         comcastEntitlements.add(comcastDol);
         comcastEntitlements.add(comcastDoe);
@@ -188,13 +190,13 @@ public class Application {
         comcast = customerRepository.save(comcast);
 
         Entitlement dellUs = entitlementRepository.save(
-                new Entitlement(100009L, usData, nyc2, dell));
+                new Entitlement(100009L, usData, nyc2, dell, 2));
         Entitlement dellDol = entitlementRepository.save(
-                new Entitlement(100010L, dolData, nyc1, dell, inAWeek));
+                new Entitlement(100010L, dolData, nyc1, dell, 2, inAWeek));
         Entitlement dellDoe = entitlementRepository.save(
-                new Entitlement(100011L, doeData, frk1, dell, inAWeek));
+                new Entitlement(100011L, doeData, frk1, dell, 2, inAWeek));
         Entitlement dellForex = entitlementRepository.save(
-                new Entitlement(100012L, forexData, lon2, dell, inAMonth));
+                new Entitlement(100012L, forexData, lon2, dell, 3, inAMonth));
         dellEntitlements.add(dellUs);
         dellEntitlements.add(dellDol);
         dellEntitlements.add(dellDoe);

@@ -4,6 +4,7 @@ import com.mni.api.multicastgroup.MulticastGroupDto
 import com.mni.api.product.ProductDto
 import com.mni.api.product.ProductResource
 import com.mni.model.multicastgroup.MulticastGroup
+import com.mni.model.multicastgroup.MulticastGroupRepository
 import com.mni.model.product.Product
 import com.mni.model.product.ProductRepository
 import org.springframework.data.domain.PageImpl
@@ -17,17 +18,19 @@ class ProductResourceSpec extends Specification {
 
     @Shared ArrayList<MulticastGroup> multicastGroups
     @Shared ArrayList<MulticastGroupDto> multicastGroupDtos
+    @Shared MulticastGroup heartbeat = new MulticastGroup(2, "Heartbeat", "Group_HEARTBEAT", true, "192.168.4.5", 1000)
     @Shared ProductResource productResource
 
     void setupSpec() {
         multicastGroups = new ArrayList<>()
-        multicastGroups.add(new MulticastGroup(1, "Example Group", "192.168.1.1", 4000))
+        multicastGroups.add(new MulticastGroup(1, "Example Group", "Group_EXAMPLE_GROUP", false, "192.168.1.1", 4000))
         multicastGroupDtos = MulticastGroupDto.multicastGroupsToMulticastGroupDtos(multicastGroups);
     }
 
     void setup(){
         productResource = new ProductResource()
         productResource.productRepository = Mock(ProductRepository)
+        productResource.multicastGroupRepository = Mock(MulticastGroupRepository)
     }
 
     void "getProduct() should return a ProductDto object when called with a valid ID" () {
@@ -74,12 +77,24 @@ class ProductResourceSpec extends Specification {
         )
 
         and:
+        "findByAutoAssign can be called"
+        (0..1) * productResource.multicastGroupRepository.findByAutoAssign(true) >>
+                [heartbeat]
+
+        and:
         "result should be the correct set of Multicast Groups"
         result instanceof Collection<MulticastGroupDto>
-        result[0].getId() == multicastGroupDtos.get(0).getId()
-        result[0].getName() == multicastGroupDtos.get(0).getName()
-        result[0].getIp() == multicastGroupDtos.get(0).getIp()
-        result[0].getPort() == multicastGroupDtos.get(0).getPort()
+        (result[0].getId() == multicastGroupDtos.get(0).getId() && result[1].getId() == heartbeat.getId()) ||
+                (result[1].getId() == multicastGroupDtos.get(0).getId() && result[0].getId() == heartbeat.getId())
+
+        (result[0].getName() == multicastGroupDtos.get(0).getName() && result[1].getName() == heartbeat.getName()) ||
+                (result[1].getName() == multicastGroupDtos.get(0).getName() && result[0].getName() == heartbeat.getName())
+
+        (result[0].getPort() == multicastGroupDtos.get(0).getPort() && result[1].getPort() == heartbeat.getPort()) ||
+                (result[1].getPort() == multicastGroupDtos.get(0).getPort() && result[0].getPort() == heartbeat.getPort())
+
+        (result[0].getIp() == multicastGroupDtos.get(0).getIp() && result[1].getIp() == heartbeat.getIp()) ||
+                (result[1].getIp() == multicastGroupDtos.get(0).getIp() && result[0].getIp() == heartbeat.getIp())
     }
 
     void "getProductMulticastGroups() should throw exception given invalid ID" () {
@@ -168,6 +183,11 @@ class ProductResourceSpec extends Specification {
         productResource.deleteProduct(1)
 
         then:
+        "findById(1) can be called"
+        (0..1) * productResource.productRepository.findById(1) >>
+                Optional.of(new Product(1, "Product Name", multicastGroups))
+
+        and:
         "deleteById(1) should be called"
         1 * productResource.productRepository.deleteById(1)
     }
@@ -213,22 +233,34 @@ class ProductResourceSpec extends Specification {
         }) >> new Product(1L, "US Data", multicastGroups)
 
         and:
+        "findByAutoAssign can be called"
+        (0..1) * productResource.multicastGroupRepository.findByAutoAssign(true) >>
+                [heartbeat]
+
+        and:
         "Correct result should be returned"
         result instanceof Collection<MulticastGroupDto>
-        result[0].getId() == multicastGroupDtos.get(0).getId()
-        result[0].getName() == multicastGroupDtos.get(0).getName()
-        result[0].getIp() == multicastGroupDtos.get(0).getIp()
-        result[0].getPort() == multicastGroupDtos.get(0).getPort()
+        (result[0].getId() == multicastGroupDtos.get(0).getId() && result[1].getId() == heartbeat.getId()) ||
+                (result[1].getId() == multicastGroupDtos.get(0).getId() && result[0].getId() == heartbeat.getId())
+
+        (result[0].getName() == multicastGroupDtos.get(0).getName() && result[1].getName() == heartbeat.getName()) ||
+                (result[1].getName() == multicastGroupDtos.get(0).getName() && result[0].getName() == heartbeat.getName())
+
+        (result[0].getPort() == multicastGroupDtos.get(0).getPort() && result[1].getPort() == heartbeat.getPort()) ||
+                (result[1].getPort() == multicastGroupDtos.get(0).getPort() && result[0].getPort() == heartbeat.getPort())
+
+        (result[0].getIp() == multicastGroupDtos.get(0).getIp() && result[1].getIp() == heartbeat.getIp()) ||
+                (result[1].getIp() == multicastGroupDtos.get(0).getIp() && result[0].getIp() == heartbeat.getIp())
     }
 
     void "updateProductMulticastGroups() should throw an exception when invalid ID" () {
         when:
         "updateProductMulticastGroups() with invalid ID is called"
-        def result = productResource.updateProductMulticastGroups(1, multicastGroupDtos)
+        def result = productResource.updateProductMulticastGroups(-1, multicastGroupDtos)
 
         then:
         "findById() should be called"
-        1 * productResource.productRepository.findById(1) >> Optional.empty()
+        1 * productResource.productRepository.findById(-1) >> Optional.empty()
 
         and:
         "Exception is thrown"

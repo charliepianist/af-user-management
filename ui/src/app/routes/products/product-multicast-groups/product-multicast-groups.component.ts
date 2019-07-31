@@ -63,13 +63,19 @@ export class ProductMulticastGroupsComponent implements OnInit {
           this.selected[i] = true;
         }
       }
+      this.initialGroups.sort(MulticastGroup.DEFAULT_SORT);
+      this.multicastGroups.sort(MulticastGroup.DEFAULT_SORT);
     }
   }
 
   getSelectedGroups(): MulticastGroup[] {
     let arr = [];
     for(let i = 0; i < this.selected.length; i++) {
-      if(this.selected[i]) arr.push(this.multicastGroups[i]);
+      if(this.selected[i]) {
+        let group = this.multicastGroups[i];
+        if(!group.isAutoAssign())
+          arr.push(this.multicastGroups[i]);
+      }
     }
     return arr;
   }

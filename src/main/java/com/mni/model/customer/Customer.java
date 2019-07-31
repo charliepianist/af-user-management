@@ -1,12 +1,11 @@
 package com.mni.model.customer;
 
 import com.mni.model.entitlement.Entitlement;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -33,27 +32,35 @@ public class Customer {
     @Column(length=MAX_PASSWORD_LENGTH)
     private String password;
 
+    private Character clientType;
+
+    private Integer priority;
+
     @NotNull
     private boolean disabled;
 
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "client")
     @NotNull
-    Collection<Entitlement> entitlements;
+    Collection<Entitlement> entitlements = new ArrayList();
 
     public Customer() {}
 
     public Customer(Long id, String name, String userId, String password,
+                    Character clientType, Integer priority,
                     Collection<Entitlement> entitlements) {
         this.id = id;
         this.name = name;
         this.userId = userId;
         this.password = password;
+        this.clientType = clientType;
+        this.priority = priority;
         this.entitlements = entitlements;
     }
 
     public Customer(Long id, String name, String userId, String password,
+                    Character clientType, Integer priority,
                     Collection<Entitlement> entitlements, boolean disabled) {
-        this(id, name, userId, password, entitlements);
+        this(id, name, userId, password, clientType, priority, entitlements);
         this.disabled = disabled;
     }
 
@@ -102,4 +109,37 @@ public class Customer {
     public void setDisabled(boolean disabled) { this.disabled = disabled; }
 
     public boolean isDisabled() { return disabled; }
+
+    public Character getClientType() {
+        return clientType;
+    }
+
+    public void setClientType(Character clientType) {
+        this.clientType = clientType;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    @Override
+    public String toString() {
+        char[] chars = new char[password.length()];
+        Arrays.fill(chars, '*');
+        String asterisks = new String(chars);
+        return "Customer{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", userId='" + userId + '\'' +
+                ", password='" + asterisks + '\'' +
+                ", clientType=" + clientType +
+                ", priority=" + priority +
+                ", disabled=" + disabled +
+                ", entitlements=" + entitlements +
+                '}';
+    }
 }

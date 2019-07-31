@@ -2,4 +2,8 @@ package com.mni.model.multicastgroup;
 
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface MulticastGroupRepository extends PagingAndSortingRepository<MulticastGroup, Long> {}
+import java.util.Set;
+
+public interface MulticastGroupRepository extends PagingAndSortingRepository<MulticastGroup, Long> {
+    Set<MulticastGroup> findByAutoAssign(boolean autoAssign);
+}

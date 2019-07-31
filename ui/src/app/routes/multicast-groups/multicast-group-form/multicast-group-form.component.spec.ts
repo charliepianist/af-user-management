@@ -44,6 +44,7 @@ describe('Creating new MulticastGroup', () => {
 
   it('should validate name, no creation if invalid', () => {
     spyOn(component, 'validateName').and.returnValue('error');
+    spyOn(component, 'validateCode').and.returnValue(null);
     spyOn(component, 'validateIp').and.returnValue(null);
     spyOn(component, 'validatePort').and.returnValue(null);
     component.submitButton();
@@ -53,8 +54,21 @@ describe('Creating new MulticastGroup', () => {
     httpMock.expectNone(`${MulticastGroupService.BASE_URL}`);
   })
 
+  it('should validate code, no creation if invalid', () => {
+    spyOn(component, 'validateName').and.returnValue(null);
+    spyOn(component, 'validateCode').and.returnValue('error');
+    spyOn(component, 'validateIp').and.returnValue(null);
+    spyOn(component, 'validatePort').and.returnValue(null);
+    component.submitButton();
+    
+    expect(component.validateCode).toHaveBeenCalled();
+    expect(component.invalidSubmit).toBeTruthy();
+    httpMock.expectNone(`${MulticastGroupService.BASE_URL}`);
+  })
+
   it('should validate IP, no creation if invalid', () => {
     spyOn(component, 'validateName').and.returnValue(null);
+    spyOn(component, 'validateCode').and.returnValue(null);
     spyOn(component, 'validateIp').and.returnValue('error');
     spyOn(component, 'validatePort').and.returnValue(null);
     component.submitButton();
@@ -66,6 +80,7 @@ describe('Creating new MulticastGroup', () => {
 
   it('should validate port, no creation if invalid', () => {
     spyOn(component, 'validateName').and.returnValue(null);
+    spyOn(component, 'validateCode').and.returnValue(null);
     spyOn(component, 'validateIp').and.returnValue(null);
     spyOn(component, 'validatePort').and.returnValue('error');
     component.submitButton();
@@ -77,12 +92,14 @@ describe('Creating new MulticastGroup', () => {
 
   it('should call multicastGroupService.createMulticastGroup() for valid inputs', () => {
     spyOn(component, 'validateName').and.returnValue(null);
+    spyOn(component, 'validateCode').and.returnValue(null);
     spyOn(component, 'validateIp').and.returnValue(null);
     spyOn(component, 'validatePort').and.returnValue(null);
     spyOn(service, 'createMulticastGroup');
     component.submitButton();
 
     expect(component.validateName).toHaveBeenCalled();
+    expect(component.validateCode).toHaveBeenCalled();
     expect(component.validateIp).toHaveBeenCalled();
     expect(component.validatePort).toHaveBeenCalled();
     expect(service.createMulticastGroup).toHaveBeenCalled();
@@ -136,6 +153,7 @@ describe('Updating MulticastGroup', () => {
 
   it('should validate name, no creation if invalid', () => {
     spyOn(component, 'validateName').and.returnValue('error');
+    spyOn(component, 'validateCode').and.returnValue(null);
     spyOn(component, 'validateIp').and.returnValue(null);
     spyOn(component, 'validatePort').and.returnValue(null);
     component.submitButton();
@@ -145,8 +163,21 @@ describe('Updating MulticastGroup', () => {
     httpMock.expectNone(`${MulticastGroupService.BASE_URL}`);
   })
 
+  it('should validate code, no creation if invalid', () => {
+    spyOn(component, 'validateName').and.returnValue(null);
+    spyOn(component, 'validateCode').and.returnValue('error');
+    spyOn(component, 'validateIp').and.returnValue(null);
+    spyOn(component, 'validatePort').and.returnValue(null);
+    component.submitButton();
+    
+    expect(component.validateCode).toHaveBeenCalled();
+    expect(component.invalidSubmit).toBeTruthy();
+    httpMock.expectNone(`${MulticastGroupService.BASE_URL}`);
+  })
+
   it('should validate IP, no creation if invalid', () => {
     spyOn(component, 'validateName').and.returnValue(null);
+    spyOn(component, 'validateCode').and.returnValue(null);
     spyOn(component, 'validateIp').and.returnValue('error');
     spyOn(component, 'validatePort').and.returnValue(null);
     component.submitButton();
@@ -158,6 +189,7 @@ describe('Updating MulticastGroup', () => {
 
   it('should validate port, no creation if invalid', () => {
     spyOn(component, 'validateName').and.returnValue(null);
+    spyOn(component, 'validateCode').and.returnValue(null);
     spyOn(component, 'validateIp').and.returnValue(null);
     spyOn(component, 'validatePort').and.returnValue('error');
     component.submitButton();
@@ -169,12 +201,14 @@ describe('Updating MulticastGroup', () => {
 
   it('should call multicastGroupService.updateMulticastGroup() for valid inputs', () => {
     spyOn(component, 'validateName').and.returnValue(null);
+    spyOn(component, 'validateCode').and.returnValue(null);
     spyOn(component, 'validateIp').and.returnValue(null);
     spyOn(component, 'validatePort').and.returnValue(null);
     spyOn(service, 'updateMulticastGroup');
     component.submitButton();
 
     expect(component.validateName).toHaveBeenCalled();
+    expect(component.validateCode).toHaveBeenCalled();
     expect(component.validateIp).toHaveBeenCalled();
     expect(component.validatePort).toHaveBeenCalled();
     expect(service.updateMulticastGroup).toHaveBeenCalled();

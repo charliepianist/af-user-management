@@ -6,6 +6,7 @@ import com.mni.api.product.ProductDto;
 import com.mni.model.entitlement.Entitlement;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -28,23 +29,29 @@ public class EntitlementDto {
 
     private CustomerDto client;
 
+    @NotNull
+    @Positive
+    private Integer numLogins;
+
     private Date expirationDate;
 
     public EntitlementDto() {}
 
-    public EntitlementDto(Long id, ProductDto product, LocationDto location, CustomerDto client) {
+    public EntitlementDto(Long id, ProductDto product, LocationDto location, CustomerDto client, Integer numLogins) {
         this.id = id;
         this.product = product;
         this.location = location;
         this.client = client;
+        this.numLogins = numLogins;
         this.expirationDate = null;
     }
 
-    public EntitlementDto(Long id, ProductDto product, LocationDto location, CustomerDto client, Date expirationDate) {
+    public EntitlementDto(Long id, ProductDto product, LocationDto location, CustomerDto client, Integer numLogins, Date expirationDate) {
         this.id = id;
         this.product = product;
         this.location = location;
         this.client = client;
+        this.numLogins = numLogins;
         this.expirationDate = expirationDate;
     }
 
@@ -59,6 +66,7 @@ public class EntitlementDto {
         entitlementDto.setClient(
                 translateCustomerToCustomerDto(entitlement.getClient()));
         entitlementDto.setExpirationDate(entitlement.getExpirationDate());
+        entitlementDto.setNumLogins(entitlement.getNumLogins());
         return entitlementDto;
     }
 
@@ -73,6 +81,7 @@ public class EntitlementDto {
         entitlement.setClient(
                 translateCustomerDtoToCustomer(entitlementDto.getClient()));
         entitlement.setExpirationDate(entitlementDto.getExpirationDate());
+        entitlement.setNumLogins(entitlementDto.getNumLogins());
         return entitlement;
     }
 
@@ -126,5 +135,25 @@ public class EntitlementDto {
 
     public void setExpirationDate(Date expirationDate) {
         this.expirationDate = expirationDate;
+    }
+
+    public Integer getNumLogins() {
+        return numLogins;
+    }
+
+    public void setNumLogins(Integer numLogins) {
+        this.numLogins = numLogins;
+    }
+
+    @Override
+    public String toString() {
+        return "EntitlementDto{" +
+                "id=" + id +
+                ", product id=" + (product != null ? product.getId().toString() : "null") +
+                ", location id=" + (location != null ? location.getId().toString() : "null") +
+                ", client id=" + (client != null ? client.getId().toString() : "null") +
+                ", numLogins=" + numLogins +
+                ", expirationDate=" + expirationDate +
+                '}';
     }
 }

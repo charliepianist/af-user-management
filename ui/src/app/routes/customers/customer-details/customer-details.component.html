@@ -34,6 +34,14 @@
                 <td>{{ customer.getPassword() }}</td>
             </tr>
             <tr>
+                <td>Client Type</td>
+                <td>{{ customer.clientTypeString() }}</td>
+            </tr>
+            <tr>
+                <td>Priority</td>
+                <td>{{ customer.getPriority() }}</td>
+            </tr>
+            <tr>
                 <td>Status</td>
                 <td [class.text-danger]="customer.isDisabled()"
                     [class.text-success]="!customer.isDisabled()">

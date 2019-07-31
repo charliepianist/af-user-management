@@ -103,7 +103,7 @@ describe('CustomerEntitlementsComponent', () => {
       for(let j = 0; j < 4; j++) {
         let cell = component.getEntitlementCell(i, j);
         let ent = cell.getCurrentEntitlement();
-        expect(ent).toBe(cell.getOriginalEntitlement());
+        expect(Entitlement.areEqual(ent, cell.getOriginalEntitlement())).toBe(true);
         
         if(i === 1) {
           if(j === 0 || j === 1) {
@@ -239,7 +239,7 @@ describe('CustomerEntitlementsComponent', () => {
     component.endTime = DateUtil.dateToInputString(date);
     component.addTrials();
     component.subscribe(0, 0);
-    component.addTrialPrompt(2, 3); // should NOT be in getEntitlements()
+    component.addTrialPrompt(2, 3); // should not be in getEntitlements()
 
     let sorter = (a: Entitlement, b: Entitlement) => {
       if(a.getId() === null && b.getId() === null) 
@@ -283,15 +283,34 @@ describe('CustomerEntitlementsComponent', () => {
   it('should not record a change-undo combination as change', () => {
     // manual change
     component.subscribe(0, 0); // Subscribe, then unsubscribe
+    component.undoChange(component.changes.map(c => c.getProductIndex()).indexOf(0));
     component.addTrialPrompt(2, 0);
     component.addTrials();
-    component.unsubscribe(0, 0);
     expect(component.changes.length).toBe(1);
 
     // Undo button
     component.subscribe(2, 3); // Subscribe, then undo
     component.undoChange(component.changes.map(c => c.getLocationIndex()).indexOf(3));
+    expect(component.expirationDate(2, 3)).toBe(component.expirationDate(2, 2));
+
+    component.unsubscribe(1, 0); // Unsubscribe, then undo
+    component.undoChange(component.changes.map(c => c.getProductIndex()).indexOf(1));
+    expect(component.isSubscribed(1, 0)).toBeTruthy();
+
     expect(component.changes.length).toBe(1);
+  })
+
+  it('should record a change-recreate-change combination', () => {
+    component.unsubscribe(1, 0);
+    expect(component.changes.length).toBe(1);
+    
+    component.subscribe(1, 0);
+    expect(component.changes.length).toBe(0);
+
+    component.setNumLogins(1, 0, 999);
+    expect(component.changes.length).toBe(1);
+    expect(component.changes[0].oldNumLogins()).toBe(Entitlement.DEFAULT_NUM_LOGINS);
+    expect(component.changes[0].newNumLogins()).toBe(999);
   })
 });
 

@@ -127,6 +127,11 @@ class LocationResourceSpec extends Specification {
         locationResource.deleteLocation(1)
 
         then:
+        "findById() can be called"
+        (0..1) * locationResource.locationRepository.findById(1) >>
+                Optional.of(new Location(1 ,"CHI1", "Chicago 1"))
+
+        and:
         "deleteById(1) should be called"
         1 * locationResource.locationRepository.deleteById(1)
     }

@@ -3,6 +3,8 @@ package com.mni.api.product;
 import com.mni.model.product.Product;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class ProductDto {
 
@@ -32,6 +34,11 @@ public class ProductDto {
         product.setName(productDto.getName());
         return product;
     }
+    public static Collection<ProductDto> translateProductsToProductDtos(Collection<Product> products) {
+        return products.stream()
+                .map(ProductDto::translateProductToProductDto)
+                .collect(Collectors.toSet());
+    }
 
     public Long getId() { return id; }
 
@@ -43,5 +50,13 @@ public class ProductDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

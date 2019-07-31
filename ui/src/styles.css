@@ -30,9 +30,13 @@ thead th { background-color: lightsteelblue;}
 .row-options {
     cursor:default;
 }
-table.checklist:not(.no-hover-highlight) :not(thead) > tr:hover {
+table.checklist:not(.no-hover-highlight) :not(thead) > tr:not(.disabled):hover {
     background-color: lightskyblue;
     cursor: pointer;
+}
+table.checklist .disabled {
+    cursor: default;
+    pointer-events: none;
 }
 table.checklist td {
     text-align: left;
@@ -103,6 +107,9 @@ input[type=datetime-local]::-webkit-inner-spin-button {
 }
 button.new-entry {
     font-size: 115%;
+}
+.gray-text {
+    color: #707070;
 }
 
 .link {
