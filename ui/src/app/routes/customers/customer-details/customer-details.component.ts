@@ -4,6 +4,7 @@ import { Customer } from 'src/app/model/customer';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CustomerEntitlementsComponent } from '../customer-entitlements/customer-entitlements.component';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-customer-details',
@@ -17,10 +18,22 @@ export class CustomerDetailsComponent implements OnInit {
   customer: Customer;
   toDelete: boolean = false;
   error: HttpErrorResponse;
+  admin: boolean = AuthService.ADMIN_DEFAULT;
 
-  constructor(private customerService: CustomerService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private customerService: CustomerService, 
+    private route: ActivatedRoute, private router: Router,
+    private authService: AuthService) { }
 
   ngOnInit() {
+    this.authService.getRoles(
+      roles => {
+        this.admin = roles.includes(AuthService.ADMIN);
+      }
+    );
+    this.getCustomer();
+  }
+
+  getCustomer() {
     this.route.paramMap.subscribe(
       params => {
         this.customerService.getCustomerWithEntitlements(params.get('id'),

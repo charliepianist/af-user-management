@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { MulticastGroup } from 'src/app/model/multicast-group';
 import { MulticastGroupService } from 'src/app/services/multicast-group.service';
 import { Product } from 'src/app/model/product';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-multicast-group-details',
@@ -16,10 +17,20 @@ export class MulticastGroupDetailsComponent implements OnInit {
   products: Product[];
   toDelete: boolean = false;
   error: HttpErrorResponse;
+  admin: boolean = AuthService.ADMIN_DEFAULT
 
-  constructor(private multicastGroupService: MulticastGroupService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private multicastGroupService: MulticastGroupService, 
+    private route: ActivatedRoute, private router: Router,
+    private authService: AuthService) { }
 
   ngOnInit() {
+    this.authService.getRoles(roles => {
+      this.admin = roles.includes(AuthService.ADMIN);
+    })
+    this.getMulticastGroup();
+  }
+
+  getMulticastGroup() {
     this.route.paramMap.subscribe(
       params => {
         this.multicastGroupService.getMulticastGroupWithProducts(params.get('id'),

@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Page } from 'src/app/model/page';
 import { MulticastGroupService } from 'src/app/services/multicast-group.service';
 import { MulticastGroup } from 'src/app/model/multicast-group';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-multicast-group-list',
@@ -11,7 +12,9 @@ import { MulticastGroup } from 'src/app/model/multicast-group';
 })
 export class MulticastGroupListComponent implements OnInit {
 
-  constructor(private multicastGroupService:MulticastGroupService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private multicastGroupService:MulticastGroupService, 
+    private router: Router, private route: ActivatedRoute,
+    private authService: AuthService) { }
 
   static readonly DEFAULT_SORT_FIELD = 'name';
   static readonly MAX_PAGE_SIZE = 100;
@@ -27,8 +30,16 @@ export class MulticastGroupListComponent implements OnInit {
     sortBy: string,
     desc: boolean,
   }
+  admin: boolean = AuthService.ADMIN_DEFAULT;
 
   ngOnInit() {
+    this.authService.getRoles(roles => {
+      this.admin = roles.includes(AuthService.ADMIN);
+    })
+    this.processQueryParams();
+  }
+
+  processQueryParams() {
     // Get query params/set to defaults if necessary
     this.route.queryParamMap.subscribe(queryParams => {
       this.queryParams = {
@@ -50,8 +61,12 @@ export class MulticastGroupListComponent implements OnInit {
 
       if(!this.isMulticastGroupField(this.queryParams.sortBy)) 
         this.queryParams.sortBy = MulticastGroupListComponent.DEFAULT_SORT_FIELD;
+    
+      this.listMulticastGroups();
     });
+  }
 
+  listMulticastGroups() {
     this.multicastGroupService.listMulticastGroups(
       p => { 
         // success, returned Page<MulticastGroup> object

@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --prod --source-map=true/; rm -rf ../src/main/resources/static/*.js; rm -rf ../src/main/resources/static/*.css; rm -rf ../src/main/resources/static/*.map; cp -f dist/ui/* ../src/main/resources/static",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

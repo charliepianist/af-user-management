@@ -36,7 +36,7 @@ class MulticastConfigResourceSpec extends Specification {
         products = [
                 new Product(10, "Product 1", [groups[0], groups[2]]),
                 new Product(20, "Product 2", [groups[1], groups[3]]),
-                new Product(30, "Product 3", [groups[2]])
+                new Product(30, "Product 3", [groups[2], groups[4]])
         ]
         locations = [
                 new Location(100, "CHI1", "Chicago 1"),

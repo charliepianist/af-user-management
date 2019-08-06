@@ -33,12 +33,12 @@ const appRoutes: Routes = [
   { path: 'products/new', component: ProductFormComponent },
   { path: 'products/:id', component: ProductDetailsComponent },
   { path: 'products/:id/update', component: ProductFormComponent },
-  
+
   { path: 'locations', component: LocationListComponent },
   { path: 'locations/new', component: LocationFormComponent },
   { path: 'locations/:id', component: LocationDetailsComponent },
   { path: 'locations/:id/update', component: LocationFormComponent },
-  
+
   { path: 'multicast-groups', component: MulticastGroupListComponent },
   { path: 'multicast-groups/new', component: MulticastGroupFormComponent },
   { path: 'multicast-groups/:id', component: MulticastGroupDetailsComponent },
@@ -74,7 +74,7 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     FormsModule,
-    RouterModule.forRoot(appRoutes),
+    RouterModule.forRoot(appRoutes,{useHash: true}),
     HttpClientModule
   ],
   providers: [],

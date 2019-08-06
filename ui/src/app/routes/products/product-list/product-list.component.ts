@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Page } from 'src/app/model/page';
 import { ProductService } from 'src/app/services/product.service';
 import { Product } from 'src/app/model/product';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-product-list',
@@ -11,7 +12,9 @@ import { Product } from 'src/app/model/product';
 })
 export class ProductListComponent implements OnInit {
 
-  constructor(private productService:ProductService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private productService:ProductService, 
+    private router: Router, private route: ActivatedRoute,
+    private authService: AuthService) { }
 
   static readonly DEFAULT_SORT_FIELD = 'name';
   static readonly MAX_PAGE_SIZE = 100;
@@ -27,8 +30,18 @@ export class ProductListComponent implements OnInit {
     sortBy: string,
     desc: boolean,
   }
+  admin: boolean = AuthService.ADMIN_DEFAULT;
 
   ngOnInit() {
+    this.authService.getRoles(
+      roles => {
+        this.admin = roles.includes(AuthService.ADMIN);
+      }
+    )
+    this.processQueryParams();
+  }
+
+  processQueryParams() {
     // Get query params/set to defaults if necessary
     this.route.queryParamMap.subscribe(queryParams => {
       this.queryParams = {
@@ -50,8 +63,12 @@ export class ProductListComponent implements OnInit {
 
       if(!this.isProductField(this.queryParams.sortBy)) 
         this.queryParams.sortBy = ProductListComponent.DEFAULT_SORT_FIELD;
+      
+      this.listProducts();
     });
+  }
 
+  listProducts() {
     this.productService.listProducts(
       p => { 
         // success, returned Page<Product> object
