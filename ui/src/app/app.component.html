@@ -1,5 +1,8 @@
 <div style="text-align:center">
-  <h1>
+  <br>
+  <button class="centered new-entry" 
+    onClick="javascript:location.href = '/logout';">Logout</button>
+  <h1 style="margin-top:0.25em;">
     AlphaFlash User Management
   </h1>
   <h3 style="margin-top: 0.25em;">
@@ -10,7 +13,7 @@
     <span class="nice-link" [routerLink]="['/locations']">Locations</span>
     |
     <span class="nice-link" [routerLink]="['/multicast-groups']">Multicast Groups</span>
+    <br>
   </h3>
 </div>
 <router-outlet></router-outlet>
-

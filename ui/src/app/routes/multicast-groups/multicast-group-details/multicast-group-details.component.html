@@ -64,7 +64,7 @@
             </ng-container>
       </table>
       <br>
-      <div align="center">
+      <div align="center" *ngIf="admin">
           <button [routerLink]="['update']">Update</button>
           <app-delete-confirmation
               [button]="true"

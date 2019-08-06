@@ -40,11 +40,13 @@
           <!-- Details, Update, Delete-->
           <td (click)="$event.stopPropagation()" class="row-options"> 
             <span [routerLink]="[location.getId()]" class="link row-option">Details</span>
-            <span [routerLink]="[location.getId(), 'update']" class="link row-option">Update</span>
-            <app-delete-confirmation
-              [button]="false"
-              (onDelete)="deleteLocation(location.getId())">
-            </app-delete-confirmation>
+            <ng-container *ngIf="admin">  
+              <span [routerLink]="[location.getId(), 'update']" class="link row-option">Update</span>
+              <app-delete-confirmation
+                [button]="false"
+                (onDelete)="deleteLocation(location.getId())">
+              </app-delete-confirmation>
+            </ng-container>
           </td>
         </tr>
       </ng-container>
@@ -76,8 +78,10 @@
   </table>
   <br>
   <div class="full-width-centered">
-    <button [routerLink]="['new']" class="new-entry">Add New Location</button>
-    <br><br>
+    <ng-container *ngIf="admin">
+      <button [routerLink]="['new']" class="new-entry">Add New Location</button>
+      <br><br>
+    </ng-container>
     <span *ngIf="locationPage && locations.length > 0" style="font-size: 1.1em;">
       <app-paginator #paginator
         [page]="locationPage"

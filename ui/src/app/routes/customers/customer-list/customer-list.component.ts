@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Page } from 'src/app/model/page';
 import { Customer } from 'src/app/model/customer';
 import { CustomerService } from 'src/app/services/customer.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-customer-list',
@@ -11,7 +12,9 @@ import { CustomerService } from 'src/app/services/customer.service';
 })
 export class CustomerListComponent implements OnInit {
 
-  constructor(private customerService:CustomerService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private customerService:CustomerService, 
+    private router: Router, private route: ActivatedRoute,
+    private authService: AuthService) { }
 
   static readonly DEFAULT_SORT_FIELD = 'name';
   static readonly MAX_PAGE_SIZE = 100;
@@ -28,8 +31,18 @@ export class CustomerListComponent implements OnInit {
     desc: boolean,
     disabled: boolean,
   }
+  admin: boolean = AuthService.ADMIN_DEFAULT;
 
   ngOnInit() {
+    this.authService.getRoles(
+      roles => {
+        this.admin = roles.includes(AuthService.ADMIN);
+      }
+    )
+    this.processQueryParams();
+  }
+
+  processQueryParams() {
     // Get query params/set to defaults if necessary
     this.route.queryParamMap.subscribe(queryParams => {
       this.queryParams = {
@@ -52,8 +65,12 @@ export class CustomerListComponent implements OnInit {
 
       if(!this.isCustomerField(this.queryParams.sortBy)) 
         this.queryParams.sortBy = CustomerListComponent.DEFAULT_SORT_FIELD;
+    
+      this.listCustomers();
     });
+  }
 
+  listCustomers() {
     this.customerService.listCustomers(
       p => { 
         // success, returned Page<Customer> object

@@ -65,11 +65,13 @@
           <!-- Details, Update, Delete-->
           <td (click)="$event.stopPropagation()" class="row-options"> 
             <span [routerLink]="[multicastGroup.getId()]" class="link row-option">Details</span>
-            <span [routerLink]="[multicastGroup.getId(), 'update']" class="link row-option">Update</span>
-            <app-delete-confirmation
-              [button]="false"
-              (onDelete)="deleteMulticastGroup(multicastGroup.getId())">
-            </app-delete-confirmation>
+            <ng-container *ngIf="admin">
+              <span [routerLink]="[multicastGroup.getId(), 'update']" class="link row-option">Update</span>
+              <app-delete-confirmation
+                [button]="false"
+                (onDelete)="deleteMulticastGroup(multicastGroup.getId())">
+              </app-delete-confirmation>
+            </ng-container>
           </td>
         </tr>
       </ng-container>
@@ -101,8 +103,10 @@
   </table>
   <br>
   <div class="full-width-centered">
-    <button [routerLink]="['new']" class="new-entry">Add New Multicast Group</button>
-    <br><br>
+    <ng-container *ngIf="admin">
+      <button [routerLink]="['new']" class="new-entry">Add New Multicast Group</button>
+      <br><br>
+    </ng-container>
     <span *ngIf="multicastGroupPage && multicastGroups.length > 0" style="font-size: 1.1em;">
       <app-paginator #paginator
         [page]="multicastGroupPage"

@@ -28,11 +28,13 @@
             <!-- Details, Update, Delete-->
             <td (click)="$event.stopPropagation()" class="row-options"> 
               <span [routerLink]="[product.getId()]" class="link row-option">Details</span>
-              <span [routerLink]="[product.getId(), 'update']" class="link row-option">Update</span>
-              <app-delete-confirmation
-                [button]="false"
-                (onDelete)="deleteProduct(product.getId())">
-              </app-delete-confirmation>
+              <ng-container *ngIf="admin">
+                <span [routerLink]="[product.getId(), 'update']" class="link row-option">Update</span>
+                <app-delete-confirmation
+                  [button]="false"
+                  (onDelete)="deleteProduct(product.getId())">
+                </app-delete-confirmation>
+              </ng-container>
             </td>
           </tr>
         </ng-container>
@@ -64,8 +66,10 @@
     </table>
     <br>
     <div class="full-width-centered">
-      <button [routerLink]="['new']" class="new-entry">Add New Product</button>
-      <br><br>
+      <ng-container *ngIf="admin">
+        <button [routerLink]="['new']" class="new-entry">Add New Product</button>
+        <br><br>
+      </ng-container>
       <span *ngIf="productPage && products.length > 0" style="font-size: 1.1em;">
         <app-paginator #paginator
           [page]="productPage"

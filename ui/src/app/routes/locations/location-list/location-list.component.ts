@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Page } from 'src/app/model/page';
 import { LocationService } from 'src/app/services/location.service';
 import { Location } from 'src/app/model/location';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-location-list',
@@ -11,7 +12,9 @@ import { Location } from 'src/app/model/location';
 })
 export class LocationListComponent implements OnInit {
 
-  constructor(private locationService:LocationService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private locationService:LocationService, 
+    private router: Router, private route: ActivatedRoute,
+    private authService: AuthService) { }
 
   static readonly DEFAULT_SORT_FIELD = 'name';
   static readonly MAX_PAGE_SIZE = 100;
@@ -27,8 +30,16 @@ export class LocationListComponent implements OnInit {
     sortBy: string,
     desc: boolean,
   }
+  admin: boolean = AuthService.ADMIN_DEFAULT;
 
   ngOnInit() {
+    this.authService.getRoles(roles => {
+      this.admin = roles.includes(AuthService.ADMIN);
+    })
+    this.processQueryParams();
+  }
+
+  processQueryParams() {
     // Get query params/set to defaults if necessary
     this.route.queryParamMap.subscribe(queryParams => {
       this.queryParams = {
@@ -50,8 +61,12 @@ export class LocationListComponent implements OnInit {
 
       if(!this.isLocationField(this.queryParams.sortBy)) 
         this.queryParams.sortBy = LocationListComponent.DEFAULT_SORT_FIELD;
-    });
 
+      this.listLocations();
+    });
+  }
+
+  listLocations() {
     this.locationService.listLocations(
       p => { 
         // success, returned Page<Location> object
