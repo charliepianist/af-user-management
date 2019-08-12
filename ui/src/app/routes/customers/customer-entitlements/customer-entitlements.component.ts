@@ -43,27 +43,29 @@ export class CustomerEntitlementsComponent implements OnInit {
 
   readonly legendStyles = [
     {
-      'meaning': 'N/A',
+      'meaning': 'Unsubscribed',
       'styles': {
         'background-color': 'inherit'
       }
     },
     {
+      'meaning': `Unsubscribed`,
+      'subtitle': 'updated',
+      'styles': {
+        'background': `repeating-linear-gradient(
+          45deg, 
+          rgba(255, 0, 0, 0.226),
+          rgba(255, 0, 0, 0.226) 5px,
+          rgba(194, 0, 0, 0.322) 5px,
+          rgba(194, 0, 0, 0.322) 10px
+      )`
+      },
+      'updateOnly': true
+    },
+    {
       'meaning': 'Subscribed',
       'styles': {
         'background-color': 'forestgreen'
-      }
-    },
-    {
-      'meaning': 'Unsubscribe',
-      'styles': {
-        'background-color': 'rgba(255, 0, 0, 0.2)'
-      }
-    },
-    {
-      'meaning': 'Trial',
-      'styles': {
-        'background-color': 'cornflowerblue'
       }
     },
     {
@@ -81,17 +83,25 @@ export class CustomerEntitlementsComponent implements OnInit {
       'updateOnly': true
     },
     {
-      'meaning': `Unsubscribed`,
+      'meaning': 'Trial',
+      'styles': {
+        'background-color': 'cornflowerblue'
+      }
+    },
+    {
+      'meaning': `Trial`,
       'subtitle': 'updated',
       'styles': {
         'background': `repeating-linear-gradient(
-          45deg, 
-          rgba(255, 0, 0, 0.226),
-          rgba(255, 0, 0, 0.226) 5px,
-          rgba(194, 0, 0, 0.322) 5px,
-          rgba(194, 0, 0, 0.322) 10px
+          45deg,
+          rgba(0, 127, 177, 0.877),
+          rgba(0, 127, 177, 0.877) 5px,
+          rgba(2, 143, 224, 0.877) 5px,
+          rgba(2, 143, 224, 0.877) 10px
       )`
       },
+      'styleText': `Trial
+      4/5/22`,
       'updateOnly': true
     },
     {
@@ -120,22 +130,6 @@ export class CustomerEntitlementsComponent implements OnInit {
           rgba(2, 143, 224, 0.877) 10px
       )`
       },
-      'updateOnly': true
-    },
-    {
-      'meaning': `Trial`,
-      'subtitle': 'updated',
-      'styles': {
-        'background': `repeating-linear-gradient(
-          45deg,
-          rgba(0, 127, 177, 0.877),
-          rgba(0, 127, 177, 0.877) 5px,
-          rgba(2, 143, 224, 0.877) 5px,
-          rgba(2, 143, 224, 0.877) 10px
-      )`
-      },
-      'styleText': `Trial
-      4/5/22`,
       'updateOnly': true
     },
   ];
