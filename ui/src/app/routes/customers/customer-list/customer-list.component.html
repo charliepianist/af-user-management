@@ -19,7 +19,8 @@
       </tr>
       <tr>
         <th style="width:26%" (click)="sort('name')">
-          Name
+          <!-- Name -->
+          {{ text.name }}
           <span class="up-arrow" *ngIf="isSortAsc('name')">
             &#10148;
           </span>
@@ -28,7 +29,8 @@
           </span>
         </th>
         <th style="width:15%" (click)="sort('userId')">
-          User ID
+          <!-- User ID -->
+          {{ text.userId }}
           <span class="up-arrow" *ngIf="isSortAsc('userId')">
             &#10148;
           </span>
@@ -36,8 +38,11 @@
             &#10148;
           </span>
         </th>
-        <th style="width:18%" (click)="sort('clientType')">
-          Client Type
+        <th style="width:18%" (click)="sort('clientType')"> 
+          <!-- Client Type -->
+          <app-tooltip 
+            [text]="text.clientType" 
+            [tooltip]="tooltips.clientType"></app-tooltip>
           <span class="up-arrow" *ngIf="isSortAsc('clientType')">
             &#10148;
           </span>
@@ -46,7 +51,10 @@
           </span>
         </th>
         <th style="width:9%" (click)="sort('priority')">
-          Priority
+          <!-- Priority -->
+          <app-tooltip 
+            [text]="text.priority" 
+            [tooltip]="tooltips.priority"></app-tooltip>
           <span class="up-arrow" *ngIf="isSortAsc('priority')">
             &#10148;
           </span>

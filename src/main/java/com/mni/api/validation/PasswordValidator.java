@@ -1,4 +1,4 @@
-package com.mni.api;
+package com.mni.api.validation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,28 +30,28 @@ public class PasswordValidator implements ConstraintValidator<Password, String> 
         if(password == null) return false;
         if(lowercase) {
             if(!password.matches(".*[a-z].*")) {
-                logger.warn("Customer creation with password " + password + " (no lowercase letter) attempted " +
+                logger.warn("Customer creation with password \"" + password + "\" (no lowercase letter) attempted " +
                         "(should not be possible using UI).");
                 return false;
             }
         }
         if(uppercase) {
             if(!password.matches(".*[A-Z].*")) {
-                logger.warn("Customer creation with password " + password + " (no uppercase letter) attempted " +
+                logger.warn("Customer creation with password \"" + password + "\" (no uppercase letter) attempted " +
                         "(should not be possible using UI).");
                 return false;
             }
         }
         if(number) {
             if(!password.matches(".*[0-9].*")) {
-                logger.warn("Customer creation with password " + password + " (no number) attempted " +
+                logger.warn("Customer creation with password \"" + password + "\" (no number) attempted " +
                         "(should not be possible using UI).");
                 return false;
             }
         }
         if(special) {
             if(!password.matches(".*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?].*")) {
-                logger.warn("Customer creation with password " + password + " (no special character) attempted " +
+                logger.warn("Customer creation with password \"" + password + "\" (no special character) attempted " +
                         "(should not be possible using UI).");
                 return false;
             }

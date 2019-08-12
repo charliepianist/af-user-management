@@ -1,4 +1,4 @@
-package com.mni.api;
+package com.mni.api.validation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +23,8 @@ public class ClientTypeValidator implements ConstraintValidator<ClientType, Char
         if(charValue == 'c' || charValue == 'r' || charValue == 'a')
             return true;
         else {
-            logger.warn("Customer creation was attempted with clientType other than 'c', 'r', and 'a': " +
-                    charValue + " (UI should not permit this).");
+            logger.warn("Customer creation was attempted with clientType other than 'c', 'r', and 'a': '" +
+                    charValue + "' (UI should not permit this).");
             return false;
         }
     }

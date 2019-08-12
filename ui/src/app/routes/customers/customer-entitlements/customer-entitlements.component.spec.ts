@@ -6,6 +6,7 @@ import { Product } from 'src/app/model/product';
 import { Location } from 'src/app/model/location';
 import { Entitlement } from 'src/app/model/entitlement';
 import { DateUtil } from 'src/app/helper/date-util';
+import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 
 
 describe('CustomerEntitlementsComponent', () => {
@@ -46,7 +47,10 @@ describe('CustomerEntitlementsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CustomerEntitlementsComponent ],
+      declarations: [ 
+        CustomerEntitlementsComponent,
+        TooltipComponent 
+      ],
       imports: [ TestingModule ]
     })
     .compileComponents();
@@ -323,7 +327,10 @@ describe('CustomerEntitlementsComponent with one missing array', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CustomerEntitlementsComponent ],
+      declarations: [ 
+        CustomerEntitlementsComponent,
+        TooltipComponent 
+      ],
       imports: [ TestingModule ]
     })
     .compileComponents();

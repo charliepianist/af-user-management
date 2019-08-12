@@ -21,6 +21,7 @@ import { MulticastGroupListComponent } from './routes/multicast-groups/multicast
 import { MulticastGroupDetailsComponent } from './routes/multicast-groups/multicast-group-details/multicast-group-details.component';
 import { MulticastGroupFormComponent } from './routes/multicast-groups/multicast-group-form/multicast-group-form.component';
 import { ProductMulticastGroupsComponent } from './routes/products/product-multicast-groups/product-multicast-groups.component';
+import { TooltipComponent } from './components/tooltip/tooltip.component';
 
 
 const appRoutes: Routes = [
@@ -70,6 +71,7 @@ const appRoutes: Routes = [
     MulticastGroupDetailsComponent,
     MulticastGroupFormComponent,
     ProductMulticastGroupsComponent,
+    TooltipComponent,
   ],
   imports: [
     BrowserModule,

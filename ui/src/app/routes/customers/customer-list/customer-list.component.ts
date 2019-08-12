@@ -4,6 +4,7 @@ import { Page } from 'src/app/model/page';
 import { Customer } from 'src/app/model/customer';
 import { CustomerService } from 'src/app/services/customer.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { Enum } from 'src/app/helper/enum';
 
 @Component({
   selector: 'app-customer-list',
@@ -32,6 +33,9 @@ export class CustomerListComponent implements OnInit {
     disabled: boolean,
   }
   admin: boolean = AuthService.ADMIN_DEFAULT;
+
+  tooltips = Enum.TOOLTIP.CUSTOMER;
+  text = Enum.DISPLAY_TEXT.CUSTOMER;
 
   ngOnInit() {
     this.authService.getRoles(

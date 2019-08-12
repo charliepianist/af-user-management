@@ -12,6 +12,7 @@ import { Observable } from 'rxjs';
 import { HttpRequest } from '@angular/common/http';
 import { PaginatorComponent } from 'src/app/components/paginator/paginator.component';
 import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
+import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 
 describe('CustomerListComponent without Query parameters', () => {
   let component: CustomerListComponent;
@@ -25,7 +26,8 @@ describe('CustomerListComponent without Query parameters', () => {
       declarations: [ 
         CustomerListComponent, 
         PaginatorComponent,
-        DeleteConfirmationComponent 
+        DeleteConfirmationComponent,
+        TooltipComponent
       ],
       imports: [
         TestingModule,
@@ -124,7 +126,8 @@ describe('CustomerListComponent with invalid query parameters', () => {
       declarations: [ 
         CustomerListComponent, 
         PaginatorComponent,
-        DeleteConfirmationComponent
+        DeleteConfirmationComponent,
+        TooltipComponent
       ],
       imports: [
         TestingModule,
@@ -184,7 +187,8 @@ describe('Customer ListComponent with valid query parameters', () => {
       declarations: [ 
         CustomerListComponent, 
         PaginatorComponent,
-        DeleteConfirmationComponent
+        DeleteConfirmationComponent,
+        TooltipComponent
       ],
       imports: [
         TestingModule,

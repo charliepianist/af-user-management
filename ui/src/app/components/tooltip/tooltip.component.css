@@ -1,0 +1,6 @@
+.tooltip:hover {
+    cursor: pointer;
+}
+span:not(div):not(div):not(div):not(div):not(div):not(div):not(div):hover {
+    cursor: pointer;
+}

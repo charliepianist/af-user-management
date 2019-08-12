@@ -1,0 +1,11 @@
+<span *ngIf="text && tooltip"
+      [title]="tooltip"
+      [style.color]="color"
+      [style.size.%]="size">
+  <span style="text-decoration: underline;
+                margin-right: 0.2em;">{{text}}</span>
+  <i *ngIf="icon"
+    class="fas fa-question-circle" 
+    style="font-size: 90%;"
+    [style.color]="questionColor"></i>
+</span>

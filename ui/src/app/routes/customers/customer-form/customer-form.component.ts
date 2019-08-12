@@ -4,6 +4,7 @@ import { CustomerService } from 'src/app/services/customer.service';
 import { Customer } from 'src/app/model/customer';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CustomerEntitlementsComponent } from '../customer-entitlements/customer-entitlements.component';
+import { Enum } from 'src/app/helper/enum';
 
 @Component({
   selector: 'app-customer-form',
@@ -63,6 +64,9 @@ export class CustomerFormComponent implements OnInit {
       string: 'Administrator'
     }
   ]
+
+  tooltips = Enum.TOOLTIP.CUSTOMER;
+  text = Enum.DISPLAY_TEXT.CUSTOMER;
 
   constructor(private router: Router, private route: ActivatedRoute, private customerService: CustomerService) {}
 

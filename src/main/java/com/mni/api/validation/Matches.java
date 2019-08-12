@@ -1,4 +1,4 @@
-package com.mni.api;
+package com.mni.api.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -12,9 +12,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Retention(RUNTIME)
 @Target({METHOD, FIELD, ANNOTATION_TYPE})
-@Constraint(validatedBy = NoSpacesValidator.class)
-public @interface NoSpaces {
-    String message() default "Code cannot have spaces.";
+@Constraint(validatedBy = MatchesValidator.class)
+public @interface Matches {
+    String message() default "Invalid Password";
+    String value();
     Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };
 }

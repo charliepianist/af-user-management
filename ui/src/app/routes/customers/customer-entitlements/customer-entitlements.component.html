@@ -36,7 +36,9 @@
       <thead>
         <tr>
           <th colspan="1000">
-            Entitlements 
+              <app-tooltip
+                [text]="text.entitlements"
+                [tooltip]="tooltips.entitlements"></app-tooltip>
             (<span (click)="showNumLogins=true" class="link">Show number of logins allowed</span>)
           </th>
         </tr>
@@ -95,7 +97,9 @@
           <thead>
             <tr>
               <th colspan="1000">
-                Entitlements 
+                <app-tooltip
+                  [text]="text.entitlements"
+                  [tooltip]="tooltips.entitlements"></app-tooltip>
                 (<span (click)="showNumLogins=false" class="link">Hide number of logins allowed</span>)
               </th>
             </tr>
@@ -113,7 +117,12 @@
                 <span *ngIf="getEntitlement(p, l); else filler" 
                   class="cell-text">
                   <!-- NumLogins input -->
-                  Logins:<br><input type="number" style="width:3em; text-align:center;"
+                  &nbsp;&nbsp;
+                  <app-tooltip
+                    [text]="text.numLogins"
+                    [tooltip]="tooltips.numLogins">
+                  </app-tooltip>
+                  <br><input type="number" style="width:3em; text-align:center;"
                   [ngModel]="getEntitlement(p, l).getNumLogins()"
                   (ngModelChange)="setNumLogins(p, l, $event)">
                 </span>
@@ -141,7 +150,9 @@
             <thead>
               <tr>
                 <th colspan="1000">
-                  Entitlements
+                    <app-tooltip
+                      [text]="text.entitlements"
+                      [tooltip]="tooltips.entitlements"></app-tooltip>
                   (<span (click)="showNumLogins=true" class="link">Show number of logins allowed</span>)
                 </th>
               </tr>
@@ -180,7 +191,9 @@
             <thead>
               <tr>
                 <th colspan="1000">
-                  Entitlements
+                    <app-tooltip
+                      [text]="text.entitlements"
+                      [tooltip]="tooltips.entitlements"></app-tooltip>
                   (<span (click)="showNumLogins=false" class="link">Hide number of logins allowed</span>)
                 </th>
               </tr>
@@ -197,7 +210,13 @@
                   [ngClass]="cellClasses(p, l)">
                   <span *ngIf="viewNumLogins(p, l); else filler" 
                     class="cell-text">
-                    Logins:<br>{{ viewNumLogins(p, l) }}
+                    <!-- NumLogins display -->
+                    &nbsp;&nbsp;
+                    <app-tooltip
+                      [text]="text.numLogins"
+                      [tooltip]="tooltips.numLogins">
+                    </app-tooltip>
+                    <br>{{ viewNumLogins(p, l) }}
                   </span>
                   <ng-template #filler>
                     <span style="visibility: hidden;" class="cell-text">
@@ -224,7 +243,10 @@
           <thead>
             <tr>
               <th colspan="1000">
-                Trial Lengths
+                <app-tooltip
+                  [text]="text.trialLengths"
+                  [tooltip]="tooltips.trialLengths"
+                  ></app-tooltip>
               </th>
             </tr>
           </thead>
@@ -267,7 +289,11 @@
               <td>Location</td>
               <td>Old</td>
               <td>New</td>
-              <td>Logins</td>
+              <td>
+                  <app-tooltip
+                    [text]="text.numLogins"
+                    [tooltip]="tooltips.numLogins"></app-tooltip>
+              </td>
             </tr>
           </thead>
           <tr *ngFor="let change of changes; let i = index" 

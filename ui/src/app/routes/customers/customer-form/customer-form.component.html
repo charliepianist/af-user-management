@@ -26,14 +26,16 @@
       <form autocomplete="off">
         <div id="labels">
           <label for="name" class="long-field">
-            Name (up to 100 characters)
+           {{ text.name }} (up to 100 characters)
           </label>
           <label for="userId" class="short-field">
-            User ID (up to 20 characters)
+            {{ text.userId }} (up to 20 characters)
           </label>
           <label for="password" class="long-field">
-            Password (15 to 100 characters, must contain lowercase letter, 
-            uppercase letter, number, and special character)
+              <app-tooltip
+                [text]="text.password + ' (15 to 100 characters)'"
+                [tooltip]="tooltips.password">
+              </app-tooltip>
           </label>
         </div>
         <div id="inputs">
@@ -78,8 +80,11 @@
         </div>
         <div id="additional-inputs">
           <div class="long-field"> <!-- Client Type and Disabled -->
-            <label for="clientType">
-              Client Type
+            <label for="clientType"> <!-- Client Type -->
+              <app-tooltip
+                [text]="text.clientType"
+                [tooltip]="tooltips.clientType">
+              </app-tooltip>
             </label>
             <select class="slight-margin-top form-control" 
             [(ngModel)]="clientType" name="clientType" id="clientType"
@@ -93,14 +98,22 @@
                     [(ngModel)]="disabled" 
                     [disabled]="updateEntitlements">
               <label for="disabled" class="text-danger">
-                  &nbsp;Disabled
+                  &nbsp;
+                  <app-tooltip
+                    [text]="'Disabled'"
+                    [tooltip]="tooltips.disabled"
+                    [color]="'inherit'">
+                  </app-tooltip>
               </label>
             </div>
           </div>
         
           <div class="short-field"> <!-- Priority -->
             <label for="priority">
-              Priority (Highest: 1)
+              <app-tooltip
+                [text]="text.priority"
+                [tooltip]="tooltips.priority">
+              </app-tooltip>
             </label>
             <input type="text" [(ngModel)]="priority" name="priority" id="priority"
                     #priorityInput="ngModel" class="form-control" 

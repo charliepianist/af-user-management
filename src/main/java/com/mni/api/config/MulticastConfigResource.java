@@ -1,11 +1,13 @@
 package com.mni.api.config;
 
+import com.mni.api.SpringFoxConfig;
 import com.mni.model.customer.Customer;
 import com.mni.model.entitlement.Entitlement;
 import com.mni.model.entitlement.EntitlementRepository;
 import com.mni.model.location.LocationRepository;
 import com.mni.model.multicastgroup.MulticastGroup;
 import com.mni.model.multicastgroup.MulticastGroupRepository;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/config")
+@Api("REST API Endpoint for multicast configuration files (multicastconfig.txt and userconfig.txt)")
 public class MulticastConfigResource {
 
     @Autowired
@@ -40,7 +43,13 @@ public class MulticastConfigResource {
     }
 
     @GetMapping("{code}/multicastconfig.txt")
-    public String getMulticastConfig(@PathVariable("code") String code) {
+    @ApiOperation("Gets the multicast code/ip:port mapping configuration file for a given location, sorted by multicast group code.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK",
+                    response = SpringFoxConfig.ExampleMulticastConfig.class)
+    })
+    public String getMulticastConfig(@PathVariable("code") @ApiParam("Code of the location the file is generated for.")
+                                                 String code) {
         logger.debug("GET Multicast Config with code " + code + " received");
         validateLocationCode(code);
         // Get Entitlements with given Location, map to Products (all products at
@@ -86,7 +95,13 @@ public class MulticastConfigResource {
     }
 
     @GetMapping("{code}/userconfig.txt")
-    public String getUserConfig(@PathVariable("code") String code) {
+    @ApiOperation("Gets the user configuration file for a given location, sorted by customer ID.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "OK",
+                    response = SpringFoxConfig.ExampleUserConfig.class)
+    })
+    public String getUserConfig(@PathVariable("code") @ApiParam("Code of the location the file is generated for.")
+                                            String code) {
         logger.debug("GET User Config with code " + code + " received");
         validateLocationCode(code);
         List<Entitlement> locationEntitlements =
@@ -132,7 +147,8 @@ public class MulticastConfigResource {
             groups.addAll(e.getProduct().getMulticastGroups());
             if(e.getNumLogins() > numLogins) numLogins = e.getNumLogins();
         }
-        addCustomerLine(builder, currentCust, numLogins, groups);
+        if(currentCust != null)
+            addCustomerLine(builder, currentCust, numLogins, groups);
 
         return builder.toString();
     }
