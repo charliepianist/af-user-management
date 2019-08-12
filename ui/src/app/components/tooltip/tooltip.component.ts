@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { isNullOrUndefined } from 'util';
+import { DOMManip } from 'src/app/helper/dom-manip';
 
 @Component({
   selector: 'app-tooltip',
@@ -7,6 +8,8 @@ import { isNullOrUndefined } from 'util';
   styleUrls: ['./tooltip.component.css']
 })
 export class TooltipComponent implements OnInit {
+
+  static readonly MAX_WIDTH = 475;
 
   @Input() text: string;
   @Input() tooltip: string;
@@ -26,19 +29,23 @@ export class TooltipComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    this.tooltip = 'OneWordddddddddd'
     if(!this.hasTextAndTooltip()) {
-      console.log('text or tooltip is null in TooltipComponent ' + this);
+      alert('text or tooltip is null in TooltipComponent ' + this);
     }
   }
 
   ngAfterViewInit() {
+    // Calculate tooltip width
     if(this.hasTextAndTooltip()) {
       setTimeout(() => {
-          this.descriptionWidth = 
-            this.getUnwrappedTextWidthInPixels(
+          this.descriptionWidth = Math.min(
+            DOMManip.getUnwrappedTextWidthInPixels(
               this.tooltip, 
-              this.getComputedProperty(this.descriptionElement, 'font')
-            ) * 2 / 3;
+              DOMManip.getComputedProperty(this.descriptionElement, 'font')
+            ) * 2 / 3,
+            TooltipComponent.MAX_WIDTH
+          );
         }
       );
     }
@@ -47,17 +54,4 @@ export class TooltipComponent implements OnInit {
   hasTextAndTooltip(): boolean {
     return !(isNullOrUndefined(this.text) || isNullOrUndefined(this.tooltip));
   }
-
-  getComputedProperty(element: ElementRef, property: string) {
-    return window.getComputedStyle(element.nativeElement).getPropertyValue(property);
-  }
-  getUnwrappedTextWidthInPixels(text: string, font: string): number {
-    if(isNullOrUndefined(this.canvas)){
-        this.canvas = document.createElement('canvas');
-        this.ctx = this.canvas.getContext('2d');
-    }
-    this.ctx.font = font;
-    return this.ctx.measureText(text).width;
-  }
-
 }
