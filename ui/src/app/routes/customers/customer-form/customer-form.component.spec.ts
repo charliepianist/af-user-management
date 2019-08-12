@@ -8,6 +8,7 @@ import { CustomerService } from 'src/app/services/customer.service';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CustomerEntitlementsComponent } from '../customer-entitlements/customer-entitlements.component';
+import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 
 
 
@@ -19,7 +20,11 @@ describe('Creating new Customer', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CustomerFormComponent, CustomerEntitlementsComponent ],
+      declarations: [ 
+        CustomerFormComponent, 
+        CustomerEntitlementsComponent,
+        TooltipComponent
+      ],
       imports: [
         TestingModule,
         FormsModule
@@ -147,7 +152,11 @@ describe('Updating Customer', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CustomerFormComponent, CustomerEntitlementsComponent ],
+      declarations: [ 
+        CustomerFormComponent, 
+        CustomerEntitlementsComponent,
+        TooltipComponent
+      ],
       imports: [
         TestingModule
       ],

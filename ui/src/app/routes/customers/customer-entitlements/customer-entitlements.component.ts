@@ -5,10 +5,10 @@ import { Product } from 'src/app/model/product';
 import { ProductService } from 'src/app/services/product.service';
 import { LocationService } from 'src/app/services/location.service';
 import { EntitlementChange } from 'src/app/routes/customers/customer-entitlements/entitlement-change';
-import { isNullOrUndefined } from 'util';
 import { DateUtil } from 'src/app/helper/date-util';
 import { EntitlementEntry } from './entitlement-entry';
 import { TrialPrompt } from './trial-prompt';
+import { Enum } from 'src/app/helper/enum';
 
 @Component({
   selector: 'app-customer-entitlements',
@@ -37,6 +37,9 @@ export class CustomerEntitlementsComponent implements OnInit {
   hoverL: number; // these highlight the corresponding table cell
 
   showNumLogins: boolean = false;
+
+  tooltips = Enum.TOOLTIP.CUSTOMER;
+  text = Enum.DISPLAY_TEXT.CUSTOMER;
 
   readonly legendStyles = [
     {
@@ -599,7 +602,7 @@ export class CustomerEntitlementsComponent implements OnInit {
   addTrials() {
     this.invalidTrialTimeError = null;
     let endDate = new Date(Date.parse(this.endTime));
-    if(endDate.getTime() < new Date().getTime()) {
+    if(endDate.getTime() <= new Date().getTime()) {
       this.invalidTrialTimeError = 'Cannot create trials that already ended.'
     }else if(isNaN(endDate.getTime())) {
       this.invalidTrialTimeError = 'Invalid Time Format.'

@@ -21,28 +21,41 @@
                     <th style="width:65%">Value</th>
                 </tr>
             </thead>
-            <tr>
-                <td>Name</td>
+            <tr> <!-- Name -->
+                <td>{{ text.name }}</td>
                 <td>{{ customer.getName() }}</td>
             </tr>
-            <tr>
-                <td>User ID</td>
+            <tr> <!-- User ID -->
+                <td>{{ text.userId }}</td>
                 <td>{{ customer.getUserId() }}</td>
             </tr>
-            <tr>
-                <td>Password</td>
+            <tr> <!-- Password -->
+                <td>{{ text.password }}</td>
                 <td>{{ customer.getPassword() }}</td>
             </tr>
-            <tr>
-                <td>Client Type</td>
+            <tr> <!-- Priority -->
+                <td>
+                    <app-tooltip
+                        [text]="text.clientType"
+                        [tooltip]="tooltips.clientType">
+                    </app-tooltip>
+                </td>
                 <td>{{ customer.clientTypeString() }}</td>
             </tr>
-            <tr>
-                <td>Priority</td>
+            <tr> <!-- Priority -->
+                <td><app-tooltip
+                    [text]="text.priority"
+                    [tooltip]="tooltips.priority">
+                </app-tooltip></td>
                 <td>{{ customer.getPriority() }}</td>
             </tr>
-            <tr>
-                <td>Status</td>
+            <tr> <!-- Status -->
+                <td>
+                    <app-tooltip
+                        [text]="text.disabled"
+                        [tooltip]="tooltips.disabled">
+                    </app-tooltip>
+                </td>
                 <td [class.text-danger]="customer.isDisabled()"
                     [class.text-success]="!customer.isDisabled()">
                     {{ customer.isDisabled() ? 'Disabled' : 'Active'}}

@@ -3,6 +3,9 @@ package com.mni.api.multicastgroup;
 import com.mni.api.product.ProductDto;
 import com.mni.model.multicastgroup.MulticastGroup;
 import com.mni.model.multicastgroup.MulticastGroupRepository;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,7 @@ import static com.mni.api.multicastgroup.MulticastGroupDto.translateMulticastGro
 
 @RestController
 @RequestMapping("/api/multicast-groups")
+@Api("REST API Endpoint for Multicast Groups.")
 public class MulticastGroupResource {
 
     private static final Logger logger = LoggerFactory.getLogger(MulticastGroupResource.class);
@@ -60,12 +64,20 @@ public class MulticastGroupResource {
     }
 
     @GetMapping
-    public Page<MulticastGroupDto> listMulticastGroups(@RequestParam(value="page", defaultValue="0") int page,
-                                           @RequestParam(value="size", defaultValue=DEFAULT_PAGE_SIZE + "")
-                                                   int size,
-                                           @RequestParam(value="sortBy", defaultValue=DEFAULT_SORT_FIELD)
-                                                   String sortBy,
-                                           @RequestParam(value="desc", defaultValue="false") boolean desc
+    @ApiOperation("Takes in parameters for sorting/pagination and returns a page of MulticastDto objects.")
+    public Page<MulticastGroupDto> listMulticastGroups(@RequestParam(value="page", defaultValue="0")
+                                                           @ApiParam("Page number, indexed at 0.")
+                                                                   int page,
+                                                       @RequestParam(value="size", defaultValue=DEFAULT_PAGE_SIZE + "")
+                                                           @ApiParam("Number of customers per page.")
+                                                                   int size,
+                                                       @RequestParam(value="sortBy", defaultValue=DEFAULT_SORT_FIELD)
+                                                           @ApiParam(value = "Field to sort customers by.",
+                                                                   allowableValues = "id, name, code, ip, port, autoAssign")
+                                                                   String sortBy,
+                                                       @RequestParam(value="desc", defaultValue="false")
+                                                           @ApiParam("Whether the page is sorted descending or not.")
+                                                                   boolean desc
     ){
         logger.debug("GET received: page=" + page + ", size=" + size + ", sortBy='" +
                 sortBy + "', desc=" + desc);
@@ -92,7 +104,9 @@ public class MulticastGroupResource {
 
 
     @GetMapping("{id}")
-    public MulticastGroupDto getMulticastGroup(@PathVariable("id") Long id){
+    @ApiOperation("Returns a MulticastGroupDto object for a specific multicast group given an ID.")
+    public MulticastGroupDto getMulticastGroup(@PathVariable("id") @ApiParam("Multicast Group ID to search for.")
+                                                           Long id){
         logger.debug("GET with ID " + id + " received.");
         Optional<MulticastGroup> multicastGroup = multicastGroupRepository.findById(id);
 
@@ -109,7 +123,9 @@ public class MulticastGroupResource {
     }
 
     @GetMapping("{id}/products")
-    public Collection<ProductDto> getMulticastGroupProducts(@PathVariable("id") Long id) {
+    @ApiOperation("Convenience method to get ProductDtos for the products that use a given multicast group.")
+    public Collection<ProductDto> getMulticastGroupProducts(@PathVariable("id") @ApiParam("ID of multicast group.")
+                                                                        Long id) {
         logger.debug("GET Products with ID " + id + " received.");
         Optional<MulticastGroup> multicastGroup = multicastGroupRepository.findById(id);
 
@@ -126,7 +142,9 @@ public class MulticastGroupResource {
     }
 
     @PostMapping
-    public MulticastGroupDto saveMulticastGroup(@Valid @RequestBody MulticastGroupDto multicastGroupDto) {
+    @ApiOperation("Saves a new multicast group given a MulticastGroupDto object.")
+    public MulticastGroupDto saveMulticastGroup(@Valid @RequestBody @ApiParam("MulticastGroupDto object to save.")
+                                                            MulticastGroupDto multicastGroupDto) {
         logger.debug("POST Received: " + multicastGroupDto);
         MulticastGroup inputMulticastGroup = translateMulticastGroupDtoToMulticastGroup(multicastGroupDto);
         inputMulticastGroup.setId(null); // ID should be autogenerated
@@ -140,7 +158,11 @@ public class MulticastGroupResource {
     }
 
     @PutMapping("{id}")
-    public MulticastGroupDto updateMulticastGroup(@PathVariable Long id, @Valid @RequestBody MulticastGroupDto multicastGroupDto) {
+    @ApiOperation("Updates a multicast group (if multicast group with given ID is not found, returns 404 NOT FOUND).")
+    public MulticastGroupDto updateMulticastGroup(@PathVariable @ApiParam("ID of multicast group to update.")
+                                                              Long id,
+                                                  @Valid @RequestBody @ApiParam("Updated MulticastGroupDto object.")
+                                                          MulticastGroupDto multicastGroupDto) {
         logger.debug("PUT with ID " + id + " received: " + multicastGroupDto);
         if(!multicastGroupRepository.existsById(id)) {
             logger.debug("PUT with ID " + id + " did not find a MulticastGroup");
@@ -158,7 +180,10 @@ public class MulticastGroupResource {
     }
 
     @DeleteMapping("{id}")
-    public void deleteMulticastGroup(@PathVariable Long id) {
+    @ApiOperation("Deletes a multicast group with a given ID. Returns 404 NOT FOUND if multicast group doesn't exist with given ID." +
+            "\nRemoves any references to the multicast group from all products.")
+    public void deleteMulticastGroup(@PathVariable @ApiParam("ID of multicast group to delete.")
+                                                 Long id) {
         logger.debug("DELETE with ID " + id + " received");
         Optional<MulticastGroup> optionalMulticastGroup = multicastGroupRepository.findById(id);
         if(optionalMulticastGroup.isPresent()) {

@@ -53,10 +53,13 @@ export class LocationFormComponent implements OnInit {
 
   validateName(): string {
     if(!this.name) return 'Please enter a name.';
+    if(this.name.length > 255) return 'Name cannot be over 255 characters long.'
     return null;
   }
   validateCode(): string {
     if(!this.code) return 'Please enter a code.';
+    if(this.code.length > 255) return 'Code cannot be over 255 characters long.'
+    if(!this.code.match("^[0-9A-Za-z_]+$")) return 'Code must be alphanumeric with underscores.';
     return null;
   }
 

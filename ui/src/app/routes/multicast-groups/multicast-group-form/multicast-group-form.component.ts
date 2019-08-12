@@ -55,10 +55,12 @@ export class MulticastGroupFormComponent implements OnInit {
 
   validateName(): string {
     if(!this.name) return 'Please enter a name.';
+    if(this.name.length > 255) return 'Name cannot be over 255 characters long.'
     return null;
   }
   validateCode(): string {
     if(!this.code) return 'Please enter a code.';
+    if(this.code.length > 255) return 'Code cannot be over 255 characters long.'
     if(this.code.match('\\s')) return 'Code cannot have whitespace.'
     return null;
   }
@@ -66,6 +68,12 @@ export class MulticastGroupFormComponent implements OnInit {
     if(!this.ip) return 'Please enter an IP.';
     if(!this.ip.match('^([0-9]{1,3}\\.){3}[0-9]{1,3}$'))
       return 'Invalid IP format. (e.g. 192.168.1.1)';
+    
+    let nums = this.ip.split('.');
+    for(let i = 0; i < nums.length; i++) {
+      if(nums[i].substring(0, 1) === '0' && nums[i].length > 1) return 'IP numbers should not have leading zeroes.'
+      if(parseInt(nums[i]) > 255) return 'IP numbers must be between 0 and 255. (e.g. 192.168.1.1)';
+    }
     return null;
   }
   validatePort(): string {

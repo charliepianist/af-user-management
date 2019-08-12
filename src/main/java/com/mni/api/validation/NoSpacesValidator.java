@@ -1,4 +1,4 @@
-package com.mni.api;
+package com.mni.api.validation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +21,8 @@ public class NoSpacesValidator implements ConstraintValidator<NoSpaces, String> 
     public boolean isValid(String code, ConstraintValidatorContext constraintValidatorContext) {
         if(code == null) return true;
         if(code.matches(".*\\s.*")) {
-            logger.warn("Space found in @NoSpaces-annotated field (received: " + code +
-                    "): " + constraintValidatorContext.getDefaultConstraintMessageTemplate());
+            logger.warn("Space found in @NoSpaces-annotated field (received: \"" + code +
+                    "\"): " + constraintValidatorContext.getDefaultConstraintMessageTemplate());
             return false;
         }else return true;
     }

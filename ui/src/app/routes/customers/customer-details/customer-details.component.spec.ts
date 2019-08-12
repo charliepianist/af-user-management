@@ -9,6 +9,7 @@ import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { Observable } from 'rxjs';
 import { DeleteConfirmationComponent } from 'src/app/components/delete-confirmation/delete-confirmation.component';
 import { CustomerEntitlementsComponent } from '../customer-entitlements/customer-entitlements.component';
+import { TooltipComponent } from 'src/app/components/tooltip/tooltip.component';
 
 describe('CustomerDetailsComponent', () => {
   let component: CustomerDetailsComponent;
@@ -21,7 +22,8 @@ describe('CustomerDetailsComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ CustomerDetailsComponent, 
         DeleteConfirmationComponent,
-        CustomerEntitlementsComponent],
+        CustomerEntitlementsComponent,
+        TooltipComponent],
       imports: [
         TestingModule
       ],

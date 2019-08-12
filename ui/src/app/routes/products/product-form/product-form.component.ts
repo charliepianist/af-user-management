@@ -56,6 +56,7 @@ export class ProductFormComponent implements OnInit {
 
   validateName(): string {
     if(!this.name) return 'Please enter a name.';
+    if(this.name.length > 255) return 'Name cannot be over 255 characters long.';
     return null;
   }
 

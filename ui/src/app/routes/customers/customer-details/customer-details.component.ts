@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CustomerEntitlementsComponent } from '../customer-entitlements/customer-entitlements.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from 'src/app/services/auth.service';
+import { Enum } from 'src/app/helper/enum';
 
 @Component({
   selector: 'app-customer-details',
@@ -19,6 +20,9 @@ export class CustomerDetailsComponent implements OnInit {
   toDelete: boolean = false;
   error: HttpErrorResponse;
   admin: boolean = AuthService.ADMIN_DEFAULT;
+  
+  tooltips = Enum.TOOLTIP.CUSTOMER;
+  text = Enum.DISPLAY_TEXT.CUSTOMER;
 
   constructor(private customerService: CustomerService, 
     private route: ActivatedRoute, private router: Router,

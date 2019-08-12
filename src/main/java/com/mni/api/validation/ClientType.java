@@ -1,4 +1,4 @@
-package com.mni.api;
+package com.mni.api.validation;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -12,13 +12,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Retention(RUNTIME)
 @Target({METHOD, FIELD, ANNOTATION_TYPE})
-@Constraint(validatedBy = PasswordValidator.class)
-public @interface Password {
-    String message() default "Invalid Password";
-    boolean lowercase() default true;
-    boolean uppercase() default true;
-    boolean number() default true;
-    boolean special() default true;
+@Constraint(validatedBy = ClientTypeValidator.class)
+public @interface ClientType {
+    String message() default "Client type can only be 'c', 'r', or 'a'";
     Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };
 }
