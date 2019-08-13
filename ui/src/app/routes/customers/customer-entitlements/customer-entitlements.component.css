@@ -199,12 +199,14 @@ td:not(.update-num-logins):hover .full-text {
     padding-right: 0.3em;
 }
 .selected-trial-prompt {
+    /* This class currently does nothing; selected-trial-prompt-animation
+    does the work. */
     background: repeating-linear-gradient(
         45deg,
-        rgba(0, 127, 177, 0.877),
-        rgba(0, 127, 177, 0.877) 5px,
-        rgba(2, 143, 224, 0.877) 5px,
-        rgba(2, 143, 224, 0.877) 10px
+        rgba(139, 232, 255, 0.904),
+          rgba(139, 232, 255, 0.904) 5px,
+          rgba(93, 220, 236, 0.877) 5px,
+          rgba(93, 220, 236, 0.877) 10px
     );
 }
 .hover-highlight {

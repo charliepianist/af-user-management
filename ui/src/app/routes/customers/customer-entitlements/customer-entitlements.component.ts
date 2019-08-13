@@ -345,6 +345,7 @@ export class CustomerEntitlementsComponent implements OnInit {
         'not-subscribed': this.displayNotSubscribed(i, j),
         'has-trial-prompt': this.hasTrialPrompt(i, j),
         'selected-trial-prompt': this.hasSelectedTrialPrompt(i, j),
+        'selected-trial-prompt-animation': this.hasSelectedTrialPrompt(i, j),
         'hover-highlight': i === this.hoverP && j === this.hoverL,
         'changed': this.hasChanged(i, j),
         'update-num-logins': this.showNumLogins,
