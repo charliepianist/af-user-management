@@ -209,11 +209,7 @@ td:not(.update-num-logins):hover .full-text {
           rgba(93, 220, 236, 0.877) 10px
     );
 }
-.hover-highlight {
-    background: none;
-    background-color: rgba(255, 238, 0, 0.493);
-}
-.hover-highlight.changed {
+.hover-highlight:not(html):not(html):not(html) {
     background: none;
     background-color: rgba(255, 238, 0, 0.493);
 }

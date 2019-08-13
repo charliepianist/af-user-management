@@ -35,6 +35,7 @@ export class CustomerEntitlementsComponent implements OnInit {
   invalidTrialTimeError: string;
   hoverP: number; // when user hovers over a trial prompt,
   hoverL: number; // these highlight the corresponding table cell
+  animateTrialPrompts: boolean = true;
 
   showNumLogins: boolean = false;
 
@@ -110,10 +111,10 @@ export class CustomerEntitlementsComponent implements OnInit {
       'styles': {
         'background': `repeating-linear-gradient(
           45deg,
-          rgba(139, 232, 255, 0.904),
-          rgba(139, 232, 255, 0.904) 5px,
-          rgba(93, 220, 236, 0.877) 5px,
-          rgba(93, 220, 236, 0.877) 10px
+        rgba(72, 198, 248, 0.74),
+        rgba(72, 198, 248, 0.74) 5px,
+        rgba(136, 205, 245, 0.877) 5px,
+        rgba(136, 205, 245, 0.877) 10px
       )`
       },
       'updateOnly': true
@@ -345,7 +346,7 @@ export class CustomerEntitlementsComponent implements OnInit {
         'not-subscribed': this.displayNotSubscribed(i, j),
         'has-trial-prompt': this.hasTrialPrompt(i, j),
         'selected-trial-prompt': this.hasSelectedTrialPrompt(i, j),
-        'selected-trial-prompt-animation': this.hasSelectedTrialPrompt(i, j),
+        'selected-trial-prompt-animation': this.animateSelectedTrialPrompt(i, j),
         'hover-highlight': i === this.hoverP && j === this.hoverL,
         'changed': this.hasChanged(i, j),
         'update-num-logins': this.showNumLogins,
@@ -468,6 +469,19 @@ export class CustomerEntitlementsComponent implements OnInit {
     if(!this.processed) return false;
     return this.getEntitlementCell(pIndex, lIndex).hasSelectedTrialPrompt();
   }
+  
+  animateSelectedTrialPrompt(pIndex: number, lIndex: number): boolean {
+    if(!this.hasSelectedTrialPrompt(pIndex, lIndex)) return false;
+    if(this.animateTrialPrompts) {
+      return true;
+    }else {
+      setTimeout(() => this.animateTrialPrompts = true);
+      return false;
+    }
+  }
+  resetTrialPromptAnimations() {
+    this.animateTrialPrompts = false;
+  }
 
   hasChanged(pIndex: number, lIndex: number): boolean {
     if(!this.processed) return false;
@@ -521,6 +535,7 @@ export class CustomerEntitlementsComponent implements OnInit {
     ));
     this.sortOrderedIndices();
 
+    this.resetTrialPromptAnimations(); // Reset animations
     return this.trialPrompts.length - 1; // Index of new value
   }
 
@@ -567,6 +582,7 @@ export class CustomerEntitlementsComponent implements OnInit {
         this.trialPromptProductIndex(i), 
         this.trialPromptLocationIndex(i)).setSelected(this.allChecked);
     }
+    this.resetTrialPromptAnimations();
   }
 
   toggleTrialPrompt(i: number) {
