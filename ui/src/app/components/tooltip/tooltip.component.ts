@@ -13,7 +13,7 @@ export class TooltipComponent implements OnInit {
   // max width for tooltip, before checking that no words are partially cut off
   static readonly MAX_EXPAND_WIDTH = 475;
   static readonly MAX_SINGLE_LINE_WIDTH = 225;
-  static readonly PADDING = 24;
+  static readonly PADDING = 18;
   // Ratio of first through second to last lines' ideal width to last line:
   // FIRST:LAST
   static readonly FIRST = 3;

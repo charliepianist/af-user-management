@@ -65,7 +65,7 @@ export class CustomerEntitlementsComponent implements OnInit {
     {
       'meaning': 'Subscribed',
       'styles': {
-        'background-color': 'forestgreen'
+        'background-color': 'rgba(90, 212, 33, 0.932)'
       }
     },
     {
@@ -76,8 +76,8 @@ export class CustomerEntitlementsComponent implements OnInit {
           45deg,
           rgba(36, 196, 4, 0.89),
           rgba(36, 196, 4, 0.89) 5px,
-          rgba(37, 168, 10, 0.89) 5px,
-          rgba(37, 168, 10, 0.89) 10px
+          rgba(90, 212, 33, 0.932) 5px,
+          rgba(90, 212, 33, 0.932) 10px
       )`
       },
       'updateOnly': true
@@ -85,7 +85,7 @@ export class CustomerEntitlementsComponent implements OnInit {
     {
       'meaning': 'Trial',
       'styles': {
-        'background-color': 'cornflowerblue'
+        'background-color': 'rgba(93, 220, 236, 0.877)'
       }
     },
     {
@@ -94,10 +94,10 @@ export class CustomerEntitlementsComponent implements OnInit {
       'styles': {
         'background': `repeating-linear-gradient(
           45deg,
-          rgba(0, 127, 177, 0.877),
-          rgba(0, 127, 177, 0.877) 5px,
-          rgba(2, 143, 224, 0.877) 5px,
-          rgba(2, 143, 224, 0.877) 10px
+          rgba(139, 232, 255, 0.904),
+          rgba(139, 232, 255, 0.904) 5px,
+          rgba(93, 220, 236, 0.877) 5px,
+          rgba(93, 220, 236, 0.877) 10px
       )`
       },
       'styleText': `Trial
@@ -110,10 +110,10 @@ export class CustomerEntitlementsComponent implements OnInit {
       'styles': {
         'background': `repeating-linear-gradient(
           45deg,
-          rgba(72, 198, 248, 0.74),
-          rgba(72, 198, 248, 0.74) 5px,
-          rgba(136, 205, 245, 0.877) 5px,
-          rgba(136, 205, 245, 0.877) 10px
+          rgba(0, 127, 177, 0.877),
+          rgba(0, 127, 177, 0.877) 5px,
+          rgba(2, 143, 224, 0.877) 5px,
+          rgba(2, 143, 224, 0.877) 10px
       )`
       },
       'updateOnly': true
