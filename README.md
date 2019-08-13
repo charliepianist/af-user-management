@@ -22,6 +22,10 @@ various pages.
     * Currently, the login page is taken from
     [login.html](src/main/resources/static/login.html).
 
+###### Software Version
+* [Angular](https://cli.angular.io/) CLI 8.0.3
+* [NodeJS](https://nodejs.org/en/) 10.16.0
+
 ###### Logging
 * slf4j Loggers are used throughout the application, and
 need to be configured to connect to a file logging system.
