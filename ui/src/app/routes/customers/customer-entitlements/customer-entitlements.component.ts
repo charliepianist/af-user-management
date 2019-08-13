@@ -472,15 +472,11 @@ export class CustomerEntitlementsComponent implements OnInit {
   
   animateSelectedTrialPrompt(pIndex: number, lIndex: number): boolean {
     if(!this.hasSelectedTrialPrompt(pIndex, lIndex)) return false;
-    if(this.animateTrialPrompts) {
-      return true;
-    }else {
-      setTimeout(() => this.animateTrialPrompts = true);
-      return false;
-    }
+    return this.animateTrialPrompts;
   }
   resetTrialPromptAnimations() {
     this.animateTrialPrompts = false;
+    setTimeout(() => this.animateTrialPrompts = true);
   }
 
   hasChanged(pIndex: number, lIndex: number): boolean {
