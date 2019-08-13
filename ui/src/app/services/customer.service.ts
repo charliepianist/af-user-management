@@ -131,7 +131,6 @@ export class CustomerService {
     successFunc: (e: Entitlement[]) => any, 
     errorFunc: (e: HttpErrorResponse) => any) {
     if(isNullOrUndefined(entitlements)) entitlements = [];
-    console.log(JSON.stringify(entitlements));
     this.httpClient.put<Entitlement[]>(CustomerService.BASE_URL + '/' + 
       id + "/entitlements", entitlements)
       .subscribe(e => {
