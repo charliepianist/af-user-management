@@ -12,7 +12,7 @@ th, thead td {
 td {
     padding: 0.3em 0.5em;
 }
-tr {
+tr { 
     height: 2em;
     font-size: 1.2em;
 }
@@ -78,8 +78,9 @@ table.checklist td {
 
 /* =========== Form Component Styling ============ */
 .form-component .form-button {
-    width: 50%;
-    padding: 0.5em 0em;
+    width: auto;
+    padding: 0.5em 1.25em;
+    margin-right: 0.6em;
 }
 
 /* ================= Input Styling ================= */
