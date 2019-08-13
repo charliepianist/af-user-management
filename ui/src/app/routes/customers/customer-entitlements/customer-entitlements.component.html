@@ -269,7 +269,7 @@
                 
             <tr *ngFor="let i of getOrderedIndices();">
               <td (click)="toggleTrialPrompt(i)" class="trial-prompt"
-                (mouseover)="trialPromptMouseover(i)" (mouseleave)="trialPromptMouseleave(i)">
+                >
                 <input type="checkbox" [checked]="trialPromptIsSelected(i)">
                 Add trial for <b>{{ trialPromptEntitlement(i).getProductName() }}</b> at 
               <b>{{ trialPromptEntitlement(i).getLocationCode() }}</b>
@@ -300,17 +300,13 @@
           </thead>
           <tr *ngFor="let change of changes; let i = index" 
               [class.first-change]="isFirstChange(i)"
-              (click)="undoChange(i)"
-              (mouseover)="changeMouseover(i)"
-              (mouseleave)="changeMouseleave(i)">
+              (click)="undoChange(i)">
             <td>
               <button>Undo</button>
             </td>
             <td *ngIf="isFirstChange(i)" 
                 [attr.rowspan]="numChangesByProduct(i)"
-                (click)="$event.stopPropagation()" 
-                (mouseover)="$event.stopPropagation()"
-                (mouseleave)="$event.stopPropagation()">
+                (click)="$event.stopPropagation()" >
               {{ change.getProductName() }}
             </td>
             <td>{{ change.getLocationCode() }}</td>
