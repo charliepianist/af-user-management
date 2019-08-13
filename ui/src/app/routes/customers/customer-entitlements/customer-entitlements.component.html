@@ -16,7 +16,9 @@
           </thead>
           <ng-container *ngFor="let styleObj of legendStyles">
             <tr *ngIf="update || !styleObj.updateOnly">
-              <td [ngStyle]="styleObj.styles" style="white-space: pre-line">
+              <td [ngStyle]="styleObj.styles" 
+                  style="white-space: pre-line"
+                  [ngClass]="styleObj.classes">
                 <b>{{styleObj.styleText}}</b>
               </td>
               <td>

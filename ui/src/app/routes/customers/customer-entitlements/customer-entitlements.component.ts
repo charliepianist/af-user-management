@@ -110,10 +110,10 @@ export class CustomerEntitlementsComponent implements OnInit {
       'styles': {
         'background': `repeating-linear-gradient(
           45deg,
-          rgba(0, 127, 177, 0.877),
-          rgba(0, 127, 177, 0.877) 5px,
-          rgba(2, 143, 224, 0.877) 5px,
-          rgba(2, 143, 224, 0.877) 10px
+          rgba(139, 232, 255, 0.904),
+          rgba(139, 232, 255, 0.904) 5px,
+          rgba(93, 220, 236, 0.877) 5px,
+          rgba(93, 220, 236, 0.877) 10px
       )`
       },
       'updateOnly': true
@@ -121,14 +121,8 @@ export class CustomerEntitlementsComponent implements OnInit {
     {
       'meaning': `Trial Prompt`,
       'subtitle': 'selected',
-      'styles': {
-        'background': `repeating-linear-gradient(
-          45deg,
-          rgba(0, 127, 177, 0.877),
-          rgba(0, 127, 177, 0.877) 5px,
-          rgba(2, 143, 224, 0.877) 5px,
-          rgba(2, 143, 224, 0.877) 10px
-      )`
+      'classes': {
+        'selected-trial-prompt-animation': true
       },
       'updateOnly': true
     },

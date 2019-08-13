@@ -295,3 +295,42 @@ td:not(.update-num-logins):hover .full-text {
 .float-left {
     float: left;
 }
+
+/* ================ Animations ================ */
+.selected-trial-prompt-animation {
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(139, 232, 255, 0.904),
+          rgba(139, 232, 255, 0.904) 5px,
+          rgba(93, 220, 236, 0.877) 5px,
+          rgba(93, 220, 236, 0.877) 10px
+    );
+    position: relative;
+}
+.selected-trial-prompt-animation::before {
+    background-color: rgba(242, 255, 56, 0.7);
+    content: '';
+    display: block;
+    height: 100%;
+    position: absolute;
+    top: 0; 
+    left: 0;
+    opacity: 0;
+    width: 100%;
+    z-index: 100;
+    animation-name: selectedTrialPromptAnimation;
+    animation-iteration-count: infinite;
+    animation-duration: 2s;
+}
+
+@keyframes selectedTrialPromptAnimation {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
