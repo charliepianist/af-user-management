@@ -18,6 +18,8 @@ import { Enum } from 'src/app/helper/enum';
 
 export class CustomerEntitlementsComponent implements OnInit {
 
+  static readonly TRIAL_PROMPT_ANIMATIONS = false;
+
   @Input() update: boolean = false;
   @Input() enabled: boolean = true;
   @Input() entitlements: Entitlement[];
@@ -123,6 +125,7 @@ export class CustomerEntitlementsComponent implements OnInit {
       'meaning': `Trial Prompt`,
       'subtitle': 'selected',
       'classes': {
+        'selected-trial-prompt': true,
         'selected-trial-prompt-animation': true
       },
       'updateOnly': true
@@ -471,12 +474,15 @@ export class CustomerEntitlementsComponent implements OnInit {
   }
   
   animateSelectedTrialPrompt(pIndex: number, lIndex: number): boolean {
+    if(!CustomerEntitlementsComponent.TRIAL_PROMPT_ANIMATIONS) return false;
     if(!this.hasSelectedTrialPrompt(pIndex, lIndex)) return false;
     return this.animateTrialPrompts;
   }
   resetTrialPromptAnimations() {
-    this.animateTrialPrompts = false;
-    setTimeout(() => this.animateTrialPrompts = true);
+    if(CustomerEntitlementsComponent.TRIAL_PROMPT_ANIMATIONS) {
+      this.animateTrialPrompts = false;
+      setTimeout(() => this.animateTrialPrompts = true);
+    }
   }
 
   hasChanged(pIndex: number, lIndex: number): boolean {

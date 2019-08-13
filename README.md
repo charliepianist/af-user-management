@@ -57,6 +57,12 @@ localhost:8080/swagger-ui.html#/).
 
 ## Guide to code
 
+### Known Problems
+* Warnings are thrown when accessing /swagger-ui.html# (Rest API Documentation) due to
+Spring Fox attempting to use "" as default values for numbers and throwing NumberFormatExceptions.
+* Adding too many trial prompts/trials to a customer at once can cause a lot of lag. There seems to be a memory
+leak in [CustomerEntitlementsComponent](ui/src/app/routes/customers/customer-entitlements/customer-entitlements.component.ts).
+
 ### Design Concerns
 * Security
     * The USER role can consume all GET methods in the Rest API, including the endpoints
@@ -85,8 +91,7 @@ localhost:8080/swagger-ui.html#/).
     not both at the same time (due to updating both not being a transactional operation).
         * The same applies to products and their multicast groups.
     * Services take callback functions as parameters rather than passing Observables around.
-    * The CSS Animations used for updating customer entitlements caused a huge increase in memory consumption
-    and are commented out.
+    * The CSS Animations used for customer entitlements are commented out due to lag.
         * The animation code is in 
         [customer-entitlements.component.css](ui/src/app/routes/customers/customer-entitlements/customer-entitlements.component.css).
         Some methods in

@@ -209,7 +209,7 @@ td:not(.update-num-logins):hover .full-text {
           rgba(93, 220, 236, 0.877) 10px
     );
 }
-.hover-highlight:not(html):not(html):not(html) {
+.hover-highlight:not(html):not(html):not(html):not(html):not(html) {
     background: none;
     background-color: rgba(255, 238, 0, 0.493);
 }
@@ -295,7 +295,7 @@ td:not(.update-num-logins):hover .full-text {
 }
 
 /* ================ Animations ================ */
-.selected-trial-prompt-animation {
+/*.selected-trial-prompt-animation {
     background: repeating-linear-gradient(
         45deg,
         rgba(139, 232, 255, 0.904),
@@ -331,4 +331,4 @@ td:not(.update-num-logins):hover .full-text {
     100% {
         opacity: 0;
     }
-}
+}*/
