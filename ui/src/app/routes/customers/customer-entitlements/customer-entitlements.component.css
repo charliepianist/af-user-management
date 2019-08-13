@@ -9,12 +9,6 @@ td div { /*Two halves of bigger div*/
 td {
     padding: 0px 0px; 
 }
-.row-options {
-    width: 11%
-}
-span {
-    cursor: default;
-}
 span.link {
     cursor: pointer;
 }
@@ -23,6 +17,12 @@ span.link {
 }
 .cell-text {
     font-weight: bold;
+}
+.clickable-cell:hover {
+    cursor: pointer;
+}
+.clickable-cell *:hover {
+    cursor: pointer;
 }
 
 /* ========== Subscribed Cells ========== */
@@ -56,6 +56,9 @@ span.link {
     /* unsub */
     display: block;
 }
+.subscribed:not(.update-num-logins):hover {
+    border: 3px solid black;
+}
 .subscribed:not(.update-num-logins):hover .lower-half {
     display: none;
 }
@@ -86,10 +89,23 @@ span.link {
     /* Sub from trial */
     background-color: rgba(90, 212, 33, 0.932);
 }
+.trial:not(.update-num-logins):hover .upper-half:hover {
+    /* Sub from trial hover */
+    /* background-color: rgba(245, 255, 106, 0.932); */
+    border-width: 1px 1px 2px 1px;
+    border-style: solid;
+    border-color: black;
+}
 .trial:not(.update-num-logins):hover .lower-half {
     /* Unsub from trial */
     background-color: rgba(255, 0, 0, 0.2);
     display: block;
+}
+.trial:not(.update-num-logins):hover .lower-half:hover {
+    /* Unsub from trial hover */
+    border-width: 2px 1px 1px 1px;
+    border-style: solid;
+    border-color: black;
 }
 .trial .upper-text {
     display: none;
@@ -114,8 +130,18 @@ span.link {
 .not-subscribed:not(.update-num-logins):hover .upper-half {
     background-color: rgba(90, 212, 33, 0.932);
 }
+.not-subscribed:not(.update-num-logins):hover .upper-half:hover {
+    border-width: 1px 1px 2px 1px;
+    border-style: solid;
+    border-color: black;
+}
 .not-subscribed:not(.update-num-logins):hover .lower-half {
     background-color: rgba(93, 220, 236, 0.877);
+}
+.not-subscribed:not(.update-num-logins):hover .lower-half:hover {
+    border-width: 2px 1px 1px 1px;
+    border-style: solid;
+    border-color: black;
 }
 
 /* ========= Cell Text ========== */
@@ -152,6 +178,7 @@ td:not(.update-num-logins):hover .full-text {
     /* Trial Prompt cell unsub */
     background: none;
     background-color: rgba(255, 0, 0, 0.2);
+    border: 3px solid black;
 }
 .trial-prompt:hover {
     background-color: lightskyblue;

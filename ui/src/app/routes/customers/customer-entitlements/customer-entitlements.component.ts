@@ -354,6 +354,7 @@ export class CustomerEntitlementsComponent implements OnInit {
         'hover-highlight': i === this.hoverP && j === this.hoverL,
         'changed': this.hasChanged(i, j),
         'update-num-logins': this.showNumLogins,
+        'clickable-cell': true
       };
     }else return {
       'view-subscribed': this.viewSubscribed(i, j),
