@@ -18,7 +18,7 @@ import { Enum } from 'src/app/helper/enum';
 
 export class CustomerEntitlementsComponent implements OnInit {
 
-  static readonly TRIAL_PROMPT_ANIMATIONS = false;
+  static readonly TRIAL_PROMPT_ANIMATIONS = true;
 
   @Input() update: boolean = false;
   @Input() enabled: boolean = true;
@@ -591,6 +591,9 @@ export class CustomerEntitlementsComponent implements OnInit {
     this.getTrialPrompt(i).toggleSelected();
     this.getPromptCell(i).setSelected(this.trialPromptIsSelected(i));
     if(!this.trialPromptIsSelected(i)) this.allChecked = false;
+
+    if(this.trialPromptIsSelected(i))
+      this.resetTrialPromptAnimations();
   }
 
   trialPromptMouseover(i: number) {

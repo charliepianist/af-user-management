@@ -24,6 +24,9 @@ span.link {
 .clickable-cell *:hover {
     cursor: pointer;
 }
+.clickable-cell input:hover {
+    cursor: text;
+}
 
 /* ========== Subscribed Cells ========== */
 .subscribed {
@@ -295,7 +298,7 @@ td:not(.update-num-logins):hover .full-text {
 }
 
 /* ================ Animations ================ */
-/*
+
 .selected-trial-prompt-animation {
     background: repeating-linear-gradient(
         45deg,
@@ -332,4 +335,4 @@ td:not(.update-num-logins):hover .full-text {
     100% {
         opacity: 0;
     }
-}*/
+}

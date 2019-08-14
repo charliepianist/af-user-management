@@ -60,8 +60,9 @@ localhost:8080/swagger-ui.html#/).
 ### Known Problems
 * Warnings are thrown when accessing /swagger-ui.html# (Rest API Documentation) due to
 Spring Fox attempting to use "" as default values for numbers and throwing NumberFormatExceptions.
-* Adding too many trial prompts/trials to a customer at once can cause a lot of lag. There seems to be a memory
-leak in [CustomerEntitlementsComponent](ui/src/app/routes/customers/customer-entitlements/customer-entitlements.component.ts).
+* Performance issues with highlighting cells when hovering over trial prompts and changes led to removing the
+(mouseover) and (mouseleave) events from [CustomerEntitlementsComponent](ui/src/app/routes/customers/customer-entitlements/customer-entitlements.component.html).
+(Attempting to fix it now)
 
 ### Design Concerns
 * Security
@@ -91,13 +92,9 @@ leak in [CustomerEntitlementsComponent](ui/src/app/routes/customers/customer-ent
     not both at the same time (due to updating both not being a transactional operation).
         * The same applies to products and their multicast groups.
     * Services take callback functions as parameters rather than passing Observables around.
-    * The CSS Animations used for customer entitlements are commented out due to lag.
-        * The animation code is in 
-        [customer-entitlements.component.css](ui/src/app/routes/customers/customer-entitlements/customer-entitlements.component.css).
-        Some methods in
-        [customer-entitlements.component.ts](ui/src/app/routes/customers/customer-entitlements/customer-entitlements.component.ts)
-        also are named with the words animate/animation but without the commented out code in the CSS file, do 
-        not cause animations.
+    * If CSS Animations in [CustomerEntitlementsComponent](ui/src/app/routes/customers/customer-entitlements/customer-entitlements.component.html)
+    cause lag, they can be disabled by commenting out the animations section in the CSS file and setting the static variable
+    TRIAL_PROMPT_ANIMATIONS to false.
 * Logging
     * Customer passwords are obfuscated as a sequence of asterisks with length equal to the length
     of the password. For example, "password" is logged as "********".
