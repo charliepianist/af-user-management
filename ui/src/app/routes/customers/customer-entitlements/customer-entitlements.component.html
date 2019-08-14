@@ -267,7 +267,7 @@
               </td>
             </tr>    
                 
-            <tr *ngFor="let i of getOrderedIndices();">
+            <tr *ngFor="let i of getOrderedIndices()">
               <td (click)="toggleTrialPrompt(i)" class="trial-prompt"
                 >
                 <input type="checkbox" [checked]="trialPromptIsSelected(i)">

@@ -63,6 +63,8 @@ Spring Fox attempting to use "" as default values for numbers and throwing Numbe
 * Performance issues with highlighting cells when hovering over trial prompts and changes led to removing the
 (mouseover) and (mouseleave) events from [CustomerEntitlementsComponent](ui/src/app/routes/customers/customer-entitlements/customer-entitlements.component.html).
 (Attempting to fix it now)
+    * Without highlighting cells on hover, the memory footprint fluctuates, which I believe is caused by Angular recreating the
+    DOM.
 
 ### Design Concerns
 * Security
