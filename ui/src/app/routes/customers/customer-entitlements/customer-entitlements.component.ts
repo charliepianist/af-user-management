@@ -340,28 +340,6 @@ export class CustomerEntitlementsComponent implements OnInit {
     return false;
   }
 
-  cellClasses(i: number, j: number) {
-    if(!this.processed) return {};
-    if(this.update) {
-      return {
-        'subscribed': this.isSubscribed(i, j),
-        'trial': this.expirationDate(i, j) ? true : false,
-        'not-subscribed': this.displayNotSubscribed(i, j),
-        'has-trial-prompt': this.hasTrialPrompt(i, j),
-        'selected-trial-prompt': this.hasSelectedTrialPrompt(i, j),
-        'selected-trial-prompt-animation': this.animateSelectedTrialPrompt(i, j),
-        'hover-highlight': i === this.hoverP && j === this.hoverL,
-        'changed': this.hasChanged(i, j),
-        'update-num-logins': this.showNumLogins,
-        'clickable-cell': true
-      };
-    }else return {
-      'view-subscribed': this.viewSubscribed(i, j),
-      'view-trial': this.viewExpirationDate(i, j) ? true : false,
-      'view-not-subscribed': this.viewNotSubscribed(i, j)
-    }
-  }
-
   unsubscribe(pIndex: number, lIndex: number) {
     this.setEntitlement(pIndex, lIndex, null);
   }

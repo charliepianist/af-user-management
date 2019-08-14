@@ -55,7 +55,16 @@
       <tr *ngFor="let product of products; let p = index;">
         <td class="product-name"><b>{{ product.getName() }}</b></td>
         <td *ngFor="let location of locations; let l = index;"
-          [ngClass]="cellClasses(p, l)"
+          [class.subscribed]="isSubscribed(p, l)"
+          [class.trial]="expirationDate(p, l)"
+          [class.not-subscribed]="displayNotSubscribed(p, l)"
+          [class.has-trial-prompt]="hasTrialPrompt(p, l)"
+          [class.selected-trial-prompt]="hasSelectedTrialPrompt(p, l)"
+          [class.selected-trial-prompt-animation]="animateSelectedTrialPrompt(p, l)"
+          [class.hover-highlight]="p === hoverP && l === hoverL"
+          [class.changed]="hasChanged(p, l)"
+          [class.update-num-logins]="showNumLogins"
+          [class.clickable-cell]="true"
           (click)="cellClick(p, l)">
     
             <div class="upper-half">
@@ -115,7 +124,16 @@
           <tr *ngFor="let product of products; let p = index">
               <td class="product-name"><b>{{ product.getName() }}</b></td>
               <td *ngFor="let location of locations; let l = index"
-                [ngClass]="cellClasses(p, l)">
+                [class.subscribed]="isSubscribed(p, l)"
+                [class.trial]="expirationDate(p, l)"
+                [class.not-subscribed]="displayNotSubscribed(p, l)"
+                [class.has-trial-prompt]="hasTrialPrompt(p, l)"
+                [class.selected-trial-prompt]="hasSelectedTrialPrompt(p, l)"
+                [class.selected-trial-prompt-animation]="animateSelectedTrialPrompt(p, l)"
+                [class.hover-highlight]="p === hoverP && l === hoverL"
+                [class.changed]="hasChanged(p, l)"
+                [class.update-num-logins]="showNumLogins"
+                [class.clickable-cell]="true">
                 <span *ngIf="getEntitlement(p, l); else filler" 
                   class="cell-text">
                   <!-- NumLogins input -->
@@ -168,7 +186,9 @@
             <tr *ngFor="let product of products; let p = index">
               <td class="product-name"><b>{{ product.getName() }}</b></td>
               <td *ngFor="let location of locations; let l = index"
-                [ngClass]="cellClasses(p, l)">
+                [class.view-subscribed]="viewSubscribed(p, l)"
+                [class.view-trial]="viewExpirationDate(p, l)"
+                [class.view-not-subscribed]="viewNotSubscribed(p, l)">
                 <span *ngIf="viewExpirationDate(p, l); else filler" 
                   class="cell-text">
                   Trial
@@ -209,7 +229,9 @@
             <tr *ngFor="let product of products; let p = index">
                 <td class="product-name"><b>{{ product.getName() }}</b></td>
                 <td *ngFor="let location of locations; let l = index"
-                  [ngClass]="cellClasses(p, l)">
+                  [class.view-subscribed]="viewSubscribed(p, l)"
+                  [class.view-trial]="viewExpirationDate(p, l)"
+                  [class.view-not-subscribed]="viewNotSubscribed(p, l)">
                   <span *ngIf="viewNumLogins(p, l); else filler" 
                     class="cell-text">
                     <!-- NumLogins display -->
