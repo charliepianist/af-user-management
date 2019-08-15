@@ -54,47 +54,52 @@
 
       <tr *ngFor="let product of products; let p = index;">
         <td class="product-name"><b>{{ product.getName() }}</b></td>
-        <td *ngFor="let location of locations; let l = index;"
-          [class.subscribed]="isSubscribed(p, l)"
-          [class.trial]="expirationDate(p, l)"
-          [class.not-subscribed]="displayNotSubscribed(p, l)"
-          [class.has-trial-prompt]="hasTrialPrompt(p, l)"
-          [class.selected-trial-prompt]="hasSelectedTrialPrompt(p, l)"
-          [class.selected-trial-prompt-animation]="animateSelectedTrialPrompt(p, l)"
-          [class.hover-highlight]="p === hoverP && l === hoverL"
-          [class.changed]="hasChanged(p, l)"
-          [class.update-num-logins]="showNumLogins"
-          [class.clickable-cell]="true"
-          (click)="cellClick(p, l)">
-    
-            <div class="upper-half">
-              <span *ngIf="expirationDate(p, l)"
-                class="full-text cell-text">
-                Trial
-                <br>{{ expirationDate(p, l) }}
-              </span>
-              <span *ngIf="isSubscribed(p, l); else subscribeText" 
-                class="upper-text cell-text">
-                Unsub
-              </span>
-              <ng-template #subscribeText>
-                <span *ngIf="!hasTrialPrompt(p, l)" class="upper-text cell-text">
-                  Sub
+          <td *ngFor="let entry of getEntitlementRow(p); let l = index;"
+            [class.subscribed]="entry.currentEntitlement && 
+            entry.currentEntitlement.expirationDate === null"
+            [class.trial]="entry.currentEntitlement && 
+            entry.currentEntitlement.expirationDate"
+            [class.not-subscribed]="!entry.currentEntitlement &&
+            (entry.trialPromptIndex === null || entry.trialPromptIndex === undefined)"
+            [class.has-trial-prompt]="entry.trialPromptIndex || 
+            entry.trialPromptIndex === 0"
+            [class.selected-trial-prompt]="entry.selectedTrialPrompt"
+            [class.selected-trial-prompt-animation]="TRIAL_PROMPT_ANNOTATIONS &&
+            entry.selectedTrialPrompt && animateTrialPrompts"
+            [class.hover-highlight]="p === hoverP && l === hoverL"
+            [class.changed]="entry.changed"
+            [class.update-num-logins]="showNumLogins"
+            [class.clickable-cell]="true"
+            (click)="cellClick(p, l)">
+      
+              <div class="upper-half">
+                <span *ngIf="expirationDate(p, l)"
+                  class="full-text cell-text">
+                  Trial
+                  <br>{{ expirationDate(p, l) }}
                 </span>
-              </ng-template>
-            </div>
-    
-            <div class="lower-half" 
-              (click)="$event.stopPropagation(); lowerHalfClick(p, l)">
-              <span *ngIf="!expirationDate(p, l) && !hasTrialPrompt(p, l); else unsub" 
-                class="lower-text cell-text">
-                Trial
-              </span>
-              <ng-template #unsub>
-                <span class="lower-text cell-text">Unsub</span>
-              </ng-template>
-            </div>
-        </td>
+                <span *ngIf="isSubscribed(p, l); else subscribeText" 
+                  class="upper-text cell-text">
+                  Unsub
+                </span>
+                <ng-template #subscribeText>
+                  <span *ngIf="!hasTrialPrompt(p, l)" class="upper-text cell-text">
+                    Sub
+                  </span>
+                </ng-template>
+              </div>
+      
+              <div class="lower-half" 
+                (click)="$event.stopPropagation(); lowerHalfClick(p, l)">
+                <span *ngIf="!expirationDate(p, l) && !hasTrialPrompt(p, l); else unsub" 
+                  class="lower-text cell-text">
+                  Trial
+                </span>
+                <ng-template #unsub>
+                  <span class="lower-text cell-text">Unsub</span>
+                </ng-template>
+              </div>
+          </td>
       </tr>
       <tr class="title-row">
           <td><b>Locations</b></td>
