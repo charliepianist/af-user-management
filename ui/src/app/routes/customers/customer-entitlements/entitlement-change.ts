@@ -1,12 +1,15 @@
 import { Entitlement } from "../../../model/entitlement";
 import { Location } from "../../../model/location";
 import { Product } from "../../../model/product";
+import { isNullOrUndefined } from "util";
 
 export class EntitlementChange {
     newEntitlement: Entitlement;
     oldEntitlement: Entitlement;
     pIndex: number;
     lIndex: number;
+    uniqueId: number;
+    static NEXT_ID = 1;
 
     constructor(newEnt: Entitlement, oldEnt: Entitlement, 
         pIndex: number, lIndex: number) {
@@ -14,6 +17,7 @@ export class EntitlementChange {
         this.oldEntitlement = oldEnt;
         this.pIndex = pIndex;
         this.lIndex = lIndex;
+        this.updateId();
     }
 
     static copy(eChange: EntitlementChange, {
@@ -80,22 +84,31 @@ export class EntitlementChange {
             }else return "Subscribed"
         }else return "Unsubscribed"
     }
-    oldClasses() {
-        let classes = [];
-        if(this.oldEntitlement) {
-            if(this.oldEntitlement.getExpirationDate()) {
-                classes.push('trial-background')
-            }else classes.push('sub-background')
-        }else classes.push('unsub-background')
-        return classes;
+    
+    oldTrial(): boolean {
+        return this.oldEntitlement && !isNullOrUndefined(this.oldEntitlement.getExpirationDate());
     }
-    newClasses() {
-        let classes = [];
-        if(this.newEntitlement) {
-            if(this.newEntitlement.getExpirationDate()) {
-                classes.push('trial-background')
-            }else classes.push('sub-background')
-        }else classes.push('unsub-background')
-        return classes;
+    oldSub(): boolean {
+        return this.oldEntitlement && isNullOrUndefined(this.oldEntitlement.getExpirationDate());
+    }
+    oldUnsub(): boolean {
+        return !this.oldEntitlement;
+    }
+    newTrial(): boolean {
+        return this.newEntitlement && !isNullOrUndefined(this.newEntitlement.getExpirationDate());
+    }
+    newSub(): boolean {
+        return this.newEntitlement && isNullOrUndefined(this.newEntitlement.getExpirationDate());
+    }
+    newUnsub(): boolean {
+        return !this.newEntitlement;
+    }
+
+    getId(): number {
+        return this.uniqueId;
+    }
+    updateId() {
+        this.uniqueId = EntitlementChange.NEXT_ID;
+        EntitlementChange.NEXT_ID++;
     }
 }

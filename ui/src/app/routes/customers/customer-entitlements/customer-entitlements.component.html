@@ -321,7 +321,7 @@
               </td>
             </tr>
           </thead>
-          <tr *ngFor="let change of changes; let i = index" 
+          <tr *ngFor="let change of changes; let i = index; trackBy: uniqueChangeId" 
               [class.first-change]="isFirstChange(i)"
               (click)="undoChange(i)"
               (mouseover)="changeMouseover(i)"
@@ -337,10 +337,14 @@
               {{ change.getProductName() }}
             </td>
             <td>{{ change.getLocationCode() }}</td>
-            <td [ngClass]="change.oldClasses()">
+            <td [class.trial-background]="change.oldTrial()"
+                [class.sub-background]="change.oldSub()"
+                [class.unsub-background]="change.oldUnsub()">
               {{ change.oldString() }}
             </td>
-            <td [ngClass]="change.newClasses()">
+            <td [class.trial-background]="change.newTrial()"
+                [class.sub-background]="change.newSub()"
+                [class.unsub-background]="change.newUnsub()">
               {{ change.newString() }}
             </td>
             <td>

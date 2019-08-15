@@ -658,4 +658,8 @@ export class CustomerEntitlementsComponent implements OnInit {
     );
     return prodNames.lastIndexOf(name) - prodNames.indexOf(name) + 1;
   }
+
+  uniqueChangeId(i: number, change: EntitlementChange): number {
+    return change.getId();
+  }
 }
