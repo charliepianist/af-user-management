@@ -60,11 +60,18 @@ localhost:8080/swagger-ui.html#/).
 ### Known Problems
 * Warnings are thrown when accessing /swagger-ui.html# (Rest API Documentation) due to
 Spring Fox attempting to use "" as default values for numbers and throwing NumberFormatExceptions.
-* Performance issues with highlighting cells when hovering over trial prompts and changes led to removing the
-(mouseover) and (mouseleave) events from [CustomerEntitlementsComponent](ui/src/app/routes/customers/customer-entitlements/customer-entitlements.component.html).
-(Attempting to fix it now)
-    * Without highlighting cells on hover, the memory footprint fluctuates, which I believe is caused by Angular recreating the
-    DOM.
+* [CustomerEntitlementsComponent](ui/src/app/routes/customers/customer-entitlements/customer-entitlements.component.html)
+performance concerns
+    * (mouseenter) and (mouseleave) in [customer-entitlements.component.html](ui/src/app/routes/customers/customer-entitlements/customer-entitlements.component.html)
+    can cause performance issues if mouse is moved quickly between different hovers. This can be removed by going in the HTML
+    code and Ctrl+F and deleting the mouseenter and mouseleave event bindings.
+    * Adding/removing a lot of entitlements immediately after page load can also cause memory problems
+    (seems to be a matter of garbage collection not running for a bit after page loads. In my experience, it's
+    gone up to over 1 GB memory footprint before garbage collection when doing things immediately after page loads)
+    * The CSS animations should not be making a difference, but for reference, disabling them requires 
+    setting TRIAL_PROMPT_ANIMATIONS to false in [customer-entitlements.component.ts](ui/src/app/routes/customers/customer-entitlements/customer-entitlements.component.ts)
+    *and* commenting out/deleting the "Animations" section of 
+    [customer-entitlements.component.css](ui/src/app/routes/customers/customer-entitlements/customer-entitlements.component.css).
 
 ### Design Concerns
 * Security
@@ -94,9 +101,8 @@ Spring Fox attempting to use "" as default values for numbers and throwing Numbe
     not both at the same time (due to updating both not being a transactional operation).
         * The same applies to products and their multicast groups.
     * Services take callback functions as parameters rather than passing Observables around.
-    * If CSS Animations in [CustomerEntitlementsComponent](ui/src/app/routes/customers/customer-entitlements/customer-entitlements.component.html)
-    cause lag, they can be disabled by commenting out the animations section in the CSS file and setting the static variable
-    TRIAL_PROMPT_ANIMATIONS to false.
+    * [CustomerEntitlementsComponent](ui/src/app/routes/customers/customer-entitlements) is a very large
+    component and may be better suited split up into several components.
 * Logging
     * Customer passwords are obfuscated as a sequence of asterisks with length equal to the length
     of the password. For example, "password" is logged as "********".
