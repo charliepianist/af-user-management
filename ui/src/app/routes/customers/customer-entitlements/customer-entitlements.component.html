@@ -64,7 +64,7 @@
             [class.has-trial-prompt]="entry.trialPromptIndex || 
             entry.trialPromptIndex === 0"
             [class.selected-trial-prompt]="entry.selectedTrialPrompt"
-            [class.selected-trial-prompt-animation]="TRIAL_PROMPT_ANNOTATIONS &&
+            [class.selected-trial-prompt-animation]="TRIAL_PROMPT_ANIMATIONS &&
             entry.selectedTrialPrompt && animateTrialPrompts"
             [class.hover-highlight]="p === hoverP && l === hoverL"
             [class.changed]="entry.changed"
@@ -296,7 +296,7 @@
                 
             <tr *ngFor="let i of getOrderedIndices()">
               <td (click)="toggleTrialPrompt(i)" class="trial-prompt"
-                (mouseover)="trialPromptMouseover(i)"
+                (mouseenter)="trialPromptMouseover(i)"
                 (mouseleave)="trialPromptMouseleave(i)">
                 <input type="checkbox" [checked]="trialPromptIsSelected(i)">
                 Add trial for <b>{{ trialPromptEntitlement(i).getProductName() }}</b> at 
@@ -329,7 +329,7 @@
           <tr *ngFor="let change of changes; let i = index; trackBy: uniqueChangeId" 
               [class.first-change]="isFirstChange(i)"
               (click)="undoChange(i)"
-              (mouseover)="changeMouseover(i)"
+              (mouseenter)="changeMouseover(i)"
               (mouseleave)="changeMouseleave(i)">
             <td>
               <button>Undo</button>
@@ -337,7 +337,7 @@
             <td *ngIf="isFirstChange(i)" 
                 [attr.rowspan]="numChangesByProduct(i)"
                 (click)="$event.stopPropagation()"
-                (mouseover)="$event.stopPropagation()"
+                (mouseenter)="$event.stopPropagation()"
                 (mouseleave)="$event.stopPropagation()">
               {{ change.getProductName() }}
             </td>
