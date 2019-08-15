@@ -147,7 +147,8 @@ correspond to pages in the application.
 
 ### Spock Tests (.groovy files)
 
-Spock tests for the Rest API Endpoints are found in the [test](src/test) directory.
+Spock tests for the Rest API Endpoints are found in the [test](src/test) directory. This is where
+the multicast config files endpoints are tested ([MulticastConfigResourceSpec](src/test/groovy/com/mni/api/MulticastConfigResourceSpec.groovy)).
 
 ### Postman Collections (API)
 
